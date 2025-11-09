@@ -70,6 +70,7 @@ const profileQuery = useProfileQuery()
       >
         <template #chatTopBarMoreMenu>
           <!-- 测试批量添加消息 -->
+          <!-- v-if="import.meta.env.DEV" -->
           <ChatTopBarMoreMenuItem @click="testPbSendMessage">
             <template #icon>
               <RiFlaskLine size="18px"></RiFlaskLine>

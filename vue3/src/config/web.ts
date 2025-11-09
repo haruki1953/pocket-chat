@@ -1,5 +1,19 @@
-// 开发时使用的
-const baseUrl = 'http://127.0.0.1:8090/' as const
+let baseUrl: string
+if (import.meta.env.DEV) {
+  console.log('当前是开发环境')
+  // 开发时使用的
+  baseUrl = 'http://127.0.0.1:8090/' as const
+}
+// if (import.meta.env.PROD)
+else {
+  console.log('当前是生产环境')
+  // 部署时，将由后端来托管前端，设置为根路径
+  baseUrl = '/' as const
+}
+export { baseUrl }
+
+// // 开发时使用的
+// const baseUrl = 'http://127.0.0.1:8090/' as const
 
 // // 这是为了在手机上测试，需要的话要改为自己电脑的ip
 // const baseUrl = 'http://192.168.2.110:8090/' as const
