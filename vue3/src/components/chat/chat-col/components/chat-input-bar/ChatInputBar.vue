@@ -249,7 +249,7 @@ defineExpose({
                 resize="none"
                 :rows="1"
                 :autosize="{ minRows: 1, maxRows: 10 }"
-                @keydown.enter.exact.prevent="handleChatInputKeydownEnter"
+                @keydown.shift.enter.exact.prevent="handleChatInputKeydownEnter"
               />
             </div>
           </template>
