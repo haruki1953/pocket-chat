@@ -2,7 +2,11 @@
 import elEnUS from 'element-plus/es/locale/lang/en'
 import elZhCN from 'element-plus/es/locale/lang/zh-cn'
 import elZhTW from 'element-plus/es/locale/lang/zh-tw'
+import elJaJP from 'element-plus/es/locale/lang/ja'
+import elKoKR from 'element-plus/es/locale/lang/ko'
+import elRuRU from 'element-plus/es/locale/lang/ru'
 
+// 导入naive-ui的国际化配置
 import {
   enUS as nuEnUS,
   dateEnUS as nuDateEnUS,
@@ -10,10 +14,23 @@ import {
   dateZhCN as nuDateZhCN,
   zhTW as nuZhTW,
   dateZhTW as nuDateZhTW,
+  jaJP as nuJaJP,
+  dateJaJP as nuDateJaJP,
+  koKR as nuKoKR,
+  dateKoKR as nuDateKoKR,
+  ruRU as nuRuRU,
+  dateRuRU as nuDateRuRU,
 } from 'naive-ui'
 
 // 当前所支持的语言，格式：(ISO 639-1)-(Country Code)
-export const i18nLocaleList = ['en-US', 'zh-CN', 'zh-TW'] as const
+export const i18nLocaleList = [
+  'en-US',
+  'zh-CN',
+  'zh-TW',
+  'ja-JP',
+  'ko-KR',
+  'ru-RU',
+] as const
 
 // 通过类型体操，根据i18nLocaleList的值得到联合类型（Union Types）
 export type I18nLocaleType = (typeof i18nLocaleList)[number]
@@ -41,15 +58,36 @@ export const i18nLocaleInfo = {
     nuLocale: nuZhTW,
     nuDateLocale: nuDateZhTW,
   },
+  'ja-JP': {
+    language: '日本語',
+    region: '日本',
+    elLocale: elJaJP,
+    nuLocale: nuJaJP,
+    nuDateLocale: nuDateJaJP,
+  },
+  'ko-KR': {
+    language: '한국어',
+    region: '대한민국',
+    elLocale: elKoKR,
+    nuLocale: nuKoKR,
+    nuDateLocale: nuDateKoKR,
+  },
+  'ru-RU': {
+    language: 'Русский',
+    region: 'Россия',
+    elLocale: elRuRU,
+    nuLocale: nuRuRU,
+    nuDateLocale: nuDateRuRU,
+  },
 } as const satisfies Record<
   // 确保类型正确
   I18nLocaleType,
   {
     language: string
     region: string
-    elLocale: typeof elEnUS | typeof elZhCN | typeof elZhTW
-    nuLocale: typeof nuEnUS | typeof nuZhCN | typeof nuZhTW
-    nuDateLocale: typeof nuDateEnUS | typeof nuDateZhCN | typeof nuDateZhTW
+    elLocale: unknown // typeof elEnUS | typeof elZhCN | typeof elZhTW
+    nuLocale: unknown // typeof nuEnUS | typeof nuZhCN | typeof nuZhTW
+    nuDateLocale: unknown // typeof nuDateEnUS | typeof nuDateZhCN | typeof nuDateZhTW
   }
 >
 
