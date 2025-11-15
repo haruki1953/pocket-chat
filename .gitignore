@@ -1,5 +1,7 @@
 test
 dist
 temp
+out
+pocketbase-release-file
 .DS_Store
 /note/.obsidian/workspace.json
