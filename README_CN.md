@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="./assets/message-3-fill-7899CC.svg" style="width: 128px; height: 128px;"></img>
+  <img src="./assets/message-3-fill-7899CC.svg" style="width: 128px; height: 128px;">
 </div>
 
 <h1 align="center">
@@ -8,17 +8,17 @@
 
 <p align="center">
   <!-- Vue.js -->
-  <img src="https://img.shields.io/badge/Vue.js-4FC08D?style=for-the-badge&logo=vue.js&logoColor=white" alt="Vue.js"></img>
+  <img src="https://img.shields.io/badge/Vue.js-4FC08D?style=for-the-badge&logo=vue.js&logoColor=white" alt="Vue.js">
   <!-- TailwindCSS -->
-  <img src="https://img.shields.io/badge/TailwindCSS-38B2AC?style=for-the-badge&logo=tailwindcss&logoColor=white" alt="TailwindCSS"></img>
+  <img src="https://img.shields.io/badge/TailwindCSS-38B2AC?style=for-the-badge&logo=tailwindcss&logoColor=white" alt="TailwindCSS">
   <!-- TanStack Query -->
-  <img src="https://img.shields.io/badge/TanStack%20Query-FF4154?style=for-the-badge&logo=reactquery&logoColor=white" alt="TanStack Query"></img>
+  <img src="https://img.shields.io/badge/TanStack%20Query-FF4154?style=for-the-badge&logo=reactquery&logoColor=white" alt="TanStack Query">
   <!-- PocketBase -->
-  <img src="https://img.shields.io/badge/PocketBase-0E83CD?style=for-the-badge&logo=pocketbase&logoColor=white" alt="PocketBase"></img>
+  <img src="https://img.shields.io/badge/PocketBase-0E83CD?style=for-the-badge&logo=pocketbase&logoColor=white" alt="PocketBase">
   </br>
-  <img src="https://img.shields.io/badge/License-MIT-green.svg?style=for-the-badge" alt="MIT License"></img>
-  <img src="https://img.shields.io/github/release/haruki1953/pocket-chat.svg?style=for-the-badge" alt="GitHub Release"></img>
-  <img src="https://img.shields.io/github/commit-activity/m/haruki1953/pocket-chat.svg?style=for-the-badge" alt="GitHub Activity"></img>
+  <img src="https://img.shields.io/badge/License-MIT-green.svg?style=for-the-badge" alt="MIT License">
+  <img src="https://img.shields.io/github/release/haruki1953/pocket-chat.svg?style=for-the-badge" alt="GitHub Release">
+  <img src="https://img.shields.io/github/commit-activity/m/haruki1953/pocket-chat.svg?style=for-the-badge" alt="GitHub Activity">
 </p>
 
 
@@ -35,7 +35,6 @@
 - 预览 https://sakiko.top
 
 ![](./assets/Snipaste_2025-11-16_16-03-05.png)
-
 ![](./assets/Snipaste_2025-11-16_16-00-27.png)
 
 ## 部署
@@ -46,17 +45,17 @@
 
 PocketChat 所有的版本更新都在 Github 以 release 形式发布，在 https://github.com/haruki1953/pocket-chat/releases 下载如 `pocket_chat_0.0.1_windows_amd64.zip` 这样的压缩包。
 
-![](assets/image.png)
+![](./assets/image.png)
 
 解压，双击 start.bat 运行，会打开这样的命令行。
 
-![](assets/image-1.png)
+![](./assets/image-1.png)
 
 与此同时，将会自动在浏览器打开 PocketBase 创建超级用户页面 也就是命令行中的链接如 `http://127.0.0.1:58090/_/#/pbinstal/eyJhbGciOiJI......`。
 
 创建超级用户是 [**部署后的务必进行的操作**](#部署后的务必进行的操作)，详见 [根据日志中的链接创建用于后台管理的超级用户](#根据日志中的链接创建用于后台管理的超级用户)
 
-![](assets/image-3.png)
+![](./assets/image-3.png)
 
 
 `http://127.0.0.1:58090/_/` 为 PocketChat 的后台管理页面，创建超级用户后即可访问
@@ -65,11 +64,11 @@ PocketChat 所有的版本更新都在 Github 以 release 形式发布，在 htt
 - config 集合，可查看或修改关于本项目的一些配置，详见 [config 集合配置](#config-集合配置)
 - messages 集合，可查看所有用户发送的所有消息
 
-![](assets/image-4.png)
+![](./assets/image-4.png)
 
 `http://127.0.0.1:58090` 为 PocketChat 的主页，在浏览器访问即可开始使用。
 
-![](assets/image-2.png)
+![](./assets/image-2.png)
 
 关于 PocketChat 的更多配置请继续阅读此文档
 

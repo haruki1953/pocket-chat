@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="./assets/message-3-fill-7899CC.svg" style="width: 128px; height: 128px;"></img>
+  <img src="./assets/message-3-fill-7899CC.svg" style="width: 128px; height: 128px;">
 </div>
 
 <h1 align="center">
@@ -8,17 +8,17 @@
 
 <p align="center">
   <!-- Vue.js -->
-  <img src="https://img.shields.io/badge/Vue.js-4FC08D?style=for-the-badge&logo=vue.js&logoColor=white" alt="Vue.js"></img>
+  <img src="https://img.shields.io/badge/Vue.js-4FC08D?style=for-the-badge&logo=vue.js&logoColor=white" alt="Vue.js">
   <!-- TailwindCSS -->
-  <img src="https://img.shields.io/badge/TailwindCSS-38B2AC?style=for-the-badge&logo=tailwindcss&logoColor=white" alt="TailwindCSS"></img>
+  <img src="https://img.shields.io/badge/TailwindCSS-38B2AC?style=for-the-badge&logo=tailwindcss&logoColor=white" alt="TailwindCSS">
   <!-- TanStack Query -->
-  <img src="https://img.shields.io/badge/TanStack%20Query-FF4154?style=for-the-badge&logo=reactquery&logoColor=white" alt="TanStack Query"></img>
+  <img src="https://img.shields.io/badge/TanStack%20Query-FF4154?style=for-the-badge&logo=reactquery&logoColor=white" alt="TanStack Query">
   <!-- PocketBase -->
-  <img src="https://img.shields.io/badge/PocketBase-0E83CD?style=for-the-badge&logo=pocketbase&logoColor=white" alt="PocketBase"></img>
+  <img src="https://img.shields.io/badge/PocketBase-0E83CD?style=for-the-badge&logo=pocketbase&logoColor=white" alt="PocketBase">
   </br>
-  <img src="https://img.shields.io/badge/License-MIT-green.svg?style=for-the-badge" alt="MIT License"></img>
-  <img src="https://img.shields.io/github/release/haruki1953/pocket-chat.svg?style=for-the-badge" alt="GitHub Release"></img>
-  <img src="https://img.shields.io/github/commit-activity/m/haruki1953/pocket-chat.svg?style=for-the-badge" alt="GitHub Activity"></img>
+  <img src="https://img.shields.io/badge/License-MIT-green.svg?style=for-the-badge" alt="MIT License">
+  <img src="https://img.shields.io/github/release/haruki1953/pocket-chat.svg?style=for-the-badge" alt="GitHub Release">
+  <img src="https://img.shields.io/github/commit-activity/m/haruki1953/pocket-chat.svg?style=for-the-badge" alt="GitHub Activity">
 </p>
 
 
@@ -33,8 +33,8 @@
 - Project address: https://github.com/haruki1953/pocket-chat
 - Live demo: https://sakiko.top
 
-![login](./assets/Snipaste_2025-11-16_16-03-05.png)
-![chat](./assets/Snipaste_2025-11-16_16-00-27.png)
+![](./assets/Snipaste_2025-11-16_16-03-05.png)
+![](./assets/Snipaste_2025-11-16_16-00-27.png)
 
 ## Deployment
 
@@ -44,17 +44,17 @@ Before deploying on Linux, it is recommended to try it first on Windows to get f
 
 All PocketChat releases are published on GitHub. Download the latest zip package from https://github.com/haruki1953/pocket-chat/releases, for example `pocket_chat_0.0.1_windows_amd64.zip`.
 
-![alt text](assets/image.png)
+![](./assets/image.png)
 
 Extract the archive and double-click `start.bat`. A command-line window will open.
 
-![alt text](assets/image-1.png)
+![](./assets/image-1.png)
 
 At the same time, your browser will automatically open the PocketBase superuser creation page (the link shown in the console, e.g. `http://127.0.0.1:58090/_/#/pbinstal/eyJhbGciOiJI......`).
 
 Creating a superuser is a [**required step after deployment**](#required-post-deployment-steps). See [Create admin superuser using the link from the logs](#create-admin-superuser-using-the-link-from-the-logs).
 
-![alt text](assets/image-3.png)
+![](./assets/image-3.png)
 
 `http://127.0.0.1:58090/_/` → PocketChat admin panel (accessible after creating the superuser)
 
@@ -62,11 +62,11 @@ Creating a superuser is a [**required step after deployment**](#required-post-de
 - `config` collection: project-specific settings (see [Config collection settings](#config-collection-settings))
 - `messages` collection: view all sent messages
 
-![alt text](assets/image-4.png)
+![](./assets/image-4.png)
 
 `http://127.0.0.1:58090` → PocketChat main chat interface
 
-![alt text](assets/image-2.png)
+![](./assets/image-2.png)
 
 Continue reading this document for more configuration options.
 
