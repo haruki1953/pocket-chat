@@ -34,9 +34,9 @@
 - 项目地址 https://github.com/haruki1953/pocket-chat
 - 预览 https://sakiko.top
 
-![login](./assets/Snipaste_2025-11-16_16-03-05.png)
+![](./assets/Snipaste_2025-11-16_16-03-05.png)
 
-![chat](./assets/Snipaste_2025-11-16_16-00-27.png)
+![](./assets/Snipaste_2025-11-16_16-00-27.png)
 
 ## 部署
 
@@ -46,17 +46,17 @@
 
 PocketChat 所有的版本更新都在 Github 以 release 形式发布，在 https://github.com/haruki1953/pocket-chat/releases 下载如 `pocket_chat_0.0.1_windows_amd64.zip` 这样的压缩包。
 
-![alt text](assets/image.png)
+![](assets/image.png)
 
 解压，双击 start.bat 运行，会打开这样的命令行。
 
-![alt text](assets/image-1.png)
+![](assets/image-1.png)
 
 与此同时，将会自动在浏览器打开 PocketBase 创建超级用户页面 也就是命令行中的链接如 `http://127.0.0.1:58090/_/#/pbinstal/eyJhbGciOiJI......`。
 
 创建超级用户是 [**部署后的务必进行的操作**](#部署后的务必进行的操作)，详见 [根据日志中的链接创建用于后台管理的超级用户](#根据日志中的链接创建用于后台管理的超级用户)
 
-![alt text](assets/image-3.png)
+![](assets/image-3.png)
 
 
 `http://127.0.0.1:58090/_/` 为 PocketChat 的后台管理页面，创建超级用户后即可访问
@@ -65,11 +65,11 @@ PocketChat 所有的版本更新都在 Github 以 release 形式发布，在 htt
 - config 集合，可查看或修改关于本项目的一些配置，详见 [config 集合配置](#config-集合配置)
 - messages 集合，可查看所有用户发送的所有消息
 
-![alt text](assets/image-4.png)
+![](assets/image-4.png)
 
 `http://127.0.0.1:58090` 为 PocketChat 的主页，在浏览器访问即可开始使用。
 
-![alt text](assets/image-2.png)
+![](assets/image-2.png)
 
 关于 PocketChat 的更多配置请继续阅读此文档
 
@@ -170,7 +170,6 @@ https://uika.top/_/#/pbinstal/eyJhbGcixxxxxxxxxxx......xxxxxxxxxxxxxx
 在浏览器访问修改后的链接，即可进入 PocketBase 创建超级用户页面。[创建超级用户](#根据日志中的链接创建用于后台管理的超级用户) 并进行 [**部署后的务必进行的操作**](#部署后的务必进行的操作) 之后，即可开始使用 PocketChat
 
 ![](./assets/Snipaste_2025-11-17_14-50-28.png)
-
 ![](./assets/Snipaste_2025-11-17_15-12-46.png)
 
 
@@ -256,7 +255,6 @@ systemctl disable pocketchat
 关于 **User IP proxy headers** ，自己用了 cloudflare ，需按照其提示添加 `CF-Connecting-IP`，即可解除其警告，并能解析到用户的真实ip
 
 ![](./assets/Snipaste_2025-11-17_16-53-57.png)
-
 ![](./assets/Snipaste_2025-11-17_16-57-00.png)
 
 建议浏览 [PocketBase](https://pocketbase.io) 官网进一步了解 PocketBase，并查看 [生产环境的建议](https://pocketbase.io/docs/going-to-production/)
