@@ -15,9 +15,7 @@ import {
   useTwowayPositioningCursorDataInitialization,
 } from './composables'
 import ChatColTemplateBase from './ChatColTemplateBase.vue'
-import { useSound } from '@vueuse/sound'
-import { appMessageNotifSound, appMessageUpdateSound } from '@/config'
-import { useRealtimeMessagesStore } from '@/stores'
+import { useChatRoomMessagesRealtimeNotifEffects } from './composables/chat-notif-effects'
 
 const props = defineProps<{
   /** 滚动容器元素 */
@@ -253,28 +251,11 @@ useChatColPageRecoverDataSetOnBeforeUnmountAndRouteLeave({
   chatRoomMessagesRealtimeReadNumber,
 })
 
-// 消息通知音效
-const messageNotifSound = useSound(appMessageNotifSound, { volume: 0.25 })
-watch(chatRoomMessagesRealtimeUnReadNumber, () => {
-  if (chatRoomMessagesRealtimeUnReadNumber.value === 0) {
-    return
-  }
-  messageNotifSound.play()
+// 封装 消息实时提示效果
+// useChatRoomMessagesRealtimeNotifEffects
+useChatRoomMessagesRealtimeNotifEffects({
+  chatRoomMessagesRealtimeUnReadNumber,
 })
-// 消息更新音效
-const messageUpdateSound = useSound(appMessageUpdateSound, { volume: 0.25 })
-const realtimeMessagesStore = useRealtimeMessagesStore()
-const chatRoomMessagesUpdateRealtime = computed(() => {
-  // props.roomId
-  // return realtimeMessagesStore.updateList.filter(i => i.room === props.roomId)
-  return realtimeMessagesStore.updateList
-})
-watch(
-  computed(() => chatRoomMessagesUpdateRealtime.value.length),
-  () => {
-    messageUpdateSound.play()
-  }
-)
 </script>
 
 <template>
