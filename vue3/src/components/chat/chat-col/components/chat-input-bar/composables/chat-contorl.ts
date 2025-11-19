@@ -7,7 +7,11 @@ import { useMutation } from '@tanstack/vue-query'
 import type { ChatInputBarPropsType } from './dependencies'
 import type { ChatInputBarDispalyType } from './chat-dispaly'
 import type { ChatInputBarDataType } from './chat-data'
-import { chatMessageControlRealtimeWaitTimeoutMsConfig } from '@/config'
+import {
+  appMessageSendSound,
+  chatMessageControlRealtimeWaitTimeoutMsConfig,
+} from '@/config'
+import { useSound } from '@vueuse/sound'
 
 // 封装 聊天输入栏的操作逻辑
 // useChatInputBarControl
@@ -93,6 +97,8 @@ export const useChatInputBarControl = (
     // retry: queryRetryPbNetworkError,
   })
 
+  // 消息发送音效
+  const messageSendSound = useSound(appMessageSendSound, { volume: 0.25 })
   // 消息发送提交
   const messageSendSubmit = async () => {
     if (chatInputContent.value.trim() === '') {
@@ -137,6 +143,11 @@ export const useChatInputBarControl = (
           message: i18nStore.t('chatMessageRealtimeWaitTimeoutErrorText')(),
         })
         chatMessageIsRealtimeTimeoutSet(true)
+      }
+      // 发送成功，播放发送音效
+      // if (raceResults === 'normal') {
+      else {
+        messageSendSound.play()
       }
     } finally {
       messageSendSubmitRunning.value = false
