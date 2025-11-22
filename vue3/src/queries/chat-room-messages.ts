@@ -14,6 +14,7 @@ import {
 import { queryKeys } from './query-keys'
 import { queryConfig } from '@/config'
 import { queryRetryPbNetworkError } from './query-retry'
+import { useRealtimeMessagesStore } from '@/stores'
 
 /** 聊天页消息 游标分页无限查询 单向 */
 export const useChatRoomMessagesInfiniteQuery = (data: {
@@ -93,6 +94,8 @@ export const useChatRoomMessagesInfiniteTwowayQuery = (data: {
 }) => {
   const { roomId, twowayPositioningCursorData } = data
 
+  const realtimeMessagesStore = useRealtimeMessagesStore()
+
   // queryKey 将被导出以便使用
   const queryKey = computed(() =>
     queryKeys.chatRoomMessagesInfiniteTwoway(
@@ -102,8 +105,16 @@ export const useChatRoomMessagesInfiniteTwowayQuery = (data: {
   )
 
   const infiniteQuery = useInfiniteQuery({
-    // 查询依赖，需 roomId
-    enabled: computed(() => roomId.value != null),
+    // 查询依赖，需 roomId，需待消息实时订阅完成
+    enabled: computed(() => {
+      if (roomId.value == null) {
+        return false
+      }
+      if (realtimeMessagesStore.isSubscribeReady === false) {
+        return false
+      }
+      return true
+    }),
     // 要和上面的queryKey保持一致，这里不直接用queryKey而是再写一遍，是为了符合eslint(@tanstack/query/exhaustive-deps)
     queryKey: computed(() =>
       queryKeys.chatRoomMessagesInfiniteTwoway(

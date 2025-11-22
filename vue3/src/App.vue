@@ -8,6 +8,8 @@ import {
   provideAppMainElScrollbar,
   useFirstDataLoadingAndAnimationMaskClose,
   useInitPbAuth,
+  useInitWebNotif,
+  useRealtimeMessagesSubscribe,
   useWatchAllowAnonymousViewAndAuthStoreIsValidCheckRouterLoginPage,
   type AppMainElScrollbar,
 } from './composables'
@@ -49,9 +51,14 @@ useSeoMeta({
   },
 })
 
+// use消息订阅
+const realtimeMessagesSubscribe = useRealtimeMessagesSubscribe()
+
 // 控制首次数据的加载，以及加载动画遮罩的关闭
 useFirstDataLoadingAndAnimationMaskClose({
   dataFirstLoadService: async () => {
+    // 启动消息订阅
+    await realtimeMessagesSubscribe.startSubscribe()
     // 遮罩的关闭会等待主要的query
     await watchUntilQueryReady(pbCollectionConfigQuery)
     await watchUntilQueryReady(profileQuery)
@@ -65,9 +72,8 @@ useInitPbAuth()
 // 监听，在禁止游客查看且未登录时跳转至登录页
 useWatchAllowAnonymousViewAndAuthStoreIsValidCheckRouterLoginPage()
 
-// 启动消息订阅
-const realtimeMessagesStore = useRealtimeMessagesStore()
-realtimeMessagesStore.startSubscribe()
+// 请求通知权限，并在成功时提示
+useInitWebNotif()
 
 const isDark = useDark()
 

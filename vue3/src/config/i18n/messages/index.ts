@@ -48,3 +48,10 @@ export type I18nMessagesKeyType = keyof typeof i18nMessages
 
 // 将在 src\stores\i18n.ts 使用
 // 页面中再使用 i18nStore.t 获取当前语言的内容
+
+// 'en-US': () => '' as const,
+// 'zh-CN': () => '' as const,
+// 'zh-TW': () => '' as const,
+// 'ja-JP': () => '' as const,
+// 'ko-KR': () => '' as const,
+// 'ru-RU': () => '' as const,

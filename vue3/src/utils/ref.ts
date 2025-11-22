@@ -44,25 +44,30 @@ export const watchUntilSourceCondition = <T>(
 /**
  * 等待 useQuery 查询完成（@tanstack/vue-query）。
  * 此版本使用 watchUntilSourceCondition 监听一个计算属性，
- * 判断是否处于请求过程中当 isLoading 和 isFetching 都为 false 时，认为查询完成。
+ * 判断是否处于请求过程中当 isLoading 和 isFetching 和 isPending 都为 false 时，认为查询完成。
  * 如发生错误，则抛出异常；否则正常返回。
  *
- * @param queryStatus - 包含 isLoading、isFetching（都是 Ref<boolean>）和可选的错误 Ref
+ * @param queryStatus - 包含 isLoading、isFetching、isPending（都是 Ref<boolean>）和可选的错误 Ref
  * @returns Promise<void> - 查询完成后 resolve，发生错误则 reject
  *
  * @example
  * const query = useQuery({ ... })
- * await awaitQueryReady(query)
+ * await watchUntilQueryReady(query)
  * console.log('✅ 查询完成:', query.data.value)
  */
 export const watchUntilQueryReady = async (queryStatus: {
   isLoading: Ref<boolean>
   isFetching: Ref<boolean>
+  isPending: Ref<boolean>
   error?: Ref<unknown>
 }): Promise<void> => {
   // 创建一个计算属性，表示是否仍在加载中
   const isQueryPending = computed(() => {
-    return queryStatus.isLoading.value || queryStatus.isFetching.value
+    return (
+      queryStatus.isLoading.value ||
+      queryStatus.isFetching.value ||
+      queryStatus.isPending.value
+    )
   })
 
   // 等待查询状态变为“非加载中”

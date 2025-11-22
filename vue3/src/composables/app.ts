@@ -1,11 +1,13 @@
 import { onMounted } from 'vue'
 import { pb } from '@/lib'
-import { useAuthStore } from '@/stores'
+import { useAuthStore, useI18nStore } from '@/stores'
 import { useMutation } from '@tanstack/vue-query'
 import { queryRetryPbNetworkError, usePbCollectionConfigQuery } from '@/queries'
 import { pbUsersAuthRefreshApi } from '@/api'
 import { useRouter } from 'vue-router'
-import { routerDict } from '@/config'
+import { appIconNotif, routerDict } from '@/config'
+import { useWebNotification } from '@vueuse/core'
+import { watchUntilQueryReady } from '@/utils'
 
 // 组合式的意义就是封装和复用有状态逻辑
 // https://cn.vuejs.org/guide/reusability/composables.html
@@ -117,3 +119,36 @@ export const useWatchAllowAnonymousViewAndAuthStoreIsValidCheckRouterLoginPage =
     watch(allowAnonymousView, checkRouterLoginPage)
     watch(() => authStore.isValid, checkRouterLoginPage)
   }
+
+/** 请求通知权限，并在成功时提示 */
+export const useInitWebNotif = () => {
+  const i18nStore = useI18nStore()
+  const pbCollectionConfigQuery = usePbCollectionConfigQuery()
+  ;(async () => {
+    const testPermissions = await useWebNotification().ensurePermissions()
+    console.log('testPermissions', testPermissions)
+
+    await watchUntilQueryReady(pbCollectionConfigQuery)
+
+    // 未取得网站名时不通知
+    if (
+      pbCollectionConfigQuery.data.value == null ||
+      pbCollectionConfigQuery.data.value['website-name'] === ''
+    ) {
+      return
+    }
+
+    useWebNotification({
+      title: i18nStore.t('appInitWebNotifTitle')(
+        pbCollectionConfigQuery.data.value['website-name']
+      ),
+      body: i18nStore.t('appInitWebNotifBody')(),
+      icon: appIconNotif,
+      tag: 'PocketChat-useInitWebNotif',
+      renotify: false,
+      silent: true,
+    })
+      .show()
+      .catch(() => {})
+  })()
+}
