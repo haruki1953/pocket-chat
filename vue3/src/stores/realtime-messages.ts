@@ -59,6 +59,13 @@ export const useRealtimeMessagesStore = defineStore(
       isSubscribeStartedRef.value = true
     }
 
+    // 是否订阅已就绪
+    const isSubscribeReadyRef = ref(false)
+    const isSubscribeReady = computed(() => isSubscribeReadyRef.value)
+    const isSubscribeReadySetTrue = () => {
+      isSubscribeReadyRef.value = true
+    }
+
     // 记录第一次实时连接时得到的第一个消息，也用于判断当前是否为第一次实时连接，none 代表第一次连接时没有消息
     const firstPbConnectMessageRef = ref<
       MessagesResponseWidthExpand | 'none' | null
@@ -81,6 +88,8 @@ export const useRealtimeMessagesStore = defineStore(
       deleteListPush,
       isSubscribeStarted,
       isSubscribeStartedSetTrue,
+      isSubscribeReady,
+      isSubscribeReadySetTrue,
       firstPbConnectMessage,
       firstPbConnectMessageSet,
     }

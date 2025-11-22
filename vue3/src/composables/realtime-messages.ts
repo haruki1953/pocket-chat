@@ -79,7 +79,9 @@ export const useRealtimeMessagesSubscribe = () => {
       window.focus()
     })
     // 显示通知
-    notif.show().catch(() => {})
+    notif.show().catch((error) => {
+      console.warn('Failed to show notification:', error)
+    })
   }
 
   // 启动订阅，将在App.vue调用
@@ -95,7 +97,15 @@ export const useRealtimeMessagesSubscribe = () => {
       // console.log('PB_CONNECT', e)
 
       // pb实时订阅连接时（断线重连时），请求最新的消息，不必用 useMutation（感觉在这里错误重试并不是很必要）
-      const messageList = await pbMessagesRealtimeReConnectListApi()
+      const messageList = await pbMessagesRealtimeReConnectListApi().catch(
+        (error) => {
+          console.error('Failed to fetch messages on reconnect:', error)
+          return null
+        }
+      )
+      if (messageList == null) {
+        return
+      }
 
       // 判断是否为第一次连接
       // 是，为firstPbConnectMessage赋值
@@ -131,11 +141,14 @@ export const useRealtimeMessagesSubscribe = () => {
         })()
         // 第二步：过滤出 createList 中不存在的消息
         // 在 msgItemsGtFirst 过滤，得到 realtimeMessagesStore.createList 中没有的，也就是需要插入的
-        const msgItemsNeedInsert = msgItemsGtFirst.filter(
-          (i) =>
-            realtimeMessagesStore.createList.find((item) => item.id === i.id) ==
-            null
+        // 用 Set 代替数组查找，可以把复杂度从 O(n²) 降到 O(n+m)，避免消息量大时卡顿。
+        const existingIds = new Set(
+          realtimeMessagesStore.createList.map((item) => item.id)
         )
+        const msgItemsNeedInsert = msgItemsGtFirst.filter(
+          (i) => !existingIds.has(i.id)
+        )
+
         // 第三步：遍历并插入，并通知
         // 反转后遍历（原数组为created降序，升序遍历更合理），调用 realtimeMessagesStore.createListCheckAndInsert
         msgItemsNeedInsert.reverse().forEach((msg) => {
@@ -146,6 +159,8 @@ export const useRealtimeMessagesSubscribe = () => {
           }
         })
       }
+    }).catch((error) => {
+      console.error('pbRealtimeSubscribePBCONNECT', error)
     })
     // pb实时消息订阅
     await pbMessagesSubscribeAllApi(async (e) => {
@@ -166,8 +181,11 @@ export const useRealtimeMessagesSubscribe = () => {
         realtimeMessagesStore.deleteListPush(e.record)
       }
       // console.log(e)
+    }).catch((error) => {
+      console.error('pbMessagesSubscribeAllApi', error)
     })
 
+    realtimeMessagesStore.isSubscribeReadySetTrue()
     return 'startSubscribe'
   }
 

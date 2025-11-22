@@ -110,7 +110,7 @@ export const useChatRoomMessagesInfiniteTwowayQuery = (data: {
       if (roomId.value == null) {
         return false
       }
-      if (realtimeMessagesStore.isSubscribeStarted === false) {
+      if (realtimeMessagesStore.isSubscribeReady === false) {
         return false
       }
       return true
