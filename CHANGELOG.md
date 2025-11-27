@@ -30,7 +30,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Add Claude Code GitHub Workflow by @niracler in [#1](https://github.com/haruki1953/pocket-chat/pull/1)
 - Support build with docker by @Ecss11 in [#4](https://github.com/haruki1953/pocket-chat/pull/4)
-Here’s the English translation of your text:
 - Implemented new message alerts by @haruki1953 in [#5](https://github.com/haruki1953/pocket-chat/pull/5)  
 - Implemented desktop message notifications, with pb real-time subscription reconnection and message compensation by @haruki1953 in [#6](https://github.com/haruki1953/pocket-chat/pull/6)  
 - Implemented project packaging via GitHub Actions, uploading to release, and Docker build & push by @haruki1953 in [#7](https://github.com/haruki1953/pocket-chat/pull/7)  
