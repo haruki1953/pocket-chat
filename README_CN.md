@@ -8,41 +8,25 @@
 
 <p align="center">
   <!-- Vue.js -->
-  <a href="https://vuejs.org/" target="_blank">
-    <img src="https://img.shields.io/badge/Vue.js-4FC08D?style=for-the-badge&logo=vue.js&logoColor=white" alt="Vue.js">
-  </a>
+  <a href="https://vuejs.org/" target="_blank"><img src="https://img.shields.io/badge/Vue.js-4FC08D?style=for-the-badge&logo=vue.js&logoColor=white" alt="Vue.js"></a>
   <!-- TailwindCSS -->
-  <a href="https://tailwindcss.com/" target="_blank">
-    <img src="https://img.shields.io/badge/TailwindCSS-38B2AC?style=for-the-badge&logo=tailwindcss&logoColor=white" alt="TailwindCSS">
-  </a>
+  <a href="https://tailwindcss.com/" target="_blank"><img src="https://img.shields.io/badge/TailwindCSS-38B2AC?style=for-the-badge&logo=tailwindcss&logoColor=white" alt="TailwindCSS"></a>
   <!-- TanStack Query -->
-  <a href="https://tanstack.com/query/latest" target="_blank">
-    <img src="https://img.shields.io/badge/TanStack%20Query-FF4154?style=for-the-badge&logo=reactquery&logoColor=white" alt="TanStack Query">
-  </a>
+  <a href="https://tanstack.com/query/latest" target="_blank"><img src="https://img.shields.io/badge/TanStack%20Query-FF4154?style=for-the-badge&logo=reactquery&logoColor=white" alt="TanStack Query"></a>
   <!-- PocketBase -->
-  <a href="https://pocketbase.io/" target="_blank">
-    <img src="https://img.shields.io/badge/PocketBase-0E83CD?style=for-the-badge&logo=pocketbase&logoColor=white" alt="PocketBase">
-  </a>
+  <a href="https://pocketbase.io/" target="_blank"><img src="https://img.shields.io/badge/PocketBase-0E83CD?style=for-the-badge&logo=pocketbase&logoColor=white" alt="PocketBase"></a>
   </br>
   <!-- License -->
-  <a href="https://opensource.org/licenses/MIT" target="_blank">
-    <img src="https://img.shields.io/badge/License-MIT-green.svg?style=for-the-badge" alt="MIT License">
-  </a>
+  <a href="https://opensource.org/licenses/MIT" target="_blank"><img src="https://img.shields.io/badge/License-MIT-green.svg?style=for-the-badge" alt="MIT License"></a>
   <!-- GitHub Release -->
-  <a href="https://github.com/haruki1953/pocket-chat/releases" target="_blank">
-    <img src="https://img.shields.io/github/release/haruki1953/pocket-chat.svg?style=for-the-badge" alt="GitHub Release">
-  </a>
+  <a href="https://github.com/haruki1953/pocket-chat/releases" target="_blank"><img src="https://img.shields.io/github/release/haruki1953/pocket-chat.svg?style=for-the-badge" alt="GitHub Release"></a>
   <!-- GitHub Activity -->
-  <a href="https://github.com/haruki1953/pocket-chat/commits" target="_blank">
-    <img src="https://img.shields.io/github/commit-activity/m/haruki1953/pocket-chat.svg?style=for-the-badge" alt="GitHub Activity">
-  </a>
+  <a href="https://github.com/haruki1953/pocket-chat/commits" target="_blank"><img src="https://img.shields.io/github/commit-activity/m/haruki1953/pocket-chat.svg?style=for-the-badge" alt="GitHub Activity"></a>
 </p>
-
 
 <p align="center">
   <a href="./README.md">English</a> | 简体中文
 </p>
-
 
 - PocketChat 是一个基于 [PocketBase](https://github.com/pocketbase/pocketbase) 与 [Vue3](https://github.com/vuejs/vue) 的开源实时聊天平台。
 - 跨平台支持 linux、windows、macos 。部署便捷，可在 windows 上解压后运行。支持 docker 部署。
