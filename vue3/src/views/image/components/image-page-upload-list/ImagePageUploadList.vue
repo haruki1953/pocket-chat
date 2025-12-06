@@ -34,8 +34,8 @@ import { ImgUploadItem } from './components'
         <div class="border-t-[3px] border-color-background"></div>
         <ImgUploadItem></ImgUploadItem>
         <!-- 分割线 -->
-        <div class="border-t-[3px] border-color-background"></div>
-        <ImgUploadItem></ImgUploadItem>
+        <!-- <div class="border-t-[3px] border-color-background"></div> -->
+        <!-- <ImgUploadItem></ImgUploadItem> -->
       </div>
     </div>
   </div>

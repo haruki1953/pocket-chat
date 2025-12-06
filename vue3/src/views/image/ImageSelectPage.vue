@@ -1,8 +1,10 @@
 <script setup lang="ts">
 import { ContainerBar, ContainerCol2 } from '@/components'
 import {
+  ImageGroupViewer,
   ImagePageBottomBar,
   ImagePageControlPanel,
+  ImagePageImageList,
   ImagePageTopBar,
   ImagePageUploadList,
 } from './components'
@@ -24,7 +26,7 @@ import {
           <div class="ml-6 mr-4">
             <ContainerBar :defaultBarHeight="60">
               <template #default>
-                <div class="relative">
+                <div class="relative mb-4">
                   <div class="sticky top-0 z-[1] flow-root">
                     <!-- 图片页顶栏 -->
                     <ImagePageTopBar></ImagePageTopBar>
@@ -39,6 +41,15 @@ import {
                     <ImagePageUploadList></ImagePageUploadList>
                   </div>
                   <!-- 图片预览 -->
+                  <div class="mt-4">
+                    <div class="">
+                      <div
+                        class="overflow-hidden rounded-[24px] border-[3px] border-transparent bg-color-background-soft"
+                      >
+                        <ImageGroupViewer></ImageGroupViewer>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </template>
               <template #bar>
@@ -52,8 +63,8 @@ import {
         </template>
         <!-- 图片列表 -->
         <template #col1>
-          <div class="ml-2 mr-6">
-            <div class="h-[1500px] bg-red-950"></div>
+          <div class="my-4 ml-2 mr-6">
+            <ImagePageImageList></ImagePageImageList>
           </div>
         </template>
       </ContainerCol2>

@@ -9,3 +9,5 @@ export {
 
 export * from './image-page-control-panel'
 export * from './image-page-upload-list'
+export * from './image-group-viewer'
+export * from './image-page-image-list'
