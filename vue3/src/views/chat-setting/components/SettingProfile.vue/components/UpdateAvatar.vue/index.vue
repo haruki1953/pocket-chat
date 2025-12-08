@@ -162,12 +162,7 @@ const submit = mutation.mutateAsync
       <!-- 居中 -->
       <div class="flex justify-center">
         <!-- ElUpload -->
-        <!--
-        将这个div换为ElUpload
-        单个文件，只允许 png jpg webp
-        用户点击这个后不是会选择文件吗，选择文件后打印文件信息
-        -->
-        <div class="upload-box">
+        <div class="upload-box overflow-hidden rounded-full">
           <ElUpload
             :autoUpload="false"
             :showFileList="false"
@@ -227,6 +222,9 @@ const submit = mutation.mutateAsync
         background-color: unset;
         border: none;
         padding: 0;
+        &.is-dragover {
+          background-color: var(--color-text-soft);
+        }
       }
     }
   }
