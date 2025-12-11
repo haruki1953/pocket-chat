@@ -44,8 +44,17 @@ export type UploadImageStoreDependenciesDataForModule = {
   uploadProgressInfoList: Ref<UploadImageStoreProgressInfo[]>
 }
 
+/**
+ * 当前 Store 的版本号。
+ *
+ * 当 store 的结构（字段、类型）发生不兼容更新时，
+ * 修改此版本号即可强制生成一个新的持久化存储空间。
+ * 避免旧数据与新类型不符导致运行时错误。
+ */
+const STORE_VERSION = 'v1'
+
 export const useUploadImageStore = defineStore(
-  'pocket-together-upload-image',
+  `pocket-together-upload-image-${STORE_VERSION}`,
   () => {
     /** 持久化：上传记录列表 */
     const uploadRecordList = ref<UploadImageStoreRecord[]>([])
@@ -73,21 +82,25 @@ export const useUploadImageStore = defineStore(
       useUploadImageSchedulerModule(uploadImageStoreDependenciesDataForModule)
 
     // ------------------------------------------------------------------------
-    // 上传管理相关函数
-    // ------------------------------------------------------------------------
-    const uploadImageSystemControlModule = useUploadImageSystemControlModule({
-      ...uploadImageStoreDependenciesDataForModule,
-      uploadScheduler,
-    })
-    const { clearFinished, clearAborted, clearErrorOrInterrupted } =
-      uploadImageSystemControlModule
-
-    // ------------------------------------------------------------------------
     // 单项操作函数
     // ------------------------------------------------------------------------
     const uploadImageItemControlModule = useUploadImageItemControlModule(
       uploadImageStoreDependenciesDataForModule
     )
+    const { uploadAbortPending, uploadAbortUploading } =
+      uploadImageItemControlModule
+
+    // ------------------------------------------------------------------------
+    // 上传管理相关函数
+    // ------------------------------------------------------------------------
+    const uploadImageSystemControlModule = useUploadImageSystemControlModule({
+      ...uploadImageStoreDependenciesDataForModule,
+      uploadScheduler,
+      uploadAbortPending,
+      uploadAbortUploading,
+    })
+    // const { clearFinished, clearAborted, clearErrorOrInterrupted } =
+    //   uploadImageSystemControlModule
 
     // ------------------------------------------------------------------------
     // 统一初始化函数（只执行一次）将在app.vue调用
@@ -98,13 +111,14 @@ export const useUploadImageStore = defineStore(
 
       // 上传记录初始处理函数：pending/uploading → interrupted
       const initialRecordProcess = () => {
-        // 清除已完成
-        clearFinished()
-        // 清除中止
-        clearAborted()
-        // 清除错误或中断
-        clearErrorOrInterrupted()
-        // 即只剩下 上传中、待上传 的，将其修改为中断
+        // // 清除已完成
+        // clearFinished()
+        // // 清除中止
+        // clearAborted()
+        // // 清除错误或中断
+        // clearErrorOrInterrupted()
+
+        // 上传中、待上传 的，将其修改为中断
         uploadRecordList.value.forEach((r) => {
           if (r.status === UISRSKC.pending || r.status === UISRSKC.uploading) {
             r.status = UISRSKC.interrupted

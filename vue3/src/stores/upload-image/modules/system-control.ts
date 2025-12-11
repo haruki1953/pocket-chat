@@ -9,11 +9,15 @@ import type { UploadImageStoreDependenciesDataForModule } from './dependencies'
 export const useUploadImageSystemControlModule = (
   data: {
     uploadScheduler: () => Promise<void>
+    uploadAbortPending: (uuid: string) => void
+    uploadAbortUploading: (uuid: string) => void
   } & UploadImageStoreDependenciesDataForModule
 ) => {
   const {
     //
     uploadScheduler,
+    uploadAbortPending,
+    uploadAbortUploading,
     uploadRecordList,
     uploadFileList,
     uploadProgressInfoList,
@@ -61,6 +65,22 @@ export const useUploadImageSystemControlModule = (
 
     // 返回uuid代表成功
     return uuid
+  }
+
+  // 是否能全部中止，有待上传或上传中的才能进行
+  const canAbortAll = () =>
+    uploadRecordList.value.some(
+      (i) => i.status === UISRSKC.pending || i.status === UISRSKC.uploading
+    )
+  // 全部中止
+  const abortAll = () => {
+    uploadRecordList.value.forEach((i) => {
+      if (i.status === UISRSKC.pending) {
+        uploadAbortPending(i.uuid)
+      } else if (i.status === UISRSKC.uploading) {
+        uploadAbortUploading(i.uuid)
+      }
+    })
   }
 
   // 是否能清除全部已完成的，存在已完成的才能进行
@@ -115,6 +135,8 @@ export const useUploadImageSystemControlModule = (
     getUploadRecordWithFileAndProgressInfo,
     addUpload,
 
+    canAbortAll,
+    abortAll,
     canClearFinished,
     clearFinished,
     canClearAborted,
