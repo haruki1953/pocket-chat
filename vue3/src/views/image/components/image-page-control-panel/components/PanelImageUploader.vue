@@ -3,9 +3,34 @@ import { pbImageUploadApi, pbImageUploadWithAxios } from '@/api'
 import { useUploadImageStore } from '@/stores'
 import type { UploadFile } from 'element-plus'
 
+// 定义允许的图片类型
+const allowedTypes = ['image/jpeg', 'image/png', 'image/webp']
+
+// // 最大文件大小（例如 1MB）
+// const MAX_SIZE = 1 * 1024 * 1024
+
 const uploadImageStore = useUploadImageStore()
 
 const imageUploadAdd = async (uploadFile: UploadFile) => {
+  const rawFile = uploadFile.raw
+  if (!rawFile) {
+    console.warn('未找到原始文件对象')
+    return
+  }
+
+  // 类型校验
+  // 头像、图片上传，拖拽文件上传时，el此时不会检查格式，应自己加上检查逻辑
+  if (!allowedTypes.includes(rawFile.type)) {
+    console.warn(`不支持的文件类型: ${rawFile.type}`)
+    return
+  }
+
+  // // 大小校验
+  // if (rawFile.size > MAX_SIZE) {
+  //   console.warn(`文件过大: ${(rawFile.size / 1024 / 1024).toFixed(2)} MB`)
+  //   return
+  // }
+
   uploadImageStore.addUpload(uploadFile)
 }
 </script>
@@ -16,7 +41,7 @@ const imageUploadAdd = async (uploadFile: UploadFile) => {
     <div class="upload-box">
       <ElUpload
         :autoUpload="false"
-        accept="image/png,image/jpeg,image/webp"
+        :accept="allowedTypes.join(',')"
         :onChange="imageUploadAdd"
         :showFileList="false"
         drag

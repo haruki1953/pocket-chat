@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { useUploadImageStore } from '@/stores'
 import { ImgUploadItem } from './components'
-import { RiDeleteBin2Line, RiStopCircleLine, RiStopFill } from '@remixicon/vue'
 
 const uploadImageStore = useUploadImageStore()
 </script>
@@ -28,7 +27,7 @@ const uploadImageStore = useUploadImageStore()
             </div>
           </div>
           <!-- 右 操作图标 -->
-          <div class="flex items-center">
+          <div class="relative flex min-w-[60] items-center">
             <!-- 清除已完成 -->
             <!-- v-if="uploadImageStore.canClearFinished()" -->
             <div
@@ -77,15 +76,18 @@ const uploadImageStore = useUploadImageStore()
         </div>
       </div>
       <!-- 列表 -->
-      <div>
+      <div class="relative">
+        <!-- <TransitionGroup name="fade-150ms-list"> -->
         <div
           v-for="item in uploadImageStore.uploadRecordWithFileAndProgressInfoList"
           :key="item.record.uuid"
+          class="w-full"
         >
           <!-- 分割线 -->
           <div class="border-t-[3px] border-color-background"></div>
           <ImgUploadItem :uploadRecordInfo="item"></ImgUploadItem>
         </div>
+        <!-- </TransitionGroup> -->
       </div>
     </div>
   </div>

@@ -17,6 +17,7 @@ export const useUploadImageSchedulerModule = (
   // ------------------------------------------------------------------------
   // 上传调度函数
   // ------------------------------------------------------------------------
+
   // 准备 uploadScheduler 中使用的 onImageUploadProgress，将传入 pbImageUploadWithAxios
   // 限制其更新速率以避免有性能问题
   const throttledProgressUpdate = throttle(
@@ -26,13 +27,13 @@ export const useUploadImageSchedulerModule = (
 
       p.loaded = e.loaded
       p.total = e.total
-
-      if (e.rate != null) p.rate = e.rate
-      if (e.estimated != null) p.estimated = e.estimated
+      p.rate = e.rate
+      p.estimated = e.estimated
     },
     1000,
     { leading: true, trailing: true }
   )
+
   // 上传调度函数
   const uploadScheduler = async () => {
     // 正在上传中的数量
@@ -73,6 +74,9 @@ export const useUploadImageSchedulerModule = (
 
     // 调用 api 开始上传，捕获错误并处理各种情况
     try {
+      // 图片处理
+
+      // 上传 api
       await pbImageUploadWithAxios(file.uploadFile, {
         controller,
         onImageUploadProgress: (e) => {

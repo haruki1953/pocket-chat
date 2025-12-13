@@ -1,11 +1,26 @@
 <script setup lang="ts">
 import { UploadProgressIcon } from '@/components'
 import {
+  useI18nStore,
   useUploadImageStore,
   type UploadRecordWithFileAndProgressInfo,
 } from '@/stores'
-import { uploadProgressPercentageUtil } from '@/utils'
-import { RiArrowUpCircleLine, RiStopCircleLine } from '@remixicon/vue'
+import {
+  convertSecondsToTimeDuration,
+  formatFileSize,
+  uploadProgressPercentageUtil,
+} from '@/utils'
+import {
+  RiArrowUpCircleLine,
+  RiErrorWarningFill,
+  RiStopCircleLine,
+  RiTimeFill,
+} from '@remixicon/vue'
+import {
+  // 重命名 uploadImageStoreRecordStatusKeyConfig 为 UISRSKC 以便于使用
+  uploadImageStoreRecordStatusKeyConfig as UISRSKC,
+  type UploadImageStoreRecordStatus,
+} from '@/config'
 
 // uploadProgressPercentageUtil
 
@@ -65,6 +80,52 @@ const uploadAbortUploading = () =>
 
 const uploadRetry = () =>
   uploadImageStore.uploadRetry(props.uploadRecordInfo.record.uuid)
+
+// 上传进度
+const uploadProgressPercentage = computed(() => {
+  if (
+    props.uploadRecordInfo.progressInfo == null ||
+    props.uploadRecordInfo.progressInfo.total == null
+  ) {
+    return null
+  }
+  return uploadProgressPercentageUtil(
+    props.uploadRecordInfo.progressInfo.loaded,
+    props.uploadRecordInfo.progressInfo.total
+  )
+})
+
+const i18nStore = useI18nStore()
+
+// 预计剩余时间
+const uploadProgressEstimatedText = computed(() => {
+  const estimated = props.uploadRecordInfo.progressInfo?.estimated
+  if (estimated == null) {
+    return null
+  }
+  return i18nStore.t('uploadProgressInfoEstimatedText')(
+    convertSecondsToTimeDuration({
+      seconds: estimated,
+      unitLength: 1,
+      messages: i18nStore.t('convertSecondsToTimeDurationMessages')(),
+    })
+  )
+})
+
+// 上传进度 总数
+const uploadProgressLoadedTotalText = computed(() => {
+  if (props.uploadRecordInfo.progressInfo == null) {
+    return null
+  }
+  const loadedText = formatFileSize(props.uploadRecordInfo.progressInfo.loaded)
+  const totalText = (() => {
+    if (props.uploadRecordInfo.progressInfo.total == null) {
+      return i18nStore.t('uploadProgressInfoTotalUnknowText')()
+    }
+    return formatFileSize(props.uploadRecordInfo.progressInfo.total)
+  })()
+  return `${loadedText}/${totalText}`
+})
 </script>
 
 <template>
@@ -77,13 +138,50 @@ const uploadRetry = () =>
           <!-- 进度图标 -->
           <div class="mr-[4px]">
             <div class="flow-root cursor-pointer" @click="uploadInfoModeSwitch">
-              <div class="m-[4px] text-el-primary">
-                <!-- <RiProgress8Line size="20px"></RiProgress8Line> -->
-                <UploadProgressIcon
-                  :percentage="10"
-                  size="20px"
-                ></UploadProgressIcon>
-              </div>
+              <Transition name="fade150ms" mode="out-in">
+                <!-- 待上传 -->
+                <div
+                  v-if="uploadRecordInfo.record.status === UISRSKC.pending"
+                  class="m-[4px] text-el-warning"
+                >
+                  <RiTimeFill size="20px"></RiTimeFill>
+                </div>
+                <!-- 上传中 -->
+                <div
+                  v-else-if="
+                    uploadRecordInfo.record.status === UISRSKC.uploading
+                  "
+                  class="m-[4px] text-el-primary"
+                >
+                  <UploadProgressIcon
+                    :percentage="uploadProgressPercentage"
+                    size="20px"
+                  ></UploadProgressIcon>
+                </div>
+                <!-- 上传完成 -->
+                <div
+                  v-else-if="uploadRecordInfo.record.status === UISRSKC.success"
+                  class="m-[4px] text-el-success"
+                >
+                  <RiCheckboxCircleFill size="20px"></RiCheckboxCircleFill>
+                </div>
+                <!-- 已中止 -->
+                <div
+                  v-else-if="
+                    uploadRecordInfo.record.status ===
+                      UISRSKC.aborted_while_pending ||
+                    uploadRecordInfo.record.status ===
+                      UISRSKC.aborted_while_uploading
+                  "
+                  class="m-[4px] text-el-info"
+                >
+                  <RiStopCircleFill size="20px"></RiStopCircleFill>
+                </div>
+                <!-- 上传错误 已中断 -->
+                <div v-else class="m-[4px] text-el-error">
+                  <RiErrorWarningFill size="20px"></RiErrorWarningFill>
+                </div>
+              </Transition>
             </div>
           </div>
 
@@ -101,10 +199,10 @@ const uploadRetry = () =>
                     {{ uploadRecordInfo.record.name }}
                   </div>
                   <div
-                    v-if="uploadRecordInfo.progressInfo != null"
+                    v-if="uploadRecordInfo.progressInfo?.rate != null"
                     class="ml-[4px] select-none text-[14px] font-bold text-color-text"
                   >
-                    50KB/s
+                    {{ formatFileSize(uploadRecordInfo.progressInfo.rate) }}/s
                   </div>
                 </div>
               </template>
@@ -114,17 +212,24 @@ const uploadRetry = () =>
                   <div
                     class="select-none truncate text-[14px] font-bold text-color-text"
                   >
-                    <template v-if="uploadRecordInfo.progressInfo != null">
-                      预计 3 秒后完成
+                    <!-- 预计剩余时间 -->
+                    <template v-if="uploadProgressEstimatedText != null">
+                      {{ uploadProgressEstimatedText }}
                     </template>
                     <!-- 已完成、错误、…… -->
-                    <template v-else> 已完成 </template>
+                    <template v-else>
+                      {{
+                        i18nStore.t(
+                          `uploadStoreRecordStatusText_${uploadRecordInfo.record.status}`
+                        )()
+                      }}
+                    </template>
                   </div>
                   <div
-                    v-if="uploadRecordInfo.progressInfo != null"
+                    v-if="uploadProgressLoadedTotalText != null"
                     class="ml-[4px] select-none text-[14px] font-bold text-color-text"
                   >
-                    10KB/100KB
+                    {{ uploadProgressLoadedTotalText }}
                   </div>
                 </div>
               </template>
