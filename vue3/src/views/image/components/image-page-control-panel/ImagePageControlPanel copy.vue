@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { RiFolderImageFill, RiFolderUserFill } from '@remixicon/vue'
 import { PanelImageUploader } from './components'
 
 const searchInputContent = ref('')
@@ -18,35 +19,53 @@ const searchInputContent = ref('')
         <div class="flex items-stretch">
           <!-- 左 全部图片 -->
           <div class="flex-1 truncate">
-            <div class="flow-root cursor-pointer bg-el-primary-light-6">
-              <div class="mx-[10px] mb-[12px] mt-[10px]">
-                <div
-                  class="select-none truncate text-center text-[18px] font-bold text-color-text"
-                >
-                  123
-                </div>
-                <div
-                  class="select-none truncate text-center text-[12px] font-bold text-color-text"
-                >
-                  全部图片
+            <div class="flow-root h-full cursor-pointer bg-el-primary-light-6">
+              <div class="flex h-full items-center">
+                <div class="flex-1 truncate">
+                  <div class="my-[12px] ml-[16px] mr-[8px]">
+                    <div class="flex items-center">
+                      <!-- 图标 -->
+                      <div class="text-color-text">
+                        <RiFolderImageFill></RiFolderImageFill>
+                      </div>
+                      <!-- 文字 -->
+                      <div class="ml-[4px] flex-1 truncate">
+                        <div
+                          class="select-none truncate text-center text-[12px] font-bold text-color-text"
+                        >
+                          全部图片全部图片全部图片全部图片全部图片全部图片
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
           <div class="border-l-[3px] border-color-background"></div>
-          <!-- 左 我的图片 -->
-          <div class="flex-1">
-            <div class="flow-root cursor-pointer">
-              <div class="mx-[10px] mb-[12px] mt-[10px]">
-                <div
-                  class="select-none truncate text-center text-[18px] font-bold text-color-text"
-                >
-                  23
-                </div>
-                <div
-                  class="select-none truncate text-center text-[12px] font-bold text-color-text"
-                >
-                  我的图片
+          <!-- 右 我的图片 -->
+          <div class="flex-1 truncate">
+            <div
+              class="flow-root h-full cursor-pointer bg-color-background-soft"
+            >
+              <div class="flex h-full items-center">
+                <div class="flex-1 truncate">
+                  <div class="my-[12px] ml-[16px] mr-[8px]">
+                    <div class="flex items-center">
+                      <!-- 图标 -->
+                      <div class="text-color-text">
+                        <RiFolderUserFill></RiFolderUserFill>
+                      </div>
+                      <!-- 文字 -->
+                      <div class="flex-1 truncate">
+                        <div
+                          class="select-none truncate text-center text-[12px] font-bold text-color-text"
+                        >
+                          我的图片
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>

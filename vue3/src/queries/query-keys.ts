@@ -22,6 +22,14 @@ export const queryKeys = {
   /** useChatRoomMessagesGetOneQuery */
   chatRoomMessagesGetOne: (messageId?: string | null) =>
     ['chatRoomMessagesGetOne', messageId] as const,
+
+  /** useImagePageListQuery */
+  imagePageList: (
+    pageNum: number | null,
+    authorId: string | null,
+    searchContent: string | null
+  ) => ['imagePageList', pageNum, authorId, searchContent] as const,
+
   /**  */
   rooms: (...args: string[]) => ['rooms', ...args] as const,
   /** useRoomsGetOneQuery */
