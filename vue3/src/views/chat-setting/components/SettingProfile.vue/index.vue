@@ -11,11 +11,6 @@ import UpdatePassword from './components/UpdatePassword.vue'
 import LogOut from './components/LogOut.vue'
 import NotLoginPrompt from './components/NotLoginPrompt.vue'
 
-const i18nStore = useI18nStore()
-useSeoMeta({
-  title: computed(() => i18nStore.t('pageSettingProfile')()),
-})
-
 const { width: windowWidth } = useWindowSize()
 /**
  * 窗口大于等于1024显示两列，小于则显示一列

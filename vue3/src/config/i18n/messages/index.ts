@@ -2,6 +2,7 @@ import { i18nMessagesChatPart } from './chat'
 import { i18nMessagesDatePart } from './date'
 import type { I18nLocaleType } from './dependencies'
 import { i18nMessagesHomePart } from './home'
+import { i18nMessagesImagePart } from './image'
 import { i18nMessagesLoginPart } from './login'
 import { i18nMessagesNotificationPart } from './notification'
 import { i18nMessagesPagePart } from './page'
@@ -44,6 +45,8 @@ export const i18nMessages = {
   ...i18nMessagesRoomPart,
   // 上传相关部分
   ...i18nMessagesUploadPart,
+  // 图片页相关部分
+  ...i18nMessagesImagePart,
 } as const satisfies I18nMessagesSatisfiesType
 
 // 通过类型体操，获取i18nMessages键的类型

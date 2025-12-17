@@ -1,7 +1,76 @@
 <script setup lang="ts">
+import type { ImageQueryModeMarkType } from './depencies'
 import { PanelImageUploader } from './components'
+import { useAuthStore, useI18nStore } from '@/stores'
+import { useImagePageListQuery } from '@/queries'
+import { useAniStrIncreasingDecreasingSequentially } from '@/composables'
 
-const searchInputContent = ref('')
+const props = defineProps<{
+  imageQueryMode: ImageQueryModeMarkType
+  canImageQueryModeSetToImageAll: boolean
+  imageQueryModeSetToImageAll: () => void
+  canImageQueryModeSetToImageMy: boolean
+  imageQueryModeSetToImageMy: () => void
+  imageQuerySearch: string
+  imageQuerySearchSet: (val: string) => void
+}>()
+
+const i18nStore = useI18nStore()
+
+const searchInputContent = ref(props.imageQuerySearch)
+
+// 是否能 搜索框开始查询
+const canSearchInputContentSetToImageQuerySearch = computed(() => {
+  if (props.imageQuerySearch === searchInputContent.value) {
+    return false
+  }
+  return true
+})
+// 搜索框开始查询
+const searchInputContentSetToImageQuerySearch = () => {
+  if (canSearchInputContentSetToImageQuerySearch.value === false) {
+    return
+  }
+  props.imageQuerySearchSet(searchInputContent.value)
+}
+
+// 搜索框清空
+const searchInputContentClear = () => {
+  searchInputContent.value = ''
+  searchInputContentSetToImageQuerySearch()
+}
+
+// 图片数量查询
+
+// 全部图片
+const numAllImagePageListQuery = useImagePageListQuery({
+  pageNum: computed(() => 1),
+  authorId: computed(() => null),
+  searchContent: computed(() => null),
+})
+
+const authStore = useAuthStore()
+
+// 我的图片
+const numMyImagePageListQuery = useImagePageListQuery({
+  pageNum: computed(() => {
+    // 未登录则 pageNum 为 null 即不查询
+    if (authStore.isValid === false || authStore.record?.id == null) {
+      return null
+    }
+    return 1
+  }),
+  authorId: computed(() => {
+    if (authStore.isValid === false || authStore.record?.id == null) {
+      return null
+    }
+    return authStore.record.id
+  }),
+  searchContent: computed(() => null),
+})
+
+// 图片数字加载时的字符串动画
+const { text: imgNumAniStr } = useAniStrIncreasingDecreasingSequentially()
 </script>
 
 <template>
@@ -18,17 +87,28 @@ const searchInputContent = ref('')
         <div class="flex items-stretch">
           <!-- 左 全部图片 -->
           <div class="flex-1 truncate">
-            <div class="flow-root cursor-pointer bg-el-primary-light-6">
+            <div
+              class="flow-root transition-colors"
+              :class="{
+                'bg-el-primary-light-6': imageQueryMode === 'image_all',
+                'cursor-pointer': canImageQueryModeSetToImageAll,
+                'cursor-not-allowed': !canImageQueryModeSetToImageAll,
+              }"
+              @click="imageQueryModeSetToImageAll"
+            >
               <div class="mx-[10px] mb-[12px] mt-[10px]">
                 <div
                   class="select-none truncate text-center text-[18px] font-bold text-color-text"
                 >
-                  123
+                  {{
+                    numAllImagePageListQuery.data.value?.totalItems ??
+                    imgNumAniStr
+                  }}
                 </div>
                 <div
                   class="select-none truncate text-center text-[12px] font-bold text-color-text"
                 >
-                  全部图片
+                  {{ i18nStore.t('imagePageAllImageText')() }}
                 </div>
               </div>
             </div>
@@ -36,17 +116,28 @@ const searchInputContent = ref('')
           <div class="border-l-[3px] border-color-background"></div>
           <!-- 左 我的图片 -->
           <div class="flex-1">
-            <div class="flow-root cursor-pointer">
+            <div
+              class="flow-root transition-colors"
+              :class="{
+                'bg-el-primary-light-6': imageQueryMode === 'image_my',
+                'cursor-pointer': canImageQueryModeSetToImageMy,
+                'cursor-not-allowed': !canImageQueryModeSetToImageMy,
+              }"
+              @click="imageQueryModeSetToImageMy"
+            >
               <div class="mx-[10px] mb-[12px] mt-[10px]">
                 <div
                   class="select-none truncate text-center text-[18px] font-bold text-color-text"
                 >
-                  23
+                  {{
+                    numMyImagePageListQuery.data.value?.totalItems ??
+                    imgNumAniStr
+                  }}
                 </div>
                 <div
                   class="select-none truncate text-center text-[12px] font-bold text-color-text"
                 >
-                  我的图片
+                  {{ i18nStore.t('imagePageMyImageText')() }}
                 </div>
               </div>
             </div>
@@ -59,18 +150,35 @@ const searchInputContent = ref('')
       <div class="search-input-box">
         <div class="my-2 flex items-stretch">
           <!-- 左栏 输入框 -->
-          <div class="ml-2 mr-1 flow-root flex-1 truncate">
+          <div class="ml-2 flow-root flex-1 truncate">
             <div>
               <ElInput
                 v-model="searchInputContent"
-                placeholder="搜索ALT、用户名"
-                @keydown.enter.exact.prevent="() => {}"
-              />
+                :placeholder="i18nStore.t('imagePageSearchPlaceholderText')()"
+                @keydown.enter.exact.prevent="
+                  searchInputContentSetToImageQuerySearch
+                "
+              >
+                <template #suffix>
+                  <div
+                    v-if="searchInputContent !== ''"
+                    class="cursor-pointer text-color-text-soft"
+                    @click="searchInputContentClear"
+                  >
+                    <RiCloseCircleLine size="18px"></RiCloseCircleLine>
+                  </div>
+                </template>
+              </ElInput>
             </div>
           </div>
           <!-- 右栏 按钮 -->
           <div class="mr-2 flex flex-col-reverse">
-            <ElButton circle type="info" @click="() => {}">
+            <ElButton
+              circle
+              type="info"
+              :disabled="!canSearchInputContentSetToImageQuerySearch"
+              @click="searchInputContentSetToImageQuerySearch"
+            >
               <template #icon>
                 <RiSearchLine></RiSearchLine>
               </template>
@@ -89,6 +197,7 @@ const searchInputContent = ref('')
       .el-input__wrapper {
         background-color: transparent;
         box-shadow: none;
+
         &:hover {
           box-shadow: none;
         }

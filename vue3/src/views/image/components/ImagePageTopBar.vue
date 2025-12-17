@@ -4,6 +4,10 @@ import { useRouterHistoryTool } from '@/composables'
 import { routerDict } from '@/config'
 import { onClickOutside } from '@vueuse/core'
 
+const props = defineProps<{
+  pageTitle: string
+}>()
+
 const isShowMoreMenu = ref(false)
 const openMoreMenu = () => {
   isShowMoreMenu.value = true
@@ -97,7 +101,7 @@ const chatTopBarBack = () => {
         <!-- 标题 -->
         <div class="flex-1 truncate">
           <div class="truncate text-[15px] font-bold text-color-text">
-            图片选择
+            {{ pageTitle }}
           </div>
         </div>
         <!-- 更多 -->

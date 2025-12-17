@@ -36,6 +36,14 @@ export const i18nMessagesPagePart = {
     'ko-KR': () => '이미지' as const,
     'ru-RU': () => 'Изображения' as const,
   },
+  pageImageSelect: {
+    'en-US': () => 'Image Selection' as const,
+    'zh-CN': () => '图片选择' as const,
+    'zh-TW': () => '圖片選擇' as const,
+    'ja-JP': () => '画像選択' as const,
+    'ko-KR': () => '이미지 선택' as const,
+    'ru-RU': () => 'Выбор изображения' as const,
+  },
   pageSetting: {
     'en-US': () => 'Setting' as const,
     'zh-CN': () => '设置' as const,

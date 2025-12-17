@@ -8,6 +8,27 @@ import {
   ImagePageTopBar,
   ImagePageUploadList,
 } from './components'
+import { useAuthStore, useI18nStore } from '@/stores'
+import { useImageQueryModeDesuwa } from './composables'
+
+const i18nStore = useI18nStore()
+
+useSeoMeta({
+  title: computed(() => i18nStore.t('pageImageSelect')()),
+})
+
+// 封装 imageQueryMode 这一块（desuwa）
+// useImageQueryModeDesuwa
+const imageQueryModeDesuwa = useImageQueryModeDesuwa()
+const {
+  imageQueryMode,
+  canImageQueryModeSetToImageAll,
+  imageQueryModeSetToImageAll,
+  canImageQueryModeSetToImageMy,
+  imageQueryModeSetToImageMy,
+  imageQuerySearch,
+  imageQuerySearchSet,
+} = imageQueryModeDesuwa
 </script>
 
 <template>
@@ -29,11 +50,25 @@ import {
                 <div class="relative mb-4">
                   <div class="sticky top-0 z-[1] flow-root">
                     <!-- 图片页顶栏 -->
-                    <ImagePageTopBar></ImagePageTopBar>
+                    <ImagePageTopBar
+                      :pageTitle="i18nStore.t('pageImageSelect')()"
+                    ></ImagePageTopBar>
                   </div>
                   <!-- 操作面板 -->
                   <div class="mt-4">
-                    <ImagePageControlPanel></ImagePageControlPanel>
+                    <ImagePageControlPanel
+                      :imageQueryMode="imageQueryMode"
+                      :canImageQueryModeSetToImageAll="
+                        canImageQueryModeSetToImageAll
+                      "
+                      :imageQueryModeSetToImageAll="imageQueryModeSetToImageAll"
+                      :canImageQueryModeSetToImageMy="
+                        canImageQueryModeSetToImageMy
+                      "
+                      :imageQueryModeSetToImageMy="imageQueryModeSetToImageMy"
+                      :imageQuerySearch="imageQuerySearch"
+                      :imageQuerySearchSet="imageQuerySearchSet"
+                    ></ImagePageControlPanel>
                   </div>
                   <!-- <div class="my-4 h-[1200px] bg-red-950"></div> -->
                   <!-- 上传列表 -->
@@ -64,7 +99,10 @@ import {
         <!-- 图片列表 -->
         <template #col1>
           <div class="my-4 ml-2 mr-6">
-            <ImagePageImageList></ImagePageImageList>
+            <ImagePageImageList
+              :imageQueryMode="imageQueryMode"
+              :imageQuerySearch="imageQuerySearch"
+            ></ImagePageImageList>
           </div>
         </template>
       </ContainerCol2>

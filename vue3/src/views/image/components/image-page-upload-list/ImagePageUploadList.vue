@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { useUploadImageStore } from '@/stores'
+import { useI18nStore, useUploadImageStore } from '@/stores'
 import { ImgUploadItem, UploadControlIconDescription } from './components'
 import throttle from 'lodash-es/throttle'
 
@@ -57,6 +57,8 @@ const setIconDescription = (key: IconDescriptionKeyType) => {
 const clearIconDescription = () => {
   // throttledUpdate(null)
 }
+
+const i18nStore = useI18nStore()
 </script>
 
 <template>
@@ -81,7 +83,7 @@ const clearIconDescription = () => {
                 <div
                   class="select-none truncate pr-1 text-[14px] font-bold text-color-text"
                 >
-                  上传图片
+                  {{ i18nStore.t('imagePageImageUploadListTitle')() }}
                 </div>
               </div>
             </UploadControlIconDescription>

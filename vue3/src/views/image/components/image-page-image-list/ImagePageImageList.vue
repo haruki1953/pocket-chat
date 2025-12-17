@@ -1,4 +1,105 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import { useImagePageListQuery } from '@/queries'
+import type { ImageQueryModeMarkType } from './dependencies'
+import { useAuthStore } from '@/stores'
+import { useElementSize } from '@vueuse/core'
+
+const props = defineProps<{
+  imageQueryMode: ImageQueryModeMarkType
+  imageQuerySearch: string
+}>()
+
+const imageAllQueryPage = ref(1)
+const imageMyQueryPage = ref(1)
+
+const imageQueryPage = computed(() => {
+  if (props.imageQueryMode === 'image_all') {
+    return imageAllQueryPage.value
+  } else {
+    // props.imageQueryMode === 'image_my'
+    return imageMyQueryPage.value
+  }
+})
+
+const imageQueryPageSet = (val: number) => {
+  if (props.imageQueryMode === 'image_all') {
+    imageAllQueryPage.value = val
+  } else {
+    // props.imageQueryMode === 'image_my'
+    imageMyQueryPage.value = val
+  }
+}
+
+const authStore = useAuthStore()
+
+const imagePageListQuery = useImagePageListQuery({
+  pageNum: computed(() => {
+    // 未登录且image_my，则应为null，不查询
+    if (
+      (authStore.isValid === false || authStore.record?.id == null) &&
+      props.imageQueryMode === 'image_my'
+    ) {
+      return null
+    }
+    return imageQueryPage.value
+  }),
+  authorId: computed(() => {
+    if (props.imageQueryMode === 'image_all') {
+      return null
+    } else {
+      // props.imageQueryMode === 'image_my'
+      if (authStore.isValid === false || authStore.record?.id == null) {
+        return null
+      }
+      return authStore.record.id
+    }
+  }),
+  searchContent: computed(() => props.imageQuerySearch),
+})
+
+const refContentBox = ref<HTMLElement | null>(null)
+const sizeContentBox = useElementSize(refContentBox)
+
+// 一行中应显示的个数
+const imageItemsPerRowCalcFn = (width: number): number => {
+  if (width >= 1800) return 10
+  if (width >= 1600) return 9
+  if (width >= 1400) return 8
+  if (width >= 1200) return 7
+  if (width >= 1000) return 6
+  if (width >= 800) return 5
+  if (width >= 600) return 4
+  return 3 // 默认最少 3
+}
+// 一行中应显示的个数
+const imageItemsPerRow = computed(() => {
+  return imageItemsPerRowCalcFn(sizeContentBox.width.value)
+})
+
+// 内容盒子应保持的高度
+const contentBoxHeightCalcFn = (
+  width: number,
+  itemNum: number,
+  itemsPerRow: number
+) => {
+  // width 除以 itemsPerRow 得到 正常情况下item的宽度，即正常情况下item的高度（正常情况下宽度和高度一致）
+  // itemNum 除以 itemsPerRow （可能要向上取整）得到 行数
+  // 行数 乘 正常情况下item的高度 得到 应为的高度
+
+  // 每个 item 的宽度（正常情况下宽高一致）
+  const itemSize = width / itemsPerRow
+
+  // 行数，向上取整
+  const rows = Math.ceil(itemNum / itemsPerRow)
+
+  // 总高度 = 行数 * item 高度
+  return rows * itemSize
+}
+// 内容盒子应保持的高度
+// const contentBoxHeigh = computed(() => {
+//   return contentBoxHeightCalcFn(sizeContentBox.width.value )
+// })
+</script>
 
 <template>
   <div>
@@ -7,62 +108,72 @@
       <div
         class="overflow-hidden rounded-t-[24px] border-[3px] border-transparent bg-color-background-soft"
       >
-        <!-- 行 -->
-        <div class="flex h-[201px] items-stretch">
-          <!-- 列 -->
-          <div class="flex-1">
-            <div class="h-full bg-red-950"></div>
-          </div>
-          <!-- 分割线 -->
-          <div class="border-l-[3px] border-transparent"></div>
-          <!-- 列 -->
-          <div class="flex-1">
-            <div class="h-full bg-red-950"></div>
-          </div>
-          <!-- 分割线 -->
-          <div class="border-l-[3px] border-transparent"></div>
-          <!-- 列 -->
-          <div class="flex-1">
-            <div class="h-full bg-red-950"></div>
-          </div>
-          <!-- 分割线 -->
-          <div class="border-l-[3px] border-transparent"></div>
-          <!-- 列 -->
-          <div class="flex-1">
-            <div class="h-full bg-red-950"></div>
-          </div>
-          <!-- 分割线 -->
-          <div class="border-l-[3px] border-transparent"></div>
-          <!-- 列 -->
-          <div class="flex-1">
-            <div class="h-full bg-red-950"></div>
-          </div>
-        </div>
-        <!-- 分割线 横向 -->
-        <div class="border-t-[3px] border-transparent"></div>
-        <!-- 行 -->
-        <div class="flex h-[201px] items-stretch">
-          <!-- 列 -->
-          <div class="flex-1">
-            <div class="h-full bg-red-950"></div>
-          </div>
-          <!-- 分割线 -->
-          <div class="border-l-[3px] border-transparent"></div>
-          <!-- 列 -->
-          <div class="flex-1">
-            <div class="h-full bg-red-950"></div>
-          </div>
-          <!-- 分割线 -->
-          <div class="border-l-[3px] border-transparent"></div>
-          <!-- 列 -->
-          <div class="flex-1">
-            <div class="h-full bg-red-950"></div>
-          </div>
-          <!-- 分割线 -->
-          <div class="border-l-[3px] border-transparent"></div>
-          <!-- 列 -->
-          <div class="flex-1">
-            <div class="h-full bg-red-950"></div>
+        <!-- 内容盒子，将获取其宽度，控制其高度 -->
+        <div
+          ref="refContentBox"
+          :style="{
+            height: '500px',
+          }"
+        >
+          <div class="flex h-full flex-col items-stretch">
+            <!-- 行 -->
+            <div class="flex flex-1 items-stretch">
+              <!-- 列 -->
+              <div class="flex-1">
+                <div class="h-full bg-red-950"></div>
+              </div>
+              <!-- 分割线 -->
+              <div class="border-l-[3px] border-transparent"></div>
+              <!-- 列 -->
+              <div class="flex-1">
+                <div class="h-full bg-red-950"></div>
+              </div>
+              <!-- 分割线 -->
+              <div class="border-l-[3px] border-transparent"></div>
+              <!-- 列 -->
+              <div class="flex-1">
+                <div class="h-full bg-red-950"></div>
+              </div>
+              <!-- 分割线 -->
+              <div class="border-l-[3px] border-transparent"></div>
+              <!-- 列 -->
+              <div class="flex-1">
+                <div class="h-full bg-red-950"></div>
+              </div>
+              <!-- 分割线 -->
+              <div class="border-l-[3px] border-transparent"></div>
+              <!-- 列 -->
+              <div class="flex-1">
+                <div class="h-full bg-red-950"></div>
+              </div>
+            </div>
+            <!-- 分割线 横向 -->
+            <div class="border-t-[3px] border-transparent"></div>
+            <!-- 行 -->
+            <div class="flex flex-1 items-stretch">
+              <!-- 列 -->
+              <div class="flex-1">
+                <div class="h-full bg-red-950"></div>
+              </div>
+              <!-- 分割线 -->
+              <div class="border-l-[3px] border-transparent"></div>
+              <!-- 列 -->
+              <div class="flex-1">
+                <div class="h-full bg-red-950"></div>
+              </div>
+              <!-- 分割线 -->
+              <div class="border-l-[3px] border-transparent"></div>
+              <!-- 列 -->
+              <div class="flex-1">
+                <div class="h-full bg-red-950"></div>
+              </div>
+              <!-- 分割线 -->
+              <div class="border-l-[3px] border-transparent"></div>
+              <!-- 列 -->
+              <div class="flex-1">
+                <div class="h-full bg-red-950"></div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -138,17 +249,4 @@
   </div>
 </template>
 
-<style lang="scss" scoped>
-.page-button-scrollbar {
-  :deep() {
-    .el-scrollbar {
-      // overflow-x: hidden;
-      // overflow: visible;
-    }
-    .el-scrollbar__bar.is-horizontal {
-      // transform: translateY(10px);
-      // bottom: -10px;
-    }
-  }
-}
-</style>
+<style lang="scss" scoped></style>

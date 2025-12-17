@@ -2,7 +2,7 @@
 import { pbImageUploadApi, pbImageUploadWithAxios } from '@/api'
 import { pbCollectionConfigDefaultGetFn } from '@/config'
 import { usePbCollectionConfigQuery } from '@/queries'
-import { useUploadImageStore } from '@/stores'
+import { useI18nStore, useUploadImageStore } from '@/stores'
 import type { UploadFile } from 'element-plus'
 
 // 定义允许的图片类型
@@ -43,6 +43,8 @@ const imageUploadAdd = async (uploadFile: UploadFile) => {
 
   uploadImageStore.addUpload(uploadFile, options)
 }
+
+const i18nStore = useI18nStore()
 </script>
 
 <template>
@@ -67,7 +69,7 @@ const imageUploadAdd = async (uploadFile: UploadFile) => {
                   <RiImageAddLine></RiImageAddLine>
                 </div>
                 <div class="select-none truncate text-[14px] font-bold">
-                  上传图片
+                  {{ i18nStore.t('imagePageImageUploadText')() }}
                 </div>
               </div>
             </div>

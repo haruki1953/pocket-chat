@@ -8,6 +8,10 @@ import { useWindowSize } from '@vueuse/core'
 
 const i18nStore = useI18nStore()
 
+useSeoMeta({
+  title: computed(() => i18nStore.t('pageSetting')()),
+})
+
 const { routerBackSafe } = useRouterHistoryTool()
 
 const chatTopBarBack = () => {
