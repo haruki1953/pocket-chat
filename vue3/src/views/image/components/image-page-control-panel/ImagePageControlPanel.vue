@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { ImageQueryModeMarkType } from './depencies'
+import type { ImageQueryModeMarkType } from './dependencies'
 import { PanelImageUploader } from './components'
 import { useAuthStore, useI18nStore } from '@/stores'
 import { useImagePageListQuery } from '@/queries'
