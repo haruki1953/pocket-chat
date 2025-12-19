@@ -28,6 +28,8 @@ const {
   imageQueryModeSetToImageMy,
   imageQuerySearch,
   imageQuerySearchSet,
+  imageQueryPage,
+  imageQueryPageSet,
 } = imageQueryModeDesuwa
 </script>
 
@@ -102,6 +104,8 @@ const {
             <ImagePageImageList
               :imageQueryMode="imageQueryMode"
               :imageQuerySearch="imageQuerySearch"
+              :imageQueryPage="imageQueryPage"
+              :imageQueryPageSet="imageQueryPageSet"
             ></ImagePageImageList>
           </div>
         </template>

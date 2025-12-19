@@ -45,4 +45,13 @@ export const i18nMessagesImagePart = {
     'ko-KR': () => '이미지 업로드' as const,
     'ru-RU': () => 'Загрузить изображение' as const,
   },
+  // 图片列表分页栏没有更多
+  imagePagePaginationBarNoMoreText: {
+    'en-US': () => 'No more...' as const,
+    'zh-CN': () => '没有更多了...' as const,
+    'zh-TW': () => '沒有更多了...' as const,
+    'ja-JP': () => 'これ以上ありません...' as const,
+    'ko-KR': () => '더 이상 없습니다...' as const,
+    'ru-RU': () => 'Больше нет...' as const,
+  },
 } as const satisfies I18nMessagesSatisfiesType

@@ -4,32 +4,14 @@ import type { ImageQueryModeMarkType } from './dependencies'
 import { useAuthStore } from '@/stores'
 import { useElementSize, useWindowSize } from '@vueuse/core'
 import { dataProcessChunkArrayBalancedUtil } from '@/utils'
+import { PaginationBar } from './components'
 
 const props = defineProps<{
   imageQueryMode: ImageQueryModeMarkType
   imageQuerySearch: string
+  imageQueryPage: number
+  imageQueryPageSet: (val: number) => void
 }>()
-
-const imageAllQueryPage = ref(1)
-const imageMyQueryPage = ref(1)
-
-const imageQueryPage = computed(() => {
-  if (props.imageQueryMode === 'image_all') {
-    return imageAllQueryPage.value
-  } else {
-    // props.imageQueryMode === 'image_my'
-    return imageMyQueryPage.value
-  }
-})
-
-const imageQueryPageSet = (val: number) => {
-  if (props.imageQueryMode === 'image_all') {
-    imageAllQueryPage.value = val
-  } else {
-    // props.imageQueryMode === 'image_my'
-    imageMyQueryPage.value = val
-  }
-}
 
 const authStore = useAuthStore()
 
@@ -42,7 +24,7 @@ const imagePageListQuery = useImagePageListQuery({
     ) {
       return null
     }
-    return imageQueryPage.value
+    return props.imageQueryPage
   }),
   authorId: computed(() => {
     if (props.imageQueryMode === 'image_all') {
@@ -203,7 +185,7 @@ const imageQueryDataMatrixOneRowGasket = computed(() => {
         <!-- 内容盒子，将获取其宽度，控制其高度 -->
         <div
           ref="refContentBox"
-          class="relative transition-[height]"
+          class="relative transition-[height] duration-300"
           :style="{
             height: `${contentBoxHeigh}px`,
           }"
@@ -322,65 +304,13 @@ const imageQueryDataMatrixOneRowGasket = computed(() => {
     <!-- 分割线 横向 -->
     <div class="border-t-[3px] border-transparent"></div>
     <!-- 分页栏 -->
-    <div>
-      <div class="overflow-hidden rounded-b-[24px] bg-color-background-soft">
-        <div class="flex items-stretch">
-          <!-- 上一页 -->
-          <div class="flex cursor-pointer items-center">
-            <div class="mx-[12px] my-[12px]">
-              <RiArrowLeftWideFill></RiArrowLeftWideFill>
-            </div>
-          </div>
-          <div class="border-l-[3px] border-color-background"></div>
-          <!-- 分页按钮栏 -->
-          <div class="flex-1 overflow-hidden">
-            <div class="page-button-scrollbar flow-root h-full">
-              <ElScrollbar
-                height="100%"
-                class=""
-                :viewStyle="{
-                  height: '100%',
-                }"
-              >
-                <div class="flex h-full w-fit items-stretch">
-                  <template v-for="item in 20" :key="item">
-                    <div
-                      class="flex flex-shrink-0 cursor-pointer items-center transition-colors"
-                      :class="{
-                        'bg-el-primary-light-6': imageQueryPage === item,
-                      }"
-                      @click="imageQueryPageSet(item)"
-                    >
-                      <div
-                        class="mx-[12px] my-[12px] w-[24px] select-none text-center text-[16px] font-bold text-color-text"
-                      >
-                        {{ item }}
-                      </div>
-                    </div>
-                    <div class="border-l-[3px] border-color-background"></div>
-                  </template>
-                  <!-- 没有更多了 -->
-                  <div class="flex flex-shrink-0 items-center">
-                    <div
-                      class="mx-[24px] my-[12px] select-none text-center text-[14px] font-bold italic text-color-text-soft"
-                    >
-                      没有更多了...
-                    </div>
-                  </div>
-                </div>
-              </ElScrollbar>
-            </div>
-          </div>
-          <div class="border-l-[3px] border-color-background"></div>
-          <!-- 下一页 -->
-          <div class="flex cursor-pointer items-center">
-            <div class="mx-[12px] my-[12px]">
-              <RiArrowRightWideFill></RiArrowRightWideFill>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+    <PaginationBar
+      :imageQueryMode="imageQueryMode"
+      :imageQuerySearch="imageQuerySearch"
+      :imageQueryPage="imageQueryPage"
+      :imageQueryPageSet="imageQueryPageSet"
+      :imageQueryTotalPages="imagePageListQuery.data.value?.totalPages ?? null"
+    ></PaginationBar>
   </div>
 </template>
 

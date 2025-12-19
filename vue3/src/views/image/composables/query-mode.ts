@@ -9,6 +9,10 @@ export const useImageQueryModeDesuwa = () => {
   // 查询搜索
   const imageQuerySearch = ref<string>('')
 
+  // 查询页数
+  const imageAllQueryPage = ref(1)
+  const imageMyQueryPage = ref(1)
+
   // 查询模式切换
 
   // 是否能 切换至 image_all
@@ -47,6 +51,25 @@ export const useImageQueryModeDesuwa = () => {
     imageQuerySearch.value = val
   }
 
+  // 查询页数相关
+  const imageQueryPage = computed(() => {
+    if (imageQueryMode.value === 'image_all') {
+      return imageAllQueryPage.value
+    } else {
+      // imageQueryMode.value === 'image_my'
+      return imageMyQueryPage.value
+    }
+  })
+
+  const imageQueryPageSet = (val: number) => {
+    if (imageQueryMode.value === 'image_all') {
+      imageAllQueryPage.value = val
+    } else {
+      // imageQueryMode.value === 'image_my'
+      imageMyQueryPage.value = val
+    }
+  }
+
   return {
     imageQueryMode,
     canImageQueryModeSetToImageAll,
@@ -55,6 +78,8 @@ export const useImageQueryModeDesuwa = () => {
     imageQueryModeSetToImageMy,
     imageQuerySearch,
     imageQuerySearchSet,
+    imageQueryPage,
+    imageQueryPageSet,
   }
   /*
   :imageQueryMode="imageQueryMode"
@@ -64,6 +89,8 @@ export const useImageQueryModeDesuwa = () => {
   :imageQueryModeSetToImageMy="imageQueryModeSetToImageMy"
   :imageQuerySearch="imageQuerySearch"
   :imageQuerySearchSet="imageQuerySearchSet"
+  :imageQueryPage="imageQueryPage"
+  :imageQueryPageSet="imageQueryPageSet"
 
   imageQueryMode: ImageQueryModeMarkType
   canImageQueryModeSetToImageAll: boolean
