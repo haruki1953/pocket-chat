@@ -5,6 +5,7 @@ import { routerDict } from '@/config'
 import { onClickOutside } from '@vueuse/core'
 import type { ImageQueryModeDesuwaType } from './dependencies'
 import { useWatchSourceToHoldTimeAndStep } from '@/utils'
+import { useI18nStore } from '@/stores'
 
 const props = defineProps<{
   pageTitle: string
@@ -64,6 +65,8 @@ const chatTopBarBack = () => {
     fallbackTo: routerDict.ChatHome.path,
   })
 }
+
+const i18nStore = useI18nStore()
 </script>
 
 <template>
@@ -93,7 +96,9 @@ const chatTopBarBack = () => {
               }"
             ></RiRestartLine>
           </template>
-          <template #text> 刷新 </template>
+          <template #text>
+            {{ i18nStore.t('imagePageImageQueryRefreshText')() }}
+          </template>
         </ChatTopBarMoreMenuItem>
         <!-- 收起 -->
         <div

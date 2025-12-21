@@ -54,4 +54,13 @@ export const i18nMessagesImagePart = {
     'ko-KR': () => '더 이상 없습니다...' as const,
     'ru-RU': () => 'Больше нет...' as const,
   },
+  // 图片查询刷新
+  imagePageImageQueryRefreshText: {
+    'en-US': () => 'Refresh' as const,
+    'zh-CN': () => '刷新' as const,
+    'zh-TW': () => '重新整理' as const,
+    'ja-JP': () => '更新' as const,
+    'ko-KR': () => '새로고침' as const,
+    'ru-RU': () => 'Обновить' as const,
+  },
 } as const satisfies I18nMessagesSatisfiesType

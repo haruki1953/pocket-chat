@@ -1,6 +1,10 @@
 <script setup lang="ts">
 import type { ImagesResponseWithExpand } from '@/api'
-import { appUserDefaultAvatar, fileUserAvatarConfig } from '@/config'
+import {
+  appUserDefaultAvatar,
+  fileUserAvatarConfig,
+  layoutGetDprFn,
+} from '@/config'
 import { pb } from '@/lib'
 import { pbImageDataChooseByTargetSizeWithUrl } from '@/utils'
 import type { ImageSelectListDesuwaType } from './dependencies'
@@ -27,10 +31,8 @@ const itemSwitch = () => {
   imageSelectListSwitch(props.imageData)
 }
 
-// 当前是几倍屏：
-const rawDpr = window.devicePixelRatio
-// 避免极端情况下的问题，限制为3到1
-const dpr = Math.min(3, Math.max(1, rawDpr))
+// 获取 dpr ，几倍屏
+const dpr = layoutGetDprFn()
 
 const imageUrl = computed(() => {
   return pbImageDataChooseByTargetSizeWithUrl(props.imageData, {

@@ -29,6 +29,10 @@ const imageQueryModeDesuwa = useImageQueryModeDesuwa()
 // image-select-list
 // useImageSelectListDesuwa
 const imageSelectListDesuwa = useImageSelectListDesuwa()
+const {
+  //
+  imageSelectList,
+} = imageSelectListDesuwa
 
 const uploadImageStore = useUploadImageStore()
 </script>
@@ -65,28 +69,40 @@ const uploadImageStore = useUploadImageStore()
                   </div>
                   <!-- <div class="my-4 h-[1200px] bg-red-950"></div> -->
                   <!-- 上传列表 -->
-                  <div
-                    v-if="uploadImageStore.uploadRecordList.length > 0"
-                    class="mt-4"
-                  >
-                    <ImagePageUploadList></ImagePageUploadList>
-                  </div>
+                  <Transition name="fade" mode="out-in">
+                    <div
+                      v-if="uploadImageStore.uploadRecordList.length > 0"
+                      class="mt-4"
+                    >
+                      <ImagePageUploadList></ImagePageUploadList>
+                    </div>
+                  </Transition>
                   <!-- 图片预览 -->
-                  <div class="mt-4">
-                    <div class="">
-                      <div
-                        class="overflow-hidden rounded-[24px] border-[3px] border-transparent bg-color-background-soft"
-                      >
-                        <ImageGroupViewer></ImageGroupViewer>
+                  <Transition name="fade" mode="out-in">
+                    <div
+                      v-if="imageSelectList.length > 0"
+                      :key="imageSelectList.map((i) => i.id).toString()"
+                      class="mt-4"
+                    >
+                      <div>
+                        <div
+                          class="overflow-hidden rounded-[24px] border-[3px] border-transparent bg-color-background-soft"
+                        >
+                          <ImageGroupViewer
+                            :imageList="imageSelectList"
+                          ></ImageGroupViewer>
+                        </div>
                       </div>
                     </div>
-                  </div>
+                  </Transition>
                 </div>
               </template>
               <template #bar>
                 <div class="flow-root">
                   <!-- 图片页底栏 -->
-                  <ImagePageBottomBar></ImagePageBottomBar>
+                  <ImagePageBottomBar
+                    :imageSelectListDesuwa="imageSelectListDesuwa"
+                  ></ImagePageBottomBar>
                 </div>
               </template>
             </ContainerBar>

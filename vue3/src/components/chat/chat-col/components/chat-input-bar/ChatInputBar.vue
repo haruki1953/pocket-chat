@@ -14,7 +14,7 @@ import {
   useChatInputBarDispaly,
 } from './composables'
 import { RouterLink } from 'vue-router'
-import { useElementSize } from '@vueuse/core'
+import { useElementSize, useWindowSize } from '@vueuse/core'
 
 const props = defineProps<{
   /** 房间id，空字符串为全局聊天 */
@@ -101,6 +101,26 @@ defineExpose({
 
 const refCharInputBar = ref<HTMLElement | null>(null)
 const { height: refCharInputBarHeight } = useElementSize(refCharInputBar)
+
+const windowSize = useWindowSize()
+
+// 输入栏编辑模式时，是否需加高，按钮纵向显示
+const isInputBarEditModeNeedHigher = computed(() => {
+  if (chatInputBarFunctionChoose.value !== 'edit') {
+    return false
+  }
+  if (windowSize.width.value > 400) {
+    return false
+  }
+  return true
+})
+
+const autosizeElInput = computed(() => {
+  if (isInputBarEditModeNeedHigher.value) {
+    return { minRows: 3, maxRows: 10 }
+  }
+  return { minRows: 1, maxRows: 10 }
+})
 </script>
 
 <template>
@@ -275,7 +295,7 @@ const { height: refCharInputBarHeight } = useElementSize(refCharInputBar)
                 type="textarea"
                 resize="none"
                 :rows="1"
-                :autosize="{ minRows: 1, maxRows: 10 }"
+                :autosize="autosizeElInput"
                 @keydown.alt.enter.exact.prevent="handleChatInputKeydownEnter"
               />
             </div>
@@ -315,7 +335,39 @@ const { height: refCharInputBarHeight } = useElementSize(refCharInputBar)
           </template>
           <!-- 编辑按钮组 -->
           <template v-else-if="chatInputBarFunctionChoose === 'edit'">
-            <div class="flex">
+            <div v-if="isInputBarEditModeNeedHigher" class="flex flex-col">
+              <div>
+                <!-- 取消 -->
+                <ElButton
+                  circle
+                  type="info"
+                  :disabled="messageEditSubmitRunning"
+                  @click="messageEditCancel"
+                >
+                  <template #icon>
+                    <RiCloseFill></RiCloseFill>
+                  </template>
+                </ElButton>
+              </div>
+              <div class="mt-[8px]">
+                <!-- 确认 -->
+                <ElButton
+                  class=""
+                  circle
+                  type="primary"
+                  :loading="messageEditSubmitRunning"
+                  :disabled="
+                    chatInputContent.trim() === '' && !messageEditSubmitRunning
+                  "
+                  @click="messageEditSubmit"
+                >
+                  <template #icon>
+                    <RiCheckFill></RiCheckFill>
+                  </template>
+                </ElButton>
+              </div>
+            </div>
+            <div v-else class="flex">
               <div>
                 <!-- 取消 -->
                 <ElButton

@@ -1,3 +1,11 @@
+// 获取 dpr ，几倍屏
+export const layoutGetDprFn = () => {
+  // 当前是几倍屏：
+  const rawDpr = window.devicePixelRatio
+  // 避免极端情况下的问题，限制为3到1
+  const dpr = Math.min(3, Math.max(1, rawDpr))
+  return dpr
+}
 /**
  * 导航栏布局配置
  */
