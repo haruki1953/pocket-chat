@@ -248,7 +248,8 @@ const imageQueryDataMatrixWithSize = computed(() => {
               v-if="
                 imageQueryDataMatrixWithSize != null &&
                 imageQueryDataMatrixWithSize.length > 0 &&
-                imageQueryDataMatrixWithSize[0].length > 0
+                imageQueryDataMatrixWithSize[0].length > 0 &&
+                imagePageListQuery.isFetching.value === false
               "
               :key="
                 imageQueryDataMatrixWithSize
@@ -304,7 +305,8 @@ const imageQueryDataMatrixWithSize = computed(() => {
             <div
               v-else-if="
                 imageQueryDataMatrixWithSize != null &&
-                imageQueryDataMatrixWithSize.length <= 0
+                imageQueryDataMatrixWithSize.length <= 0 &&
+                imagePageListQuery.isFetching.value === false
               "
               class="absolute bottom-0 left-0 right-0 top-0 flex items-center justify-center"
             >

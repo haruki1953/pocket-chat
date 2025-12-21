@@ -10,12 +10,16 @@ import throttle from 'lodash-es/throttle'
 import type { AxiosProgressEvent } from 'axios'
 import type { UploadImageStoreDependenciesDataForModule } from './dependencies'
 import { uploadImageProcessUtil } from '@/utils'
+import { queryKeys } from '@/queries'
+import { useQueryClient } from '@tanstack/vue-query'
 
 /** 封装轮询驱动上传调度 */
 export const useUploadImageSchedulerModule = (
   data: UploadImageStoreDependenciesDataForModule
 ) => {
   const { uploadRecordList, uploadFileList, uploadProgressInfoList } = data
+
+  const queryClient = useQueryClient()
 
   // ------------------------------------------------------------------------
   // 上传调度函数
@@ -128,6 +132,17 @@ export const useUploadImageSchedulerModule = (
       uploadProgressInfoList.value = uploadProgressInfoList.value.filter(
         (i) => i.uuid !== next.uuid
       )
+    }
+
+    // 当最后一个上传任务完成时（即已没有待上传或上传中的记录）、将图片查询invalidateQueries
+    if (
+      uploadRecordList.value.find(
+        (i) => i.status === UISRSKC.pending || i.status === UISRSKC.uploading
+      ) == null
+    ) {
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.imagePageList(),
+      })
     }
   }
 

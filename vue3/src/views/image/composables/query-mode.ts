@@ -1,4 +1,6 @@
+import { queryKeys } from '@/queries'
 import { useAuthStore } from '@/stores'
+import { useQueryClient } from '@tanstack/vue-query'
 
 export type ImageQueryModeMarkType = 'image_all' | 'image_my'
 
@@ -58,6 +60,27 @@ export const useImageQueryModeDesuwa = () => {
     imageQueryPage.value = val
   }
 
+  const queryClient = useQueryClient()
+
+  // 是否正在刷新
+  const isImageQueryRefreshRunning = ref(false)
+  // 查询刷新
+  const imageQueryRefresh = async () => {
+    if (isImageQueryRefreshRunning.value) return
+    isImageQueryRefreshRunning.value = true
+
+    try {
+      // 页面重置
+      imageQueryPage.value = 1
+
+      await queryClient.invalidateQueries({
+        queryKey: queryKeys.imagePageList(),
+      })
+    } finally {
+      isImageQueryRefreshRunning.value = false
+    }
+  }
+
   return {
     imageQueryMode,
     canImageQueryModeSetToImageAll,
@@ -68,26 +91,9 @@ export const useImageQueryModeDesuwa = () => {
     imageQuerySearchSet,
     imageQueryPage,
     imageQueryPageSet,
+    isImageQueryRefreshRunning,
+    imageQueryRefresh,
   }
-  /*
-  :imageQueryMode="imageQueryMode"
-  :canImageQueryModeSetToImageAll="canImageQueryModeSetToImageAll"
-  :imageQueryModeSetToImageAll="imageQueryModeSetToImageAll"
-  :canImageQueryModeSetToImageMy="canImageQueryModeSetToImageMy"
-  :imageQueryModeSetToImageMy="imageQueryModeSetToImageMy"
-  :imageQuerySearch="imageQuerySearch"
-  :imageQuerySearchSet="imageQuerySearchSet"
-  :imageQueryPage="imageQueryPage"
-  :imageQueryPageSet="imageQueryPageSet"
-
-  imageQueryMode: ImageQueryModeMarkType
-  canImageQueryModeSetToImageAll: boolean
-  imageQueryModeSetToImageAll: () => void
-  canImageQueryModeSetToImageMy: boolean
-  imageQueryModeSetToImageMy: () => void
-  imageQuerySearch: string
-  imageQuerySearchSet: (val: string) => void
-  */
 }
 
 export type ImageQueryModeDesuwaType = ReturnType<

@@ -25,11 +25,20 @@ export const queryKeys = {
 
   /** useImagePageListQuery */
   imagePageList: (
-    pageNum: number | null,
-    authorId: string | null,
-    searchContent: string | null
-  ) => ['imagePageList', pageNum, authorId, searchContent] as const,
-
+    pageNum?: number | null,
+    authorId?: string | null,
+    searchContent?: string | null
+  ) => {
+    return [
+      'imagePageList',
+      ...(pageNum === undefined ? ([] as const) : ([pageNum] as const)),
+      ...(authorId === undefined ? ([] as const) : ([authorId] as const)),
+      ...(searchContent === undefined
+        ? ([] as const)
+        : ([searchContent] as const)),
+    ] as const
+    // return ['imagePageList', pageNum, authorId, searchContent] as const
+  },
   /**  */
   rooms: (...args: string[]) => ['rooms', ...args] as const,
   /** useRoomsGetOneQuery */

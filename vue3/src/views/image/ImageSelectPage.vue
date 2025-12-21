@@ -54,6 +54,7 @@ const uploadImageStore = useUploadImageStore()
                     <!-- 图片页顶栏 -->
                     <ImagePageTopBar
                       :pageTitle="i18nStore.t('pageImageSelect')()"
+                      :imageQueryModeDesuwa="imageQueryModeDesuwa"
                     ></ImagePageTopBar>
                   </div>
                   <!-- 操作面板 -->
