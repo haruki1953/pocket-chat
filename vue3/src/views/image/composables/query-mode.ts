@@ -10,8 +10,7 @@ export const useImageQueryModeDesuwa = () => {
   const imageQuerySearch = ref<string>('')
 
   // 查询页数
-  const imageAllQueryPage = ref(1)
-  const imageMyQueryPage = ref(1)
+  const imageQueryPage = ref(1)
 
   // 查询模式切换
 
@@ -25,6 +24,7 @@ export const useImageQueryModeDesuwa = () => {
       return
     }
     imageQueryMode.value = 'image_all'
+    imageQueryPage.value = 1
   }
 
   // 响应式登陆状态
@@ -44,30 +44,18 @@ export const useImageQueryModeDesuwa = () => {
       return
     }
     imageQueryMode.value = 'image_my'
+    imageQueryPage.value = 1
   }
 
   // 查询搜索设置
   const imageQuerySearchSet = (val: string) => {
     imageQuerySearch.value = val
+    imageQueryPage.value = 1
   }
 
-  // 查询页数相关
-  const imageQueryPage = computed(() => {
-    if (imageQueryMode.value === 'image_all') {
-      return imageAllQueryPage.value
-    } else {
-      // imageQueryMode.value === 'image_my'
-      return imageMyQueryPage.value
-    }
-  })
-
+  // 查询页数设置
   const imageQueryPageSet = (val: number) => {
-    if (imageQueryMode.value === 'image_all') {
-      imageAllQueryPage.value = val
-    } else {
-      // imageQueryMode.value === 'image_my'
-      imageMyQueryPage.value = val
-    }
+    imageQueryPage.value = val
   }
 
   return {
