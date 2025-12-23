@@ -35,7 +35,9 @@ const imageUrl = computed(() => {
     :style="{
       backgroundImage: `url(${imageUrl})`,
     }"
-  ></div>
+  >
+    <slot :imageItem="imageItem"></slot>
+  </div>
 </template>
 
 <style lang="scss" scoped></style>

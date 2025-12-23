@@ -1,6 +1,11 @@
 <script setup lang="ts">
 import type { PMLRCApiParameters0DataPageParamNonNullable } from '@/api'
-import { ContainerDialog, ImageGroupViewer, TextWithLink } from '@/components'
+import {
+  ContainerDialog,
+  IGVSoltHoverSlideInfoGo,
+  ImageGroupViewer,
+  TextWithLink,
+} from '@/components'
 import { useRouteControlDialog } from '@/composables'
 import { useDateFormatYYYYMMDDHHmmss } from '@/utils'
 import type {
@@ -235,14 +240,19 @@ const authStore = useAuthStore()
                     }"
                   >
                     <div
-                      class="overflow-hidden rounded-[20px] border-[3px] border-transparent"
+                      class="overflow-hidden rounded-[20px] border-[3px] border-transparent bg-color-background"
                     >
                       <ImageGroupViewer
+                        v-slot="{ imageItem }"
                         :imageList="
                           chatRoomMessagesGetOneQuery.data.value.expand.images
                         "
                         bgTwcss="bg-color-background-mute"
-                      ></ImageGroupViewer>
+                      >
+                        <IGVSoltHoverSlideInfoGo
+                          :imageItem="imageItem"
+                        ></IGVSoltHoverSlideInfoGo>
+                      </ImageGroupViewer>
                     </div>
                   </div>
                 </div>

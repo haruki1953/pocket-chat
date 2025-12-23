@@ -106,9 +106,12 @@ const layout = computed(() => {
     <!-- 单图 -->
     <div v-if="layout.single != null" class="w-full" :style="{ aspectRatio }">
       <ImageGroupItem
+        v-slot="{ imageItem }"
         :imageItem="layout.single"
         :bgTwcss="bgTwcss"
-      ></ImageGroupItem>
+      >
+        <slot :imageItem="imageItem"></slot>
+      </ImageGroupItem>
     </div>
 
     <!-- 多图（2～4） -->
@@ -123,9 +126,12 @@ const layout = computed(() => {
           <template v-for="(img, index) in layout.left" :key="img.id">
             <div class="flex-1">
               <ImageGroupItem
+                v-slot="{ imageItem }"
                 :imageItem="img"
                 :bgTwcss="bgTwcss"
-              ></ImageGroupItem>
+              >
+                <slot :imageItem="imageItem"></slot>
+              </ImageGroupItem>
             </div>
 
             <!-- 左半内部的分割线 -->
@@ -147,9 +153,12 @@ const layout = computed(() => {
           <template v-for="(img, index) in layout.right" :key="img.id">
             <div class="flex-1">
               <ImageGroupItem
+                v-slot="{ imageItem }"
                 :imageItem="img"
                 :bgTwcss="bgTwcss"
-              ></ImageGroupItem>
+              >
+                <slot :imageItem="imageItem"></slot>
+              </ImageGroupItem>
             </div>
 
             <!-- 右半内部的分割线 -->

@@ -21,7 +21,7 @@ import {
   useMessageRealtimeUpdate,
 } from './composables'
 import { useI18nStore } from '@/stores'
-import { ImageGroupViewer, TextWithLink } from '@/components'
+import { IGVSoltAltLable, ImageGroupViewer, TextWithLink } from '@/components'
 import {
   imageCalcMaxWidthByRatioUtil,
   pbImageDataChooseByLargest,
@@ -375,9 +375,23 @@ const messageShowModeWithData = computed<MessageShowModeWithDataValueType>(
                         }"
                       >
                         <ImageGroupViewer
+                          v-slot="{ imageItem }"
                           :imageList="messageShowModeWithData.data.images"
                           bgTwcss="bg-color-background-mute"
-                        ></ImageGroupViewer>
+                        >
+                          <div
+                            class="h-full cursor-pointer"
+                            @click="
+                              () => {
+                                console.log('imageItem', imageItem)
+                              }
+                            "
+                          >
+                            <IGVSoltAltLable
+                              :imageItem="imageItem"
+                            ></IGVSoltAltLable>
+                          </div>
+                        </ImageGroupViewer>
                       </div>
                     </div>
                     <!-- 消息文字内容 -->

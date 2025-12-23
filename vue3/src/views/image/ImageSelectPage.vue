@@ -1,5 +1,10 @@
 <script setup lang="ts">
-import { ContainerBar, ContainerCol2, ImageGroupViewer } from '@/components'
+import {
+  ContainerBar,
+  ContainerCol2,
+  IGVSoltAltLable,
+  ImageGroupViewer,
+} from '@/components'
 import {
   ImagePageBottomBar,
   ImagePageControlPanel,
@@ -125,12 +130,26 @@ const imageGroupMaxWidth = computed(() => {
                         }"
                       >
                         <div
-                          class="overflow-hidden rounded-[24px] border-[3px] border-transparent bg-color-background-soft"
+                          class="overflow-hidden rounded-[20px] border-[3px] border-transparent bg-color-background-soft"
                         >
                           <ImageGroupViewer
+                            v-slot="{ imageItem }"
                             :imageList="imageSelectList"
                             bgTwcss="bg-color-background-mute"
-                          ></ImageGroupViewer>
+                          >
+                            <div
+                              class="h-full cursor-pointer"
+                              @click="
+                                () => {
+                                  console.log('imageItem', imageItem)
+                                }
+                              "
+                            >
+                              <IGVSoltAltLable
+                                :imageItem="imageItem"
+                              ></IGVSoltAltLable>
+                            </div>
+                          </ImageGroupViewer>
                         </div>
                       </div>
                     </div>

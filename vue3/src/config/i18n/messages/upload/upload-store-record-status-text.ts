@@ -37,7 +37,7 @@ export const i18nMessagesUploadPartUploadStoreRecordStatusText = {
   },
   // 在 pending 状态时被中止
   [`uploadStoreRecordStatusText_${UISRSKC.aborted_while_pending}` as const]: {
-    'en-US': () => 'Aborted (while pending)' as const,
+    'en-US': () => 'Aborted' as const,
     'zh-CN': () => '已中止' as const,
     'zh-TW': () => '已中止' as const,
     'ja-JP': () => '中止' as const,

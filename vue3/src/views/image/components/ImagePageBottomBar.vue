@@ -2,7 +2,7 @@
 import { pb } from '@/lib'
 import type { ImageSelectListDesuwaType } from './dependencies'
 import { pbImageDataChooseBySmallestWithUrl } from '@/utils'
-import { useSelectionImageStore } from '@/stores'
+import { useI18nStore, useSelectionImageStore } from '@/stores'
 import { useRouter } from 'vue-router'
 import { useRouterHistoryTool } from '@/composables'
 import { routerDict } from '@/config'
@@ -37,6 +37,8 @@ const imageSelectSubmit = () => {
     fallbackTo: routerDict.ChatHome.path,
   })
 }
+
+const i18nStore = useI18nStore()
 </script>
 
 <template>
@@ -79,7 +81,7 @@ const imageSelectSubmit = () => {
             <div
               class="select-none truncate px-1 text-center text-[14px] font-bold italic text-color-text-soft"
             >
-              请选择图片
+              {{ i18nStore.t('imagePageBottomBarSelectText')() }}
             </div>
           </div>
         </div>

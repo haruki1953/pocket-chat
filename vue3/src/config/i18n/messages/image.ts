@@ -63,4 +63,22 @@ export const i18nMessagesImagePart = {
     'ko-KR': () => '새로고침' as const,
     'ru-RU': () => 'Обновить' as const,
   },
+  // 请选择图片（可多选）提示
+  imagePageBottomBarSelectText: {
+    'en-US': () => 'Please select image(s)' as const,
+    'zh-CN': () => '请选择图片' as const, // 中文本身不区分单复数
+    'zh-TW': () => '請選擇圖片' as const,
+    'ja-JP': () => '画像を選択してください' as const, // 日语也不区分单复数
+    'ko-KR': () => '이미지를 선택하세요' as const,
+    'ru-RU': () => 'Пожалуйста, выберите изображение(я)' as const,
+  },
+  // 显示在图片左下角的ALT
+  imageShowAltLableText: {
+    'en-US': () => 'ALT' as const,
+    'zh-CN': () => 'ALT' as const,
+    'zh-TW': () => 'ALT' as const,
+    'ja-JP': () => 'ALT' as const,
+    'ko-KR': () => 'ALT' as const,
+    'ru-RU': () => 'ALT' as const,
+  },
 } as const satisfies I18nMessagesSatisfiesType
