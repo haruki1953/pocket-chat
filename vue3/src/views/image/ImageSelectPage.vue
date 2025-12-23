@@ -1,7 +1,6 @@
 <script setup lang="ts">
-import { ContainerBar, ContainerCol2 } from '@/components'
+import { ContainerBar, ContainerCol2, ImageGroupViewer } from '@/components'
 import {
-  ImageGroupViewer,
   ImagePageBottomBar,
   ImagePageControlPanel,
   ImagePageImageList,
@@ -130,6 +129,7 @@ const imageGroupMaxWidth = computed(() => {
                         >
                           <ImageGroupViewer
                             :imageList="imageSelectList"
+                            bgTwcss="bg-color-background-mute"
                           ></ImageGroupViewer>
                         </div>
                       </div>

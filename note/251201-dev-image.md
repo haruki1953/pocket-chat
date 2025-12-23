@@ -77,8 +77,8 @@ src\components\chat\chat-col\components\chat-input-bar\ChatInputBar.vue
 
 TODO
 ```
-聊天页图片选择实现
-
-
+图片选择页响应式
+图片详情页
+图片选择页数据恢复实现
 ```
 

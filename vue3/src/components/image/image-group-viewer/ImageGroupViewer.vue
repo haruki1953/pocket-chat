@@ -6,6 +6,8 @@ import { imageCalcSingleRatioOptionsConfig } from '@/config'
 
 const props = defineProps<{
   imageList: ImagesResponseWithExpand[]
+  // 用于设置背景色
+  bgTwcss?: string
 }>()
 
 // 支持 1 到 4 个图片
@@ -103,7 +105,10 @@ const layout = computed(() => {
   <div>
     <!-- 单图 -->
     <div v-if="layout.single != null" class="w-full" :style="{ aspectRatio }">
-      <ImageGroupItem :imageItem="layout.single"></ImageGroupItem>
+      <ImageGroupItem
+        :imageItem="layout.single"
+        :bgTwcss="bgTwcss"
+      ></ImageGroupItem>
     </div>
 
     <!-- 多图（2～4） -->
@@ -117,7 +122,10 @@ const layout = computed(() => {
         <div class="flex flex-1 flex-col">
           <template v-for="(img, index) in layout.left" :key="img.id">
             <div class="flex-1">
-              <ImageGroupItem :imageItem="img"></ImageGroupItem>
+              <ImageGroupItem
+                :imageItem="img"
+                :bgTwcss="bgTwcss"
+              ></ImageGroupItem>
             </div>
 
             <!-- 左半内部的分割线 -->
@@ -138,7 +146,10 @@ const layout = computed(() => {
         <div class="flex flex-1 flex-col">
           <template v-for="(img, index) in layout.right" :key="img.id">
             <div class="flex-1">
-              <ImageGroupItem :imageItem="img"></ImageGroupItem>
+              <ImageGroupItem
+                :imageItem="img"
+                :bgTwcss="bgTwcss"
+              ></ImageGroupItem>
             </div>
 
             <!-- 右半内部的分割线 -->

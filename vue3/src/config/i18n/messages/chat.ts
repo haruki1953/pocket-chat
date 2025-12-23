@@ -168,4 +168,12 @@ export const i18nMessagesChatPart = {
     'ko-KR': () => '단축키: Shift + Enter 로 메시지 전송' as const, // 韩语
     'ru-RU': () => 'Сочетание клавиш: Shift + Enter — отправка' as const, // 俄语
   },
+  chatMessageReplyMessageImageShowText: {
+    'en-US': () => '[image]' as const,
+    'zh-CN': () => '[图片]' as const,
+    'zh-TW': () => '[圖片]' as const,
+    'ja-JP': () => '[画像]' as const,
+    'ko-KR': () => '[이미지]' as const,
+    'ru-RU': () => '[изображение]' as const,
+  },
 } as const satisfies I18nMessagesSatisfiesType

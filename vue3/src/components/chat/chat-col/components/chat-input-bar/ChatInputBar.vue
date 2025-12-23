@@ -273,6 +273,14 @@ const autosizeElInput = computed(() => {
                       }}
                     </div>
                     <div
+                      v-else-if="chatReplyMessage.images.length > 0"
+                      class="select-none truncate text-[12px] text-color-text"
+                    >
+                      {{
+                        i18nStore.t('chatMessageReplyMessageImageShowText')()
+                      }}
+                    </div>
+                    <div
                       v-else
                       class="select-none truncate text-[12px] text-color-text"
                     >

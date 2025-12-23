@@ -21,18 +21,38 @@ export const pbMessagesSendChatApi = async (data: {
   content: string
   /** 回复的帖子id，空字符串或null都可代表无 */
   replyMessageId?: string | null
+  /** 发送图片 */
+  images: string[]
 }) => {
-  const { roomId, content, replyMessageId } = data
+  const { roomId, content, replyMessageId, images } = data
 
   // 未登录，抛出错误
   if (!pb.authStore.isValid || pb.authStore.record?.id == null) {
     throw new Error('!pb.authStore.isValid || pb.authStore.record?.id == null')
   }
 
+  // 图片和内容互斥，优先发送图片消息
+  const { processedContent, processedImages } = (() => {
+    if (images.length > 0) {
+      return {
+        processedContent: '',
+        processedImages: images,
+      }
+    }
+    // content
+    else {
+      return {
+        processedContent: content,
+        processedImages: [],
+      }
+    }
+  })()
+
   // 准备数据
   const createData: Create<Collections.Messages> = {
     author: pb.authStore.record.id,
-    content: content,
+    content: processedContent,
+    images: processedImages,
     // room: (() => {
     //   if (roomId == null) {
     //     return undefined
@@ -78,17 +98,37 @@ export const pbMessagesEditChatApi = async (data: {
   content: string
   /** 回复的帖子id，空字符串或null都可代表无 */
   replyMessageId?: string | null
+  /** 发送图片 */
+  images: string[]
 }) => {
-  const { chatEditMessageId, content, replyMessageId } = data
+  const { chatEditMessageId, content, images, replyMessageId } = data
 
   // 未登录，抛出错误
   if (!pb.authStore.isValid || pb.authStore.record?.id == null) {
     throw new Error('!pb.authStore.isValid || pb.authStore.record?.id == null')
   }
 
+  // 图片和内容互斥，优先发送图片消息
+  const { processedContent, processedImages } = (() => {
+    if (images.length > 0) {
+      return {
+        processedContent: '',
+        processedImages: images,
+      }
+    }
+    // content
+    else {
+      return {
+        processedContent: content,
+        processedImages: [],
+      }
+    }
+  })()
+
   // 准备数据
   const updateData: Update<Collections.Messages> = {
-    content: content,
+    content: processedContent,
+    images: processedImages,
     replyMessage: (() => {
       if (replyMessageId == null) {
         return ''

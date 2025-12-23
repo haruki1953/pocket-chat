@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { PMLRCApiParameters0DataPageParamNonNullable } from '@/api'
-import { ContainerDialog, TextWithLink } from '@/components'
+import { ContainerDialog, ImageGroupViewer, TextWithLink } from '@/components'
 import { useRouteControlDialog } from '@/composables'
 import { useDateFormatYYYYMMDDHHmmss } from '@/utils'
 import type {
@@ -193,6 +193,17 @@ const authStore = useAuthStore()
                         }}
                       </div>
                       <div
+                        v-else-if="
+                          chatRoomMessagesGetOneQuery.data.value.expand
+                            .replyMessage.images.length > 0
+                        "
+                        class="select-none truncate text-[12px] text-color-text"
+                      >
+                        {{
+                          i18nStore.t('chatMessageReplyMessageImageShowText')()
+                        }}
+                      </div>
+                      <div
                         v-else
                         class="select-none truncate text-[12px] text-color-text"
                       >
@@ -204,8 +215,40 @@ const authStore = useAuthStore()
                     </div>
                   </div>
                 </div>
+                <!-- 图片 -->
+                <div
+                  v-if="
+                    chatRoomMessagesGetOneQuery.data.value.expand?.images !=
+                      null &&
+                    chatRoomMessagesGetOneQuery.data.value.expand.images
+                      .length > 0
+                  "
+                  class="flow-root"
+                >
+                  <div
+                    class="mx-[15px]"
+                    :class="{
+                      // 无回复消息是，上边距多一点
+                      'mt-[5px]':
+                        chatRoomMessagesGetOneQuery.data.value.expand
+                          ?.replyMessage == null,
+                    }"
+                  >
+                    <div
+                      class="overflow-hidden rounded-[20px] border-[3px] border-transparent"
+                    >
+                      <ImageGroupViewer
+                        :imageList="
+                          chatRoomMessagesGetOneQuery.data.value.expand.images
+                        "
+                        bgTwcss="bg-color-background-mute"
+                      ></ImageGroupViewer>
+                    </div>
+                  </div>
+                </div>
                 <!-- 消息 -->
                 <div
+                  v-else
                   class="wrap-long-text mx-[15px] text-[16px] text-color-text"
                 >
                   <TextWithLink

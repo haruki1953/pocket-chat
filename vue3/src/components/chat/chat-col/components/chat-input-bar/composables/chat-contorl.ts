@@ -26,6 +26,7 @@ export const useChatInputBarControl = (
     //
     props,
     chatInputContent,
+    chatImageSelectList,
     chatReplyMessage,
     chatEditMessage,
     chatEditMessageSet,
@@ -74,6 +75,7 @@ export const useChatInputBarControl = (
         content: chatInputContent.value,
         roomId: props.roomId,
         replyMessageId: chatReplyMessage.value?.id,
+        images: chatImageSelectList.value.map((i) => i.id),
       })
       // console.log(pbRes)
       return pbRes
@@ -82,6 +84,7 @@ export const useChatInputBarControl = (
     onSuccess: (data) => {
       // 发送后重置输入栏
       chatInputContent.value = ''
+      chatImageSelectList.value = []
       // 发送后取消刚刚的回复消息
       chatReplyMessage.value = null
     },
@@ -101,7 +104,10 @@ export const useChatInputBarControl = (
   const messageSendSound = useSound(appMessageSendSound, { volume: 0.25 })
   // 消息发送提交
   const messageSendSubmit = async () => {
-    if (chatInputContent.value.trim() === '') {
+    if (
+      chatInputContent.value.trim() === '' &&
+      chatImageSelectList.value.length <= 0
+    ) {
       return
     }
     if (messageSendSubmitRunning.value === true) {
@@ -174,6 +180,7 @@ export const useChatInputBarControl = (
         chatEditMessageId: chatEditMessage.value.id,
         content: chatInputContent.value,
         replyMessageId: chatReplyMessage.value?.id,
+        images: chatImageSelectList.value.map((i) => i.id),
       })
       // console.log(pbRes)
       return pbRes
@@ -197,7 +204,10 @@ export const useChatInputBarControl = (
 
   // 消息编辑提交
   const messageEditSubmit = async () => {
-    if (chatInputContent.value.trim() === '') {
+    if (
+      chatInputContent.value.trim() === '' &&
+      chatImageSelectList.value.length <= 0
+    ) {
       return
     }
     if (messageEditSubmitRunning.value === true) {
