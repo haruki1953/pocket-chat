@@ -1,6 +1,9 @@
 <script setup lang="ts">
 import type { ImagesResponseWithBaseExpand } from '@/api'
-import { imageGetDprFn } from '@/config'
+import {
+  imageGetDprFn,
+  imagePbImageDataChooseByTargetSizeScaleFactorConfig,
+} from '@/config'
 import { pbImageDataChooseByTargetSizeWithUrl } from '@/utils'
 import { useElementSize } from '@vueuse/core'
 
@@ -21,8 +24,14 @@ const imageUrl = computed(() => {
     return undefined
   }
   return pbImageDataChooseByTargetSizeWithUrl(props.imageItem, {
-    targetWidth: divSize.width.value * dpr,
-    targetHeight: divSize.height.value * dpr,
+    targetWidth:
+      divSize.width.value *
+      dpr *
+      imagePbImageDataChooseByTargetSizeScaleFactorConfig,
+    targetHeight:
+      divSize.height.value *
+      dpr *
+      imagePbImageDataChooseByTargetSizeScaleFactorConfig,
   }).url
 })
 </script>

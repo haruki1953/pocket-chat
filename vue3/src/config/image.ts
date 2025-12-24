@@ -1,7 +1,7 @@
 // 图片分页查询，查询个数
 export const imagePageListApiPerPageNumConfig = 30 as const
 
-// 获取 dpr ，几倍屏
+// 获取 dpr ，几倍屏，设备像素比
 export const imageGetDprFn = () => {
   // 当前是几倍屏：
   const rawDpr = window.devicePixelRatio
@@ -9,6 +9,28 @@ export const imageGetDprFn = () => {
   const dpr = Math.min(3, Math.max(1, rawDpr))
   return dpr
 }
+
+/**
+ * scaleFactor 用来缩小目标尺寸，从而允许略小于目标尺寸的图片尺寸被视为可用。
+ * - 1.0：不允许比目标小（严格匹配）
+ * - 0.9：可比目标小一点
+ */
+export const imagePbImageDataChooseByTargetSizeScaleFactorConfig = 0.9 as const
+// src\components\image\image-group-viewer\components\ImageGroupItem.vue
+// src\views\image\components\image-page-image-list\components\ImageListItem.vue
+// 如
+// const imageUrl = computed(() => {
+//   return pbImageDataChooseByTargetSizeWithUrl(props.imageData, {
+//     targetWidth:
+//       props.itemWidth *
+//       dpr *
+//       imagePbImageDataChooseByTargetSizeScaleFactorConfig,
+//     targetHeight:
+//       props.itemHeight *
+//       dpr *
+//       imagePbImageDataChooseByTargetSizeScaleFactorConfig,
+//   }).url
+// })
 
 // 单图比例计算配置
 export const imageCalcSingleRatioOptionsConfig = {

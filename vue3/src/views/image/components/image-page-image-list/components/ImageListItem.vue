@@ -4,6 +4,7 @@ import {
   appUserDefaultAvatar,
   fileUserAvatarConfig,
   imageGetDprFn,
+  imagePbImageDataChooseByTargetSizeScaleFactorConfig,
 } from '@/config'
 import { pb } from '@/lib'
 import { pbImageDataChooseByTargetSizeWithUrl } from '@/utils'
@@ -36,8 +37,14 @@ const dpr = imageGetDprFn()
 
 const imageUrl = computed(() => {
   return pbImageDataChooseByTargetSizeWithUrl(props.imageData, {
-    targetWidth: props.itemWidth * dpr,
-    targetHeight: props.itemHeight * dpr,
+    targetWidth:
+      props.itemWidth *
+      dpr *
+      imagePbImageDataChooseByTargetSizeScaleFactorConfig,
+    targetHeight:
+      props.itemHeight *
+      dpr *
+      imagePbImageDataChooseByTargetSizeScaleFactorConfig,
   }).url
 })
 
