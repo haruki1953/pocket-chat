@@ -5,6 +5,7 @@ on:
     branches: ["*"]
   pull_request:
     branches: ["*"]
+  workflow_dispatch:   # 允许手动触发
 
 jobs:
   vue3-ci:
