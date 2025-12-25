@@ -54,7 +54,7 @@ const imageAuthorAvatarUrl = computed(() => {
             <!-- 头像 -->
             <div class="">
               <div
-                class="m-[3px] h-[22px] w-[24px] rounded-full bg-color-background-mute bg-cover bg-center"
+                class="m-[3px] h-[22px] w-[22px] rounded-full bg-color-background-mute bg-cover bg-center"
                 :style="{
                   backgroundImage: `url(${imageAuthorAvatarUrl})`,
                 }"

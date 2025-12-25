@@ -81,4 +81,13 @@ export const i18nMessagesImagePart = {
     'ko-KR': () => 'ALT' as const,
     'ru-RU': () => 'ALT' as const,
   },
+  // 图片详情查询刷新
+  imageInfoPageImageQueryRefreshText: {
+    'en-US': () => 'Refresh' as const,
+    'zh-CN': () => '刷新' as const,
+    'zh-TW': () => '重新整理' as const,
+    'ja-JP': () => '更新' as const,
+    'ko-KR': () => '새로고침' as const,
+    'ru-RU': () => 'Обновить' as const,
+  },
 } as const satisfies I18nMessagesSatisfiesType

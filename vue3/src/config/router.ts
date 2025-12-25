@@ -29,6 +29,18 @@ export const routerDict = {
     path: '/image-select',
     name: 'ImageSelectPage',
   },
+  ImageInfoPage: (() => {
+    const paramsKey = {
+      id: 'id',
+    } as const
+    return {
+      // 使用paramsKey拼接参数字符串，安心安全安定
+      path: `/image-info/:${paramsKey.id}`,
+      name: 'ImageInfoPage',
+      // 导出paramsKey以便页面中使用
+      paramsKey,
+    } as const
+  })(),
 } as const satisfies Record<string, RouterItem>
 
 // // 路由信息字典，导出以便整个程序中使用

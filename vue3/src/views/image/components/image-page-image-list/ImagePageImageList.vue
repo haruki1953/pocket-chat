@@ -47,7 +47,12 @@ const imagePageListQuery = useImagePageListQuery({
       return authStore.record.id
     }
   }),
-  searchContent: computed(() => imageQuerySearch.value),
+  searchContent: computed(() => {
+    if (imageQuerySearch.value === '') {
+      return null
+    }
+    return imageQuerySearch.value
+  }),
 })
 
 // 内容的数据，图片的个数

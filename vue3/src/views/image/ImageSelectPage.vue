@@ -197,7 +197,7 @@ const windowSize = useWindowSize()
             maxWidth: '500px',
           }"
         >
-          <ContainerBar :defaultBarHeight="60">
+          <ContainerBar :defaultBarHeight="52">
             <template #default>
               <div class="relative mb-4">
                 <div class="sticky top-0 z-[1] flow-root">
