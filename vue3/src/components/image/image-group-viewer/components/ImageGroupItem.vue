@@ -2,15 +2,17 @@
 import type { ImagesResponseWithBaseExpand } from '@/api'
 import {
   imageGetDprFn,
+  imageLazyIntersectionRootMargin,
   imagePbImageDataChooseByTargetSizeScaleFactorConfig,
 } from '@/config'
 import { pbImageDataChooseByTargetSizeWithUrl } from '@/utils'
-import { useElementSize } from '@vueuse/core'
+import { useElementSize, useIntersectionObserver } from '@vueuse/core'
 
 const props = defineProps<{
   imageItem: ImagesResponseWithBaseExpand
   // 用于设置背景色
   bgTwcss?: string
+  lazy?: boolean
 }>()
 
 const refDiv = ref<HTMLElement | null>(null)
@@ -34,6 +36,36 @@ const imageUrl = computed(() => {
       imagePbImageDataChooseByTargetSizeScaleFactorConfig,
   }).url
 })
+
+// 是否显示图片
+const isShowImg = ref(true)
+// 是否启用懒加载
+if (props.lazy === true) {
+  isShowImg.value = false
+  // 懒加载
+  const { stop } = useIntersectionObserver(
+    refDiv,
+    ([entry]) => {
+      if (entry.isIntersecting) {
+        isShowImg.value = true
+        stop()
+      }
+    },
+    {
+      root: null,
+      // 边界偏移量
+      rootMargin: imageLazyIntersectionRootMargin,
+      threshold: 0,
+    }
+  )
+}
+
+const backgroundImageVal = computed(() => {
+  if (isShowImg.value === false) {
+    return undefined
+  }
+  return `url(${imageUrl.value})`
+})
 </script>
 
 <template>
@@ -42,7 +74,7 @@ const imageUrl = computed(() => {
     class="h-full bg-cover bg-center"
     :class="bgTwcss"
     :style="{
-      backgroundImage: `url(${imageUrl})`,
+      backgroundImage: backgroundImageVal,
     }"
   >
     <slot :imageItem="imageItem"></slot>

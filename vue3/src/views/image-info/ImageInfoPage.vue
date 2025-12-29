@@ -1,8 +1,11 @@
 <script setup lang="ts">
 import { useI18nStore } from '@/stores'
-import { ImageInfoPageTopBar } from './components'
+import { ImageInfoImageViewer, ImageInfoPageTopBar } from './components'
 import { useRoute } from 'vue-router'
 import { routerDict } from '@/config'
+import { useImageInfoQueryDesuwa } from './composables'
+
+export type ImageInfoRouteParamsType = typeof imageInfoRouteParams
 
 const i18nStore = useI18nStore()
 
@@ -19,6 +22,14 @@ const imageInfoRouteParams = computed(() => {
     id: id,
   }
 })
+
+const imageInfoQueryDesuwa = useImageInfoQueryDesuwa({
+  imageInfoRouteParams,
+})
+const {
+  // 当前查询状态 "content" | "loading" | "none"
+  imageInfoQueryStatus,
+} = imageInfoQueryDesuwa
 </script>
 
 <template>
@@ -40,7 +51,41 @@ const imageInfoRouteParams = computed(() => {
             ></ImageInfoPageTopBar>
           </div>
           <!-- 内容 -->
-          <div class="h-[2000px] bg-red-950"></div>
+          <div v-if="imageInfoQueryStatus === 'content'">
+            <!-- 图片显示组件 -->
+            <div class="mt-4">
+              <ImageInfoImageViewer
+                :imageInfoQueryDesuwa="imageInfoQueryDesuwa"
+              ></ImageInfoImageViewer>
+            </div>
+            <!-- 图片详情显示、操作面板 -->
+            <!-- 使用此图片的消息 -->
+          </div>
+          <!-- 加载状态 -->
+          <div v-else-if="imageInfoQueryStatus === 'loading'">
+            <div class="flex h-[400px] items-center justify-center">
+              <div
+                class="h-[50px] w-[50px] overflow-hidden text-color-text-soft"
+              >
+                <RiLoader3Line
+                  class="loading-spinner-800ms"
+                  size="50px"
+                ></RiLoader3Line>
+              </div>
+            </div>
+          </div>
+          <!-- 图片不存在 -->
+          <!-- <div v-else-if="imageInfoQueryStatus === 'none'"> -->
+          <div v-else>
+            <div class="flex h-[400px] items-center justify-center">
+              <div
+                class="h-[100px] w-[100px] overflow-hidden text-color-background-soft"
+              >
+                <!-- class="h-full max-h-[50%] w-full max-w-[50%] object-contain" -->
+                <RiMessage3Fill size="100px"></RiMessage3Fill>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>

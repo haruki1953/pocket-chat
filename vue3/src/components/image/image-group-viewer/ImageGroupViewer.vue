@@ -8,6 +8,7 @@ const props = defineProps<{
   imageList: ImagesResponseWithBaseExpand[]
   // 用于设置背景色
   bgTwcss?: string
+  lazy?: boolean
 }>()
 
 // 支持 1 到 4 个图片
@@ -109,6 +110,7 @@ const layout = computed(() => {
         v-slot="{ imageItem }"
         :imageItem="layout.single"
         :bgTwcss="bgTwcss"
+        :lazy="lazy"
       >
         <slot :imageItem="imageItem"></slot>
       </ImageGroupItem>
@@ -129,6 +131,7 @@ const layout = computed(() => {
                 v-slot="{ imageItem }"
                 :imageItem="img"
                 :bgTwcss="bgTwcss"
+                :lazy="lazy"
               >
                 <slot :imageItem="imageItem"></slot>
               </ImageGroupItem>
@@ -156,6 +159,7 @@ const layout = computed(() => {
                 v-slot="{ imageItem }"
                 :imageItem="img"
                 :bgTwcss="bgTwcss"
+                :lazy="lazy"
               >
                 <slot :imageItem="imageItem"></slot>
               </ImageGroupItem>

@@ -378,6 +378,7 @@ const messageShowModeWithData = computed<MessageShowModeWithDataValueType>(
                           v-slot="{ imageItem }"
                           :imageList="messageShowModeWithData.data.images"
                           bgTwcss="bg-color-background-mute"
+                          lazy
                         >
                           <div
                             class="h-full cursor-pointer"

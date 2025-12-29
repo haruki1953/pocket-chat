@@ -128,3 +128,6 @@ export const imageCalcMaxWidthByRatioSizeLimitHandlerConfig = (data: {
   // 否则保持原 maxWidth
   return maxWidth
 }
+
+/** 懒加载 视口边界偏移量 */
+export const imageLazyIntersectionRootMargin = '1000px' as const
