@@ -75,6 +75,7 @@ useImageSelectPagePageRecoverScrollTop({
 useImageSelectPagePageRecoverDataSetOnLeave({
   imageQueryModeDesuwa,
   imageSelectListDesuwa,
+  refImagePageImageList,
 })
 
 const uploadImageStore = useUploadImageStore()
@@ -211,6 +212,9 @@ const windowSize = useWindowSize()
               ref="refImagePageImageList"
               :imageQueryModeDesuwa="imageQueryModeDesuwa"
               :imageSelectListDesuwa="imageSelectListDesuwa"
+              :imageSelectPagePageRecoverDataDesuwa="
+                imageSelectPagePageRecoverDataDesuwa
+              "
             ></ImagePageImageList>
           </div>
         </template>
@@ -257,6 +261,9 @@ const windowSize = useWindowSize()
                     ref="refImagePageImageList"
                     :imageQueryModeDesuwa="imageQueryModeDesuwa"
                     :imageSelectListDesuwa="imageSelectListDesuwa"
+                    :imageSelectPagePageRecoverDataDesuwa="
+                      imageSelectPagePageRecoverDataDesuwa
+                    "
                   ></ImagePageImageList>
                 </div>
               </div>

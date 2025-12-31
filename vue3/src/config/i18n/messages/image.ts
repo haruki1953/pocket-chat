@@ -108,4 +108,84 @@ export const i18nMessagesImagePart = {
     'ko-KR': () => '브라우저가 지원되지 않습니다. 수동으로 복사하세요' as const,
     'ru-RU': () => 'Браузер не поддерживается, скопируйте вручную' as const,
   },
+
+  // 确认要删除此图片吗？
+  imageInfoPageDeleteConfirmText: {
+    'en-US': () => 'Are you sure you want to delete this image?' as const,
+    'zh-CN': () => '确认要删除此图片吗？' as const,
+    'zh-TW': () => '確認要刪除此圖片嗎？' as const,
+    'ja-JP': () => 'この画像を削除してもよろしいですか？' as const,
+    'ko-KR': () => '이 이미지를 삭제하시겠습니까?' as const,
+    'ru-RU': () => 'Вы уверены, что хотите удалить это изображение?' as const,
+  },
+
+  // 删除图片
+  imageInfoPageDeleteImageTitle: {
+    'en-US': () => 'Delete image' as const,
+    'zh-CN': () => '删除图片' as const,
+    'zh-TW': () => '刪除圖片' as const,
+    'ja-JP': () => '画像を削除' as const,
+    'ko-KR': () => '이미지 삭제' as const,
+    'ru-RU': () => 'Удалить изображение' as const,
+  },
+
+  // 删除失败
+  imageInfoPageDeleteFailedText: {
+    'en-US': () => 'Delete failed' as const,
+    'zh-CN': () => '删除失败' as const,
+    'zh-TW': () => '刪除失敗' as const,
+    'ja-JP': () => '削除に失敗しました' as const,
+    'ko-KR': () => '삭제 실패' as const,
+    'ru-RU': () => 'Не удалось удалить' as const,
+  },
+
+  // 关键词（title）
+  imageInfoPageKeywordTitle: {
+    'en-US': () => 'Keywords' as const,
+    'zh-CN': () => '关键词' as const,
+    'zh-TW': () => '關鍵詞' as const,
+    'ja-JP': () => 'キーワード' as const,
+    'ko-KR': () => '키워드' as const,
+    'ru-RU': () => 'Ключевые слова' as const,
+  },
+
+  // 用于图片搜索（placeholder）
+  imageInfoPageKeywordPlaceholder: {
+    'en-US': () => 'Used for image search' as const,
+    'zh-CN': () => '用于图片搜索' as const,
+    'zh-TW': () => '用於圖片搜尋' as const,
+    'ja-JP': () => '画像検索に使用' as const,
+    'ko-KR': () => '이미지 검색에 사용' as const,
+    'ru-RU': () => 'Используется для поиска изображений' as const,
+  },
+
+  // ALT（title，所有语言都是 ALT）
+  imageInfoPageAltTitle: {
+    'en-US': () => 'ALT' as const,
+    'zh-CN': () => 'ALT' as const,
+    'zh-TW': () => 'ALT' as const,
+    'ja-JP': () => 'ALT' as const,
+    'ko-KR': () => 'ALT' as const,
+    'ru-RU': () => 'ALT' as const,
+  },
+
+  // 图片描述（placeholder）
+  imageInfoPageAltPlaceholder: {
+    'en-US': () => 'Image description' as const,
+    'zh-CN': () => '图片描述' as const,
+    'zh-TW': () => '圖片描述' as const,
+    'ja-JP': () => '画像の説明' as const,
+    'ko-KR': () => '이미지 설명' as const,
+    'ru-RU': () => 'Описание изображения' as const,
+  },
+
+  // 修改失败
+  imageInfoPageUpdateFailedText: {
+    'en-US': () => 'Update failed' as const,
+    'zh-CN': () => '修改失败' as const,
+    'zh-TW': () => '修改失敗' as const,
+    'ja-JP': () => '更新に失敗しました' as const,
+    'ko-KR': () => '수정 실패' as const,
+    'ru-RU': () => 'Не удалось обновить' as const,
+  },
 } as const satisfies I18nMessagesSatisfiesType

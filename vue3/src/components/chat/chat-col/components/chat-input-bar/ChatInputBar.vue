@@ -358,10 +358,8 @@ const autosizeElInput = computed(() => {
                   <div v-else class="mt-[1px]">
                     <ElInput
                       v-model="chatInputContent"
-                      size="large"
                       type="textarea"
                       resize="none"
-                      :rows="1"
                       :autosize="autosizeElInput"
                       @keydown.alt.enter.exact.prevent="
                         handleChatInputKeydownEnter

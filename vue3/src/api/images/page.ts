@@ -28,6 +28,7 @@ export const imagesPageFilterBuildFn = (data: {
     alt: 'alt',
     keyword: 'keyword',
     id: 'id',
+    isDeleted: 'isDeleted',
   } as const satisfies Group<
     // 限制键必须来自 `[CollectionName]Record`，且每个键的值必须与键名相同（KeyValueMirror），可选（允许只使用部分字段）
     Partial<KeyValueMirror<keyof ImagesRecord>>
@@ -71,21 +72,33 @@ export const imagesPageFilterBuildFn = (data: {
     )` as const
   })()
 
+  // isDelete 部分
+  const filterIsDeletePart = `${recordKeys.isDeleted}=false` as const
+
   // --- 显式 if 分支 ---
   if (filterAuthorPart !== null && filterSearchPart !== null) {
     return `(
     ${filterAuthorPart} &&
-    ${filterSearchPart}
+    ${filterSearchPart} &&
+    ${filterIsDeletePart}
     )` as const
   }
   if (filterAuthorPart !== null && filterSearchPart === null) {
-    return filterAuthorPart
+    // return filterAuthorPart
+    return `(
+    ${filterAuthorPart} &&
+    ${filterIsDeletePart}
+    )` as const
   }
   if (filterAuthorPart === null && filterSearchPart !== null) {
-    return filterSearchPart
+    // return filterSearchPart
+    return `(
+    ${filterSearchPart} &&
+    ${filterIsDeletePart}
+    )` as const
   }
   // 两者都为 null
-  return undefined
+  return filterIsDeletePart
 }
 
 /** 图片分页查询，普通分页 */

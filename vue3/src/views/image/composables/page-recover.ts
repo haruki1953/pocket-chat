@@ -4,6 +4,7 @@ import type { ImageSelectListDesuwaType } from './select-list'
 import { injectAppMainElScrollbar, useOnComponentLeave } from '@/composables'
 import type { RefImagePageImageListType } from './dependencies'
 import { watchUntilSourceCondition } from '@/utils'
+import { useWindowSize } from '@vueuse/core'
 
 /** 页面恢复数据获取 */
 export const useImageSelectPagePageRecoverDataDesuwa = () => {
@@ -55,32 +56,32 @@ export const useImageSelectPagePageRecoverScrollTop = (data: {
 
   const appMainElScrollbar = injectAppMainElScrollbar()
 
-  // 是否有内容高度
-  const isHaveContentHeight = computed(() => {
-    if (
-      refImagePageImageList.value != null &&
-      refImagePageImageList.value.refContentBox != null &&
-      refImagePageImageList.value.sizeContentBox.width.value > 0 &&
-      refImagePageImageList.value.contentBoxHeigh > 0
-    ) {
-      return true
-    }
-    return false
-  })
+  // // 是否有内容高度
+  // const isHaveContentHeight = computed(() => {
+  //   if (
+  //     refImagePageImageList.value != null &&
+  //     refImagePageImageList.value.refContentBox != null &&
+  //     refImagePageImageList.value.sizeContentBox.width.value > 0 &&
+  //     refImagePageImageList.value.contentBoxHeigh > 0
+  //   ) {
+  //     return true
+  //   }
+  //   return false
+  // })
 
   onMounted(async () => {
     // 无 页面恢复数据 直接返回
     if (imageSelectPagePageRecoverData == null) {
       return
     }
-    // 等待有内容高度，有内容高度才能初始化滚动
-    await watchUntilSourceCondition(isHaveContentHeight, (val) => val === true)
+    // // 等待有内容高度，有内容高度才能初始化滚动
+    // await watchUntilSourceCondition(isHaveContentHeight, (val) => val === true)
     await nextTick()
-    // 因为子组件内的内容高度有过渡duration-300，所以可能还要再等300ms
-    await new Promise((resolve) => setTimeout(resolve, 300))
+    // // 因为子组件内的内容高度有过渡duration-300，所以可能还要再等300ms
+    // await new Promise((resolve) => setTimeout(resolve, 300))
     appMainElScrollbar.value?.wrapRef?.scrollTo({
       top: imageSelectPagePageRecoverData.data.appMainElScrollbarScrollTop, // 滚动到原先的位置
-      behavior: 'smooth', // 平滑
+      behavior: 'instant',
     })
   })
 }
@@ -94,11 +95,13 @@ export const useImageSelectPagePageRecoverDataSetOnLeave = (data: {
   //
   imageQueryModeDesuwa: ImageQueryModeDesuwaType
   imageSelectListDesuwa: ImageSelectListDesuwaType
+  refImagePageImageList: RefImagePageImageListType
 }) => {
   const {
     //
     imageQueryModeDesuwa,
     imageSelectListDesuwa,
+    refImagePageImageList,
   } = data
 
   const {
@@ -113,6 +116,8 @@ export const useImageSelectPagePageRecoverDataSetOnLeave = (data: {
     imageSelectList,
   } = imageSelectListDesuwa
 
+  const windowSize = useWindowSize()
+
   const appMainElScrollbar = injectAppMainElScrollbar()
 
   const routerHistoryStore = useRouterHistoryStore()
@@ -124,6 +129,8 @@ export const useImageSelectPagePageRecoverDataSetOnLeave = (data: {
       imageQueryPage: imageQueryPage.value,
       imageSelectList: imageSelectList.value,
       appMainElScrollbarScrollTop: appMainElScrollbar.value?.wrapRef?.scrollTop,
+      windowWidth: windowSize.width.value,
+      contentBoxWidth: refImagePageImageList.value?.sizeContentBox.width.value,
     })
   }
 

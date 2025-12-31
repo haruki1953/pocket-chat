@@ -18,6 +18,10 @@ export const useImageInfoQueryDesuwa = (data: {
   const imageInfoQueryStatus = computed(() => {
     // 有内容
     if (imagesGetOneQuery.data.value != null) {
+      // 特殊情况已删除
+      if (imagesGetOneQuery.data.value.isDeleted === true) {
+        return 'isDeleted'
+      }
       return 'content' as const
     }
     // 加载中

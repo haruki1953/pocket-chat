@@ -85,6 +85,7 @@ const {
           </div>
           <!-- 图片不存在 -->
           <!-- <div v-else-if="imageInfoQueryStatus === 'none'"> -->
+          <!-- <div v-else-if="imageInfoQueryStatus === 'isDeleted'"> -->
           <div v-else>
             <div class="flex h-[400px] items-center justify-center">
               <div

@@ -1,5 +1,10 @@
 <script setup lang="ts">
-import { UserInfoAndLinkButton } from './components'
+import {
+  UpdateImageAlt,
+  UpdateImageIsDeleted,
+  UpdateImageKeyword,
+  UserInfoAndLinkButton,
+} from './components'
 import type { ImageInfoQueryDesuwaType } from './dependencies'
 
 const props = defineProps<{
@@ -23,13 +28,29 @@ const {
       ></UserInfoAndLinkButton>
     </div>
     <!-- 操作面板 -->
-    <div>
-      <!-- 修改alt -->
-      <!-- 修改关键词 -->
-      <!-- 图片为当前用户的时为修改，非当前用户的时文本域只读 -->
+    <div class="mt-2">
+      <div class="overflow-hidden rounded-[24px] bg-color-background-soft">
+        <!-- 修改alt -->
+        <!-- UpdateImageAlt -->
+        <UpdateImageAlt
+          :imageInfoQueryDesuwa="imageInfoQueryDesuwa"
+        ></UpdateImageAlt>
+        <!-- 分割线 -->
+        <div class="border-t-[3px] border-color-background"></div>
+        <!-- 修改关键词 -->
+        <!-- UpdateImageKeyword -->
+        <UpdateImageKeyword
+          :imageInfoQueryDesuwa="imageInfoQueryDesuwa"
+        ></UpdateImageKeyword>
+        <!-- 分割线 -->
+        <div class="border-t-[3px] border-color-background"></div>
+        <!-- 删除图片 -->
+        <!-- UpdateImageIsDeleted -->
+        <UpdateImageIsDeleted
+          :imageInfoQueryDesuwa="imageInfoQueryDesuwa"
+        ></UpdateImageIsDeleted>
+      </div>
     </div>
-    <!-- 消息列表 -->
-    <div></div>
   </div>
 </template>
 

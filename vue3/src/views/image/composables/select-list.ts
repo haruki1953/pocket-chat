@@ -1,5 +1,8 @@
 import type { ImagesResponseWithBaseExpand } from '@/api'
 import type { ImageSelectPagePageRecoverDataDesuwaType } from './page-recover'
+import { useQueryClient } from '@tanstack/vue-query'
+import type { useImagesGetOneQuery } from '@/queries'
+import { queryKeys } from '@/queries'
 
 export const useImageSelectListDesuwa = (data: {
   imageSelectPagePageRecoverDataDesuwa: ImageSelectPagePageRecoverDataDesuwaType
@@ -18,6 +21,11 @@ export const useImageSelectListDesuwa = (data: {
   if (imageSelectPagePageRecoverData != null) {
     imageSelectList.value = imageSelectPagePageRecoverData.data.imageSelectList
   }
+
+  // setup时，需检查图片是否已被删除，因为可能是刚从图片详情页删除并返回
+  usePruneDeletedImages({
+    imageSelectList,
+  })
 
   /**
    * 添加图片（带最大数量限制 4）：
@@ -98,3 +106,46 @@ export const useImageSelectListDesuwa = (data: {
 export type ImageSelectListDesuwaType = ReturnType<
   typeof useImageSelectListDesuwa
 >
+
+/**
+ * setup时，需检查图片是否已被删除，因为可能是刚从图片详情页删除并返回
+ * - 若列表为空则不处理
+ * - 若列表有内容，则根据 vue-query 缓存判断哪些图片已被删除
+ * - 删除缓存中标记 isDeleted === true 的图片
+ *
+ * 不导出，其只在 useImageSelectListDesuwa 中使用
+ */
+const usePruneDeletedImages = (data: {
+  imageSelectList: Ref<ImagesResponseWithBaseExpand[]>
+}) => {
+  const { imageSelectList } = data
+  const queryClient = useQueryClient()
+
+  // 若列表为空则无需处理
+  if (imageSelectList.value.length > 0) {
+    try {
+      // 将已删除的图片去除
+      imageSelectList.value = imageSelectList.value.filter((i) => {
+        // 尝试获取querydata
+        const imageGetQueryData = queryClient.getQueryData(
+          queryKeys.imagesGetOne(i.id)
+        ) as
+          | ReturnType<typeof useImagesGetOneQuery>['data']['value']
+          | undefined
+
+        // 如果图片query缓存中有数据，且isDeleted是true，则为已删除，返回false
+        if (imageGetQueryData != null && imageGetQueryData.isDeleted === true) {
+          return false
+        }
+
+        return true
+      })
+    } catch (error) {
+      console.warn(
+        'src/views/image/composables/select-list.ts',
+        'usePruneDeletedImages',
+        error
+      )
+    }
+  }
+}

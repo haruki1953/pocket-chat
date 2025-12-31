@@ -12,26 +12,28 @@ const i18nStore = useI18nStore()
 
 <template>
   <div class="flex h-full items-end justify-start">
-    <div v-if="imageItem.alt !== ''" class="flow-root">
-      <!-- <div v-if="1" class="flow-root"> -->
-      <!-- 距离图片边的距离 -->
-      <div class="border-x-[10px] border-y-[4px] border-transparent">
-        <!-- alt标签背景色 -->
-        <div class="flow-root rounded-full bg-black/50">
-          <!-- 边距控制标签大小 -->
-          <!-- mx-[7px] my-[2px] -->
-          <!-- 边框控制大小 -->
-          <!-- border-x-[7px] border-y-[2px] -->
-          <!-- margin/padding 在小 px 下会出现不一致，而 border 却非常稳定。 -->
-          <!-- 边框（border）在渲染时会被浏览器尽量对齐到物理像素（device pixel） -->
-          <div class="border-x-[7px] border-y-[2px] border-transparent">
-            <div class="select-none text-[10px] font-bold text-white">
-              {{ i18nStore.t('imageShowAltLableText')() }}
+    <Transition name="fade-pop" mode="out-in">
+      <div v-if="imageItem.alt !== ''" class="flow-root">
+        <!-- <div v-if="1" class="flow-root"> -->
+        <!-- 距离图片边的距离 -->
+        <div class="border-x-[10px] border-y-[4px] border-transparent">
+          <!-- alt标签背景色 -->
+          <div class="flow-root rounded-full bg-black/50">
+            <!-- 边距控制标签大小 -->
+            <!-- mx-[7px] my-[2px] -->
+            <!-- 边框控制大小 -->
+            <!-- border-x-[7px] border-y-[2px] -->
+            <!-- margin/padding 在小 px 下会出现不一致，而 border 却非常稳定。 -->
+            <!-- 边框（border）在渲染时会被浏览器尽量对齐到物理像素（device pixel） -->
+            <div class="border-x-[7px] border-y-[2px] border-transparent">
+              <div class="select-none text-[10px] font-bold text-white">
+                {{ i18nStore.t('imageShowAltLableText')() }}
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
+    </Transition>
   </div>
 </template>
 

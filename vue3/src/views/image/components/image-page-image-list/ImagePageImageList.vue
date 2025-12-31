@@ -4,6 +4,7 @@ import type {
   ImageQueryModeDesuwaType,
   ImageQueryModeMarkType,
   ImageSelectListDesuwaType,
+  ImageSelectPagePageRecoverDataDesuwaType,
 } from './dependencies'
 import { useAuthStore } from '@/stores'
 import { useElementSize, useWindowSize } from '@vueuse/core'
@@ -13,6 +14,7 @@ import { ImageListItem, PaginationBar } from './components'
 const props = defineProps<{
   imageQueryModeDesuwa: ImageQueryModeDesuwaType
   imageSelectListDesuwa: ImageSelectListDesuwaType
+  imageSelectPagePageRecoverDataDesuwa: ImageSelectPagePageRecoverDataDesuwaType
 }>()
 
 const {
@@ -22,6 +24,9 @@ const {
   imageQueryPage,
   imageQueryPageSet,
 } = props.imageQueryModeDesuwa
+
+const { imageSelectPagePageRecoverData } =
+  props.imageSelectPagePageRecoverDataDesuwa
 
 const authStore = useAuthStore()
 
@@ -84,8 +89,36 @@ const imageItemsCountForHeightCalc = computed(() => {
   return imageItemsCountByCache.value
 })
 
+const windowsSize = useWindowSize()
+
 const refContentBox = ref<HTMLElement | null>(null)
 const sizeContentBox = useElementSize(refContentBox)
+
+// 经过页面恢复数据优化后的 sizeContentBox.width.value ，让高度在setup时就有值
+const sizeContentBoxWidthWithPageRecoverData = computed(() => {
+  // 以 sizeContentBox.width.value 值优先
+  if (sizeContentBox.width.value > 0) {
+    return sizeContentBox.width.value
+  }
+  if (
+    imageSelectPagePageRecoverData?.data.windowWidth == null ||
+    imageSelectPagePageRecoverData?.data.windowWidth <= 0 ||
+    imageSelectPagePageRecoverData?.data.contentBoxWidth == null ||
+    imageSelectPagePageRecoverData?.data.contentBoxWidth <= 0
+  ) {
+    return sizeContentBox.width.value
+  }
+  // 需检验是否正确，现在和之前的窗口大小需一致，差超过10即为不正确
+  if (
+    Math.abs(
+      windowsSize.width.value - imageSelectPagePageRecoverData.data.windowWidth
+    ) > 10
+  ) {
+    return sizeContentBox.width.value
+  }
+  // 经检验正确（且当前 sizeContentBox.width.value 为0）
+  return imageSelectPagePageRecoverData.data.contentBoxWidth
+})
 
 // 一行中应显示的个数
 const imageItemsPerRowCalcFn = (width: number): number => {
@@ -101,7 +134,7 @@ const imageItemsPerRowCalcFn = (width: number): number => {
 }
 // 一行中应显示的个数
 const imageItemsPerRow = computed(() => {
-  return imageItemsPerRowCalcFn(sizeContentBox.width.value)
+  return imageItemsPerRowCalcFn(sizeContentBoxWidthWithPageRecoverData.value)
 })
 
 // 内容盒子应保持的高度，根据图片计算
@@ -128,8 +161,6 @@ const contentBoxHeightByItemsCountCalcFn = (
   return rows * itemSize
 }
 
-const windowsSize = useWindowSize()
-
 // 内容盒子应保持的高度，图片为0时，使用此默认高度
 const contentBoxHeightByDefault = () => {
   // 外边距
@@ -143,7 +174,7 @@ const contentBoxHeightByDefault = () => {
 // 内容盒子应保持的高度
 const contentBoxHeigh = computed(() => {
   const contentBoxHeightByItemsCount = contentBoxHeightByItemsCountCalcFn(
-    sizeContentBox.width.value,
+    sizeContentBoxWidthWithPageRecoverData.value,
     imageItemsCountForHeightCalc.value,
     imageItemsPerRow.value
   )
@@ -198,7 +229,7 @@ const imageQueryDataMatrixOneRowGasket = computed(() => {
 // 宽度 除以 行中实际个数 ，即为 每一项的宽度
 const imageQueryDataMatrixWithSize = computed(() => {
   const matrix = imageQueryDataMatrix.value
-  const containerWidth = sizeContentBox.width.value
+  const containerWidth = sizeContentBoxWidthWithPageRecoverData.value
   const maxPerRow = imageItemsPerRow.value
 
   if (matrix == null || containerWidth <= 0 || maxPerRow <= 0) {
@@ -253,7 +284,7 @@ defineExpose({
       >
         <Transition name="fade500ms" mode="out-in">
           <div
-            v-if="refContentBox != null && sizeContentBox.width.value > 0"
+            v-if="sizeContentBoxWidthWithPageRecoverData > 0"
             class="h-full overflow-hidden rounded-t-[24px] border-[3px] border-transparent bg-color-background-soft"
           >
             <div class="relative h-full">
@@ -361,7 +392,7 @@ defineExpose({
       </div>
     </div>
     <Transition name="fade500ms" mode="out-in">
-      <div v-if="refContentBox != null && sizeContentBox.width.value > 0">
+      <div v-if="sizeContentBoxWidthWithPageRecoverData > 0">
         <!-- 分割线 横向 -->
         <div class="border-t-[3px] border-transparent"></div>
         <!-- 分页栏 -->

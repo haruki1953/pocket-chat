@@ -9,6 +9,8 @@ export type PageRecoverDataForImageSelectPageItemType = {
     imageQueryPage: number
     imageSelectList: ImagesResponseWithBaseExpand[]
     appMainElScrollbarScrollTop: number | undefined
+    windowWidth: number | undefined
+    contentBoxWidth: number | undefined
   }
 }
 
