@@ -19,12 +19,13 @@ const {
   //
   imagesGetOneQuery,
   imageInfoQueryStatus,
+  imageInfoDataWithRealtime,
 } = props.imageInfoQueryDesuwa
 
 /**
  * 当前图片记录
  */
-const imageRecord = computed(() => imagesGetOneQuery.data.value)
+const imageRecord = computed(() => imageInfoDataWithRealtime.value)
 
 /**
  * 作者（假定已 expand author）
@@ -36,7 +37,7 @@ const imageAuthor = computed(() => imageRecord.value?.expand?.author)
  */
 const authorAvatarUrl = computed(() => {
   // 无数据（理论上不会渲染到这里，返回默认头像兜底）
-  if (imagesGetOneQuery.data.value == null) {
+  if (imageInfoDataWithRealtime.value == null) {
     return appUserDefaultAvatar
   }
 

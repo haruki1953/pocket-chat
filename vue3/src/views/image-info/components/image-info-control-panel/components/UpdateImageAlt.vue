@@ -17,6 +17,7 @@ const {
   //
   imagesGetOneQuery,
   isAuthorCurrent,
+  imageInfoDataWithRealtime,
 } = props.imageInfoQueryDesuwa
 
 /**
@@ -33,7 +34,7 @@ const altInputValue = ref('')
  * 当前图片 alt（来自查询结果）
  */
 const imageAlt = computed(() => {
-  return imagesGetOneQuery.data.value?.alt ?? ''
+  return imageInfoDataWithRealtime.value?.alt ?? ''
 })
 
 /**
@@ -74,12 +75,15 @@ const queryClient = useQueryClient()
 
 const submitEditAltMutation = useMutation({
   mutationFn: async () => {
-    if (imagesGetOneQuery.data.value == null) {
-      throw new Error('imagesGetOneQuery.data.value == null')
+    if (imageInfoDataWithRealtime.value == null) {
+      throw new Error('imageInfoDataWithRealtime.value == null')
     }
-    const pbRes = await pbImageUpdateAltApi(imagesGetOneQuery.data.value.id, {
-      alt: altInputValue.value,
-    })
+    const pbRes = await pbImageUpdateAltApi(
+      imageInfoDataWithRealtime.value.id,
+      {
+        alt: altInputValue.value,
+      }
+    )
     return pbRes
   },
   // ✅ 在网络错误时重试
@@ -88,13 +92,16 @@ const submitEditAltMutation = useMutation({
     // 更新query
     // 更新前，应确认data.update时间为最新的，以此方式避免两次很近的请求导致问题
     if (
-      imagesGetOneQuery.data.value != null &&
-      // data.updated > imagesGetOneQuery.data.value.updated
-      compareDatesSafe(data.updated, imagesGetOneQuery.data.value.updated) === 1
+      imageInfoDataWithRealtime.value != null &&
+      // data.updated > imageInfoDataWithRealtime.value.updated
+      compareDatesSafe(
+        data.updated,
+        imageInfoDataWithRealtime.value.updated
+      ) === 1
     ) {
       // 更新query缓存
       queryClient.setQueryData(
-        queryKeys.imagesGetOne(imagesGetOneQuery.data.value.id),
+        queryKeys.imagesGetOne(imageInfoDataWithRealtime.value.id),
         // 确保类型正确
         data satisfies NonNullable<typeof imagesGetOneQuery.data.value>
       )

@@ -21,7 +21,11 @@ import {
   useMessageRealtimeUpdate,
 } from './composables'
 import { useI18nStore } from '@/stores'
-import { IGVSoltAltLable, ImageGroupViewer, TextWithLink } from '@/components'
+import {
+  IGVSoltAltLable,
+  ImageGroupViewerWithQueryAndRealtime,
+  TextWithLink,
+} from '@/components'
 import {
   imageCalcMaxWidthByRatioUtil,
   pbImageDataChooseByLargest,
@@ -374,7 +378,7 @@ const messageShowModeWithData = computed<MessageShowModeWithDataValueType>(
                           'rounded-br-[4px]': !isMessageBoxroundedBR,
                         }"
                       >
-                        <ImageGroupViewer
+                        <ImageGroupViewerWithQueryAndRealtime
                           v-slot="{ imageItem }"
                           :imageList="messageShowModeWithData.data.images"
                           bgTwcss="bg-color-background-mute"
@@ -392,7 +396,7 @@ const messageShowModeWithData = computed<MessageShowModeWithDataValueType>(
                               :imageItem="imageItem"
                             ></IGVSoltAltLable>
                           </div>
-                        </ImageGroupViewer>
+                        </ImageGroupViewerWithQueryAndRealtime>
                       </div>
                     </div>
                     <!-- 消息文字内容 -->

@@ -13,6 +13,7 @@ import {
   useFirstDataLoadingAndAnimationMaskClose,
   useInitPbAuth,
   useInitWebNotif,
+  useRealtimeImagesSubscribe,
   useRealtimeMessagesSubscribe,
   useWatchAllowAnonymousViewAndAuthStoreIsValidCheckRouterLoginPage,
   type AppMainElScrollbar,
@@ -69,6 +70,10 @@ useFirstDataLoadingAndAnimationMaskClose({
     await watchUntilQueryReady(chatRoomMessagesInfiniteTwowayQuery)
   },
 })
+
+// use图片订阅
+const realtimeImagesSubscribe = useRealtimeImagesSubscribe()
+realtimeImagesSubscribe.startSubscribe()
 
 // 在程序初始化时，进行关于pocketbase身份验证的一些操作
 useInitPbAuth()

@@ -15,6 +15,7 @@ const props = defineProps<{
 const {
   //
   imagesGetOneQuery,
+  imageInfoDataWithRealtime,
 } = props.imageInfoQueryDesuwa
 
 const { dialogVisible, dialogOpen, dialogClose } = useRouteControlDialog({
@@ -27,11 +28,11 @@ const queryClient = useQueryClient()
 
 const submitImageDeleteMutation = useMutation({
   mutationFn: async () => {
-    if (imagesGetOneQuery.data.value == null) {
-      throw new Error('imagesGetOneQuery.data.value == null')
+    if (imageInfoDataWithRealtime.value == null) {
+      throw new Error('imageInfoDataWithRealtime.value == null')
     }
     const pbRes = await pbImageUpdateIsDeletedApi(
-      imagesGetOneQuery.data.value.id,
+      imageInfoDataWithRealtime.value.id,
       {
         isDeleted: true,
       }
@@ -49,13 +50,16 @@ const submitImageDeleteMutation = useMutation({
     // 更新query
     // 更新前，应确认data.update时间为最新的，以此方式避免两次很近的请求导致问题
     if (
-      imagesGetOneQuery.data.value != null &&
-      // data.updated > imagesGetOneQuery.data.value.updated
-      compareDatesSafe(data.updated, imagesGetOneQuery.data.value.updated) === 1
+      imageInfoDataWithRealtime.value != null &&
+      // data.updated > imageInfoDataWithRealtime.value.updated
+      compareDatesSafe(
+        data.updated,
+        imageInfoDataWithRealtime.value.updated
+      ) === 1
     ) {
       // 更新query缓存
       queryClient.setQueryData(
-        queryKeys.imagesGetOne(imagesGetOneQuery.data.value.id),
+        queryKeys.imagesGetOne(imageInfoDataWithRealtime.value.id),
         // 确保类型正确
         data satisfies NonNullable<typeof imagesGetOneQuery.data.value>
       )

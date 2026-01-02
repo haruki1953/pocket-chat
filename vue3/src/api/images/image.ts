@@ -1,6 +1,7 @@
 import { Collections, pb, type Update } from '@/lib'
 import { imagesBaseExpand, type ImagesResponseWithBaseExpand } from './base'
 import { fetchWithTimeoutPreferred } from '@/utils'
+import type { RecordSubscription } from 'pocketbase'
 
 /** images 集合 getone */
 export const pbImagesGetOneApi = async (imageId: string) => {
@@ -75,4 +76,26 @@ export const pbImageUpdateIsDeletedApi = (
   }
 ) => {
   return pbImageUpdateApi(imageId, data)
+}
+
+/** images 集合 实时订阅 */
+export const pbImagesSubscribeAllApi = async (
+  callback: (data: RecordSubscription<ImagesResponseWithBaseExpand>) => void
+) => {
+  // expand 字符串
+  const expand = imagesBaseExpand
+
+  return pb
+    .collection(Collections.Images)
+    .subscribe<ImagesResponseWithBaseExpand>(
+      '*',
+      (e) => {
+        callback(e)
+      },
+      {
+        expand,
+        // timeout为5000
+        fetch: fetchWithTimeoutPreferred,
+      }
+    )
 }

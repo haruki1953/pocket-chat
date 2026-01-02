@@ -18,14 +18,15 @@ const props = defineProps<{
 const {
   //
   imagesGetOneQuery,
+  imageInfoDataWithRealtime,
 } = props.imageInfoQueryDesuwa
 
 const imageViewerMaxWidth = computed(() => {
-  if (imagesGetOneQuery.data.value == null) {
+  if (imageInfoDataWithRealtime.value == null) {
     return undefined
   }
   const { width: imageWidth, height: imageHeight } = pbImageDataChooseByLargest(
-    imagesGetOneQuery.data.value
+    imageInfoDataWithRealtime.value
   )
 
   const maxWidthNum = imageCalcMaxWidthByRatioUtil({
@@ -41,7 +42,7 @@ const imageViewerMaxWidth = computed(() => {
 
 <template>
   <div>
-    <div v-if="imagesGetOneQuery.data.value != null">
+    <div v-if="imageInfoDataWithRealtime != null">
       <div
         class="mx-auto"
         :style="{
@@ -53,7 +54,7 @@ const imageViewerMaxWidth = computed(() => {
         >
           <ImageGroupViewer
             v-slot="{ imageItem }"
-            :imageList="[imagesGetOneQuery.data.value]"
+            :imageList="[imageInfoDataWithRealtime]"
             bgTwcss="bg-color-background-mute"
           >
             <div

@@ -3,7 +3,7 @@ import {
   ContainerBar,
   ContainerCol2,
   IGVSoltAltLable,
-  ImageGroupViewer,
+  ImageGroupViewerWithQueryAndRealtime,
 } from '@/components'
 import {
   ImagePageBottomBar,
@@ -170,7 +170,7 @@ const windowSize = useWindowSize()
                         <div
                           class="overflow-hidden rounded-[20px] border-[3px] border-transparent bg-color-background-soft"
                         >
-                          <ImageGroupViewer
+                          <ImageGroupViewerWithQueryAndRealtime
                             v-slot="{ imageItem }"
                             :imageList="imageSelectList"
                             bgTwcss="bg-color-background-mute"
@@ -187,7 +187,7 @@ const windowSize = useWindowSize()
                                 :imageItem="imageItem"
                               ></IGVSoltAltLable>
                             </div>
-                          </ImageGroupViewer>
+                          </ImageGroupViewerWithQueryAndRealtime>
                         </div>
                       </div>
                     </div>
