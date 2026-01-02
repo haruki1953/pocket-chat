@@ -6,6 +6,8 @@ import {
 import type { ImageInfoRouteParamsType } from './dependencies'
 import { useQueryClient } from '@tanstack/vue-query'
 import { useAuthStore, useRealtimeImagesStore } from '@/stores'
+import type { ImagesResponseWithBaseExpand } from '@/api'
+import { compareDatesSafe } from '@/utils'
 
 export const useImageInfoQueryDesuwa = (data: {
   imageInfoRouteParams: ImageInfoRouteParamsType
@@ -127,6 +129,29 @@ export const useImageInfoQueryDesuwa = (data: {
     return false
   })
 
+  /**
+   * 用于图片信息修改成功后，根据返回的数据检查并设置setQueryData
+   * 在 onSuccess 中使用
+   */
+  const imageInfoCheckSetQueryDataOnSuccessUpdate = (
+    data: ImagesResponseWithBaseExpand
+  ) => {
+    // 更新query
+    // 更新前，应确认data.update时间为最新的，以此方式避免两次很近的请求导致问题
+    if (
+      imagesGetOneQuery.data.value != null &&
+      // data.updated > imagesGetOneQuery.data.value.updated
+      compareDatesSafe(data.updated, imagesGetOneQuery.data.value.updated) === 1
+    ) {
+      // 更新query缓存
+      queryClient.setQueryData(
+        queryKeys.imagesGetOne(imagesGetOneQuery.data.value.id),
+        // 确保类型正确
+        data satisfies NonNullable<typeof imagesGetOneQuery.data.value>
+      )
+    }
+  }
+
   return {
     //
     imagesGetOneQuery,
@@ -138,6 +163,7 @@ export const useImageInfoQueryDesuwa = (data: {
     imageQueryRefresh,
     isImageQueryRefreshRunning,
     isAuthorCurrent,
+    imageInfoCheckSetQueryDataOnSuccessUpdate,
   }
 }
 

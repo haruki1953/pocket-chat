@@ -18,6 +18,7 @@ const {
   imagesGetOneQuery,
   isAuthorCurrent,
   imageInfoDataWithRealtime,
+  imageInfoCheckSetQueryDataOnSuccessUpdate,
 } = props.imageInfoQueryDesuwa
 
 /**
@@ -90,22 +91,7 @@ const submitEditAltMutation = useMutation({
   retry: queryRetryPbNetworkError,
   onSuccess: (data) => {
     // 更新query
-    // 更新前，应确认data.update时间为最新的，以此方式避免两次很近的请求导致问题
-    if (
-      imageInfoDataWithRealtime.value != null &&
-      // data.updated > imageInfoDataWithRealtime.value.updated
-      compareDatesSafe(
-        data.updated,
-        imageInfoDataWithRealtime.value.updated
-      ) === 1
-    ) {
-      // 更新query缓存
-      queryClient.setQueryData(
-        queryKeys.imagesGetOne(imageInfoDataWithRealtime.value.id),
-        // 确保类型正确
-        data satisfies NonNullable<typeof imagesGetOneQuery.data.value>
-      )
-    }
+    imageInfoCheckSetQueryDataOnSuccessUpdate(data)
     cancelEditAlt()
   },
   onError: () => {

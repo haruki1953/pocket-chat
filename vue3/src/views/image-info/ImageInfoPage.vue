@@ -18,6 +18,10 @@ export type ImageInfoRouteParamsType = typeof imageInfoRouteParams
 
 const i18nStore = useI18nStore()
 
+useSeoMeta({
+  title: computed(() => i18nStore.t('pageImageInfo')()),
+})
+
 const route = useRoute()
 const imageInfoRouteParams = computed(() => {
   const paramRawId = route.params[routerDict.ImageInfoPage.paramsKey.id]
