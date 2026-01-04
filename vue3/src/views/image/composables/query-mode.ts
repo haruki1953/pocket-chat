@@ -1,4 +1,4 @@
-import { queryKeys } from '@/queries'
+import { queryKeys, useImagePageListQuery } from '@/queries'
 import { useAuthStore } from '@/stores'
 import { useQueryClient } from '@tanstack/vue-query'
 import type { ImageSelectPagePageRecoverDataDesuwaType } from './page-recover'
@@ -102,6 +102,65 @@ export const useImageQueryModeDesuwa = (data: {
     }
   }
 
+  // 全部图片
+  const numAllImagePageListQuery = useImagePageListQuery({
+    pageNum: computed(() => 1),
+    authorId: computed(() => null),
+    searchContent: computed(() => null),
+    customStrId: computed(() => 'numAllImagePageListQuery'),
+  })
+
+  // 我的图片
+  const numMyImagePageListQuery = useImagePageListQuery({
+    pageNum: computed(() => {
+      // 未登录则 pageNum 为 null 即不查询
+      if (authStore.isValid === false || authStore.record?.id == null) {
+        return null
+      }
+      return 1
+    }),
+    authorId: computed(() => {
+      if (authStore.isValid === false || authStore.record?.id == null) {
+        return null
+      }
+      return authStore.record.id
+    }),
+    searchContent: computed(() => null),
+    customStrId: computed(() => 'numMyImagePageListQuery'),
+  })
+
+  const imagePageListQuery = useImagePageListQuery({
+    pageNum: computed(() => {
+      // 未登录且image_my，则应为null，不查询
+      if (
+        (authStore.isValid === false || authStore.record?.id == null) &&
+        imageQueryMode.value === 'image_my'
+      ) {
+        return null
+      }
+      return imageQueryPage.value
+    }),
+    authorId: computed(() => {
+      if (imageQueryMode.value === 'image_all') {
+        return null
+      } else {
+        // imageQueryMode.value === 'image_my'
+        if (authStore.isValid === false || authStore.record?.id == null) {
+          return null
+        }
+        return authStore.record.id
+      }
+    }),
+    searchContent: computed(() => {
+      // 【260103】
+      if (imageQuerySearch.value === '') {
+        return null
+      }
+      return imageQuerySearch.value
+    }),
+    customStrId: computed(() => 'imagePageListQuery'),
+  })
+
   return {
     imageQueryMode,
     canImageQueryModeSetToImageAll,
@@ -114,6 +173,9 @@ export const useImageQueryModeDesuwa = (data: {
     imageQueryPageSet,
     isImageQueryRefreshRunning,
     imageQueryRefresh,
+    numAllImagePageListQuery,
+    numMyImagePageListQuery,
+    imagePageListQuery,
   }
 }
 

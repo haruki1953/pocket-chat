@@ -23,44 +23,11 @@ const {
   imageQuerySearch,
   imageQueryPage,
   imageQueryPageSet,
+  imagePageListQuery,
 } = props.imageQueryModeDesuwa
 
 const { imageSelectPagePageRecoverData } =
   props.imageSelectPagePageRecoverDataDesuwa
-
-const authStore = useAuthStore()
-
-const imagePageListQuery = useImagePageListQuery({
-  pageNum: computed(() => {
-    // 未登录且image_my，则应为null，不查询
-    if (
-      (authStore.isValid === false || authStore.record?.id == null) &&
-      imageQueryMode.value === 'image_my'
-    ) {
-      return null
-    }
-    return imageQueryPage.value
-  }),
-  authorId: computed(() => {
-    if (imageQueryMode.value === 'image_all') {
-      return null
-    } else {
-      // imageQueryMode.value === 'image_my'
-      if (authStore.isValid === false || authStore.record?.id == null) {
-        return null
-      }
-      return authStore.record.id
-    }
-  }),
-  searchContent: computed(() => {
-    // 【260103】
-    if (imageQuerySearch.value === '') {
-      return null
-    }
-    return imageQuerySearch.value
-  }),
-  customStrId: computed(() => 'imagePageListQuery'),
-})
 
 // 内容的数据，图片的个数
 const imageItemsCountByQuery = computed(

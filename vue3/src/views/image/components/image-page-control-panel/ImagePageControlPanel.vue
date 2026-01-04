@@ -20,6 +20,8 @@ const {
   imageQueryModeSetToImageMy,
   imageQuerySearch,
   imageQuerySearchSet,
+  numAllImagePageListQuery,
+  numMyImagePageListQuery,
 } = props.imageQueryModeDesuwa
 
 const i18nStore = useI18nStore()
@@ -46,52 +48,6 @@ const searchInputContentClear = () => {
   searchInputContent.value = ''
   searchInputContentSetToImageQuerySearch()
 }
-
-// 图片数量查询
-
-// 全部图片
-const numAllImagePageListQuery = useImagePageListQuery({
-  pageNum: computed(() => 1),
-  authorId: computed(() => null),
-  searchContent: computed(() => null),
-  customStrId: computed(() => 'numAllImagePageListQuery'),
-})
-
-const authStore = useAuthStore()
-
-// 我的图片
-const numMyImagePageListQuery = useImagePageListQuery({
-  pageNum: computed(() => {
-    // 未登录则 pageNum 为 null 即不查询
-    if (authStore.isValid === false || authStore.record?.id == null) {
-      return null
-    }
-    return 1
-  }),
-  authorId: computed(() => {
-    if (authStore.isValid === false || authStore.record?.id == null) {
-      return null
-    }
-    return authStore.record.id
-  }),
-  searchContent: computed(() => null),
-  customStrId: computed(() => 'numMyImagePageListQuery'),
-})
-
-// note\笔记251120\260104-关于 TanStack Vue Query 动态 queryKey 与 invalidateQueries 异常行为数据或缓存污染的分析笔记.md
-// 【20260104-0915】
-// 至于到底是否应该绝对不用 invalidateQueries ，应该也没到那个地步，在某些地方时还是很好用的
-// 只是应该注意，在有多个useQuery的key相同且都是active时，此时用invalidateQueries就会导致问题
-// 尽量只对非active的查询使用invalidateQueries吧，这应该是安全的
-
-// 经过实验后确认了，在有多个useQuery的key相同且都是active时，此时用invalidateQueries就会导致问题
-// 实验方法是，在 ImagePageControlPanel.vue 中注释掉了 numAllImagePageListQuery 、numMyImagePageListQuery
-// src\views\image\components\image-page-control-panel\ImagePageControlPanel.vue
-// 然后再进行测试，设置搜索、刷新、返回、再次进入图片选择页，发现是正常的，列表中正常显示着全部图片，
-// 而在之前有问题时，设置搜索、刷新、返回、再次进入图片选择页后，列表中显示的是之前搜索的值，而且明明搜索框当前是空的，这就说明了数据或缓存污染异常行为
-
-// 现在确认了，只要在invalidateQueries时，没有多个useQuery的key相同且都是active，就不会有问题
-// 这样的话，图片选择页的刷新也不必都改为 refetch，只要让key别一样就行，改改 queryKeys.imagePageList 在最后加上一个可自定义的充当唯一标识的字符串即可
 
 // 图片数字加载时的字符串动画
 const { text: imgNumAniStr } = useAniStrIncreasingDecreasingSequentially()
