@@ -1,18 +1,26 @@
 <script setup lang="ts">
 import { useI18nStore } from '@/stores'
-import type { ViewerControlDesuwaType } from './dependencise'
+import type {
+  ViewerControlDesuwaType,
+  ViewerDisplayDesuwaType,
+} from './dependencise'
 
 const props = defineProps<{
   viewerControlDesuwa: ViewerControlDesuwaType
+  viewerDisplayDesuwa: ViewerDisplayDesuwaType
 }>()
 
 const {
   //
-  isAltOpen,
   altOpen,
   altClose,
-  viewerImageData,
 } = props.viewerControlDesuwa
+
+const {
+  //
+  isAltOpen,
+  viewerImageData,
+} = props.viewerDisplayDesuwa
 
 const i18nStore = useI18nStore()
 </script>

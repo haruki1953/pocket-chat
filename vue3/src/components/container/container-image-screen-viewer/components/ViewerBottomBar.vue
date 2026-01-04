@@ -1,18 +1,26 @@
 <script setup lang="ts">
 import { pbImageDataChooseBySmallestWithUrl } from '@/utils'
-import type { ViewerControlDesuwaType } from './dependencise'
+import type {
+  ViewerControlDesuwaType,
+  ViewerDisplayDesuwaType,
+} from './dependencise'
 
 const props = defineProps<{
   viewerControlDesuwa: ViewerControlDesuwaType
+  viewerDisplayDesuwa: ViewerDisplayDesuwaType
 }>()
+
+const {
+  //
+  viewerImageSwitch,
+  viewerClose,
+} = props.viewerControlDesuwa
 
 const {
   //
   viewerImageList,
   viewerImageData,
-  viewerImageSwitch,
-  viewerClose,
-} = props.viewerControlDesuwa
+} = props.viewerDisplayDesuwa
 </script>
 
 <template>

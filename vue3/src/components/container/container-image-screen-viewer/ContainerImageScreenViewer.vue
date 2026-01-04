@@ -2,7 +2,7 @@
 import type { ImagesResponseWithBaseExpand } from '@/api'
 import { useDark } from '@vueuse/core'
 import { ViewerBottomBar, ViewerImage, ViewerTopBar } from './components'
-import { useViewerControlDesuwa } from './composables'
+import { useViewerControlDesuwa, useViewerDisplayDesuwa } from './composables'
 import { useElementOverlayClick } from '@/composables'
 
 const props = withDefaults(
@@ -40,8 +40,7 @@ const { onOverlayDown, onOverlayUp, stopOverlayJudge } = useElementOverlayClick(
   }
 )
 
-const viewerControlDesuwa = useViewerControlDesuwa({
-  //
+const viewerDisplayDesuwa = useViewerDisplayDesuwa({
   props,
 })
 const {
@@ -49,7 +48,14 @@ const {
   viewerContentData,
   viewerImageData,
   viewerKeyUuid,
-} = viewerControlDesuwa
+  viewerAllSize,
+} = viewerDisplayDesuwa
+
+const viewerControlDesuwa = useViewerControlDesuwa({
+  //
+  props,
+  viewerDisplayDesuwa,
+})
 
 const refViewerImage = ref<InstanceType<typeof ViewerImage> | null>(null)
 const isImageLoading = computed(() => {
@@ -87,10 +93,9 @@ const isImageLoading = computed(() => {
                 class="absolute bottom-0 left-0 right-0 top-0"
               >
                 <div
-                  v-if="viewerContentData != null"
+                  v-if="viewerContentData != null && viewerAllSize != null"
                   class="relative h-full w-full"
                 >
-                  <!-- 内容中的子元素负责位移与缩放 -->
                   <Transition name="fade" mode="out-in">
                     <div
                       :key="viewerContentData.url"
@@ -100,16 +105,13 @@ const isImageLoading = computed(() => {
                         height: `${viewerContentData.height}px`,
                       }"
                     >
-                      <div
-                        class="h-full w-full"
-                        @mousedown.stop="stopOverlayJudge"
-                        @mouseup.stop="stopOverlayJudge"
-                      >
-                        <ViewerImage
-                          ref="refViewerImage"
-                          :imageSrc="viewerContentData.url"
-                        ></ViewerImage>
-                      </div>
+                      <!-- 内容中的子元素负责位移与缩放 -->
+                      <ViewerImage
+                        ref="refViewerImage"
+                        :imageSrc="viewerContentData.url"
+                        :stopOverlayJudge="stopOverlayJudge"
+                        :viewerAllSize="viewerAllSize"
+                      ></ViewerImage>
                     </div>
                   </Transition>
                 </div>
@@ -119,31 +121,33 @@ const isImageLoading = computed(() => {
             <Transition name="fade-down-up" mode="out-in">
               <div
                 v-if="viewerImageData != null && viewerImageData.alt !== ''"
-                class="absolute left-0 right-0 top-0"
+                class="pointer-events-none absolute left-0 right-0 top-0"
               >
                 <div class="mx-[8px]">
                   <div
-                    class="mx-auto max-w-[500px]"
+                    class="pointer-events-auto mx-auto max-w-[500px]"
                     @mousedown.stop="stopOverlayJudge"
                     @mouseup.stop="stopOverlayJudge"
                   >
                     <ViewerTopBar
                       :viewerControlDesuwa="viewerControlDesuwa"
+                      :viewerDisplayDesuwa="viewerDisplayDesuwa"
                     ></ViewerTopBar>
                   </div>
                 </div>
               </div>
             </Transition>
             <!-- 底栏 -->
-            <div class="absolute bottom-0 left-0 right-0">
+            <div class="pointer-events-none absolute bottom-0 left-0 right-0">
               <div class="mx-[8px]">
                 <div
-                  class="mx-auto w-fit"
+                  class="pointer-events-auto mx-auto w-fit"
                   @mousedown.stop="stopOverlayJudge"
                   @mouseup.stop="stopOverlayJudge"
                 >
                   <ViewerBottomBar
                     :viewerControlDesuwa="viewerControlDesuwa"
+                    :viewerDisplayDesuwa="viewerDisplayDesuwa"
                   ></ViewerBottomBar>
                 </div>
               </div>
