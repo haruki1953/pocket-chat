@@ -79,6 +79,15 @@ const imagePageListQueryTest = useImagePageListQuery({
 // pnpm add @tanstack/vue-query@5.92.1
 // 没用还是有问题
 
+// 再明确的说明一下问题
+// 初始时，imagePageListQueryTest 和 imagePageListQuery 的数据相同，这是没问题的
+// 然后 searchContent 更改，会让 imagePageListQuery 触发新的查询，其值改变
+// 此时 imagePageListQueryTest 和 imagePageListQuery 的数据是不同的
+// 当此时 queryClient.invalidateQueries(/* ... */) 后，就会出现问题
+// imagePageListQueryTest 的数据变得和 imagePageListQuery 一样，即根据searchContent查询的数据
+// 明明 imagePageListQueryTest 的 searchContent: computed(() => '') 是不变的
+// imagePageListQueryTest 的数据却变得和 imagePageListQuery 一样
+
 const imagePageListQuery = useImagePageListQuery({
   pageNum: computed(() => {
     // 未登录且image_my，则应为null，不查询
