@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [0.1.1] - 2026-01-05
+## [0.2.0] - 2026-01-05
 
 <details>
 <summary>📝 查看中文版本 (Chinese Version)</summary>
@@ -21,8 +21,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Implement image functionality by @haruki1953 in https://github.com/haruki1953/pocket-chat/pull/8
-
-
 
 ## [0.1.0] - 2025-11-27
 
@@ -68,5 +66,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - pocket-chat: 一个基于 PocketBase 与 Vue3 的实时聊天平台 | A real-time chat platform built with PocketBase and Vue3. 
 
-
-[0.1.1]: https://github.com/haruki1953/pocket-chat/compare/v0.1.0...v0.1.1
+[unreleased]: https://github.com/haruki1953/pocket-chat/compare/v0.2.0...HEAD
+[0.2.0]: https://github.com/haruki1953/pocket-chat/compare/v0.1.0...v0.2.0
