@@ -98,7 +98,7 @@ export const useChatRoomMessagesRealtimeUnReadNotes = (data: {
     }
     const canScroll =
       props.refScrollWarp.scrollHeight > props.refScrollWarp.clientHeight
-    console.log('canScroll', canScroll)
+    // console.log('canScroll', canScroll)
     if (canScroll) {
       return
     }

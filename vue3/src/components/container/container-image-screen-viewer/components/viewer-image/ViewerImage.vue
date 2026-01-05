@@ -24,6 +24,7 @@ const allSize = computed(() => props.viewerAllSize)
 
 const {
   transform,
+  transition,
   onWheel,
   onMouseDown,
   onMouseMove,
@@ -47,7 +48,10 @@ defineExpose({
   <div class="h-full w-full">
     <div
       class="img-box h-full w-full cursor-grab active:cursor-grabbing"
-      :style="{ transform }"
+      :style="{
+        transform,
+        transition,
+      }"
       @mousedown.stop="stopOverlayJudge"
       @mouseup.stop="stopOverlayJudge"
       @wheel="onWheel"
