@@ -12,7 +12,7 @@
   <!-- TailwindCSS -->
   <a href="https://tailwindcss.com/" target="_blank"><img src="https://img.shields.io/badge/TailwindCSS-38B2AC?style=for-the-badge&logo=tailwindcss&logoColor=white" alt="TailwindCSS"></a>
   <!-- TanStack Query -->
-  <a href="https://tanstack.com/query/latest" target="_blank"><img src="https://img.shields.io/badge/TanStack%20Query-FF4154?style=for-the-badge&logo=reactquery&logoColor=white" alt="TanStack Query"></a>
+  <a href="https://tanstack.com/query/latest" target="_blank"><img src="https://img.shields.io/badge/TanStack%20Query-FF4154?style=for-the-badge&logo=TanStack&logoColor=white" alt="TanStack Query"></a>
   <!-- PocketBase -->
   <a href="https://pocketbase.io/" target="_blank"><img src="https://img.shields.io/badge/PocketBase-0E83CD?style=for-the-badge&logo=pocketbase&logoColor=white" alt="PocketBase"></a>
   </br>
@@ -22,6 +22,11 @@
   <a href="https://github.com/haruki1953/pocket-chat/releases" target="_blank"><img src="https://img.shields.io/github/release/haruki1953/pocket-chat.svg?style=for-the-badge" alt="GitHub Release"></a>
   <!-- GitHub Activity -->
   <a href="https://github.com/haruki1953/pocket-chat/commits" target="_blank"><img src="https://img.shields.io/github/commit-activity/m/haruki1953/pocket-chat.svg?style=for-the-badge" alt="GitHub Activity"></a>
+  </br>
+  <!-- Discord -->
+  <a href="https://discord.gg/aZq6u3Asak"><img alt="Discord" src="https://img.shields.io/discord/1192346949635026944?logo=discord&logoColor=white&label=Discord&color=4285F4&style=for-the-badge"></a>
+  <!-- Telegram -->
+  <a href="https://t.me/PocketTogether"><img alt="Telegram" src="https://img.shields.io/badge/Telegram-JOIN-188FCA.svg?logo=telegram&logoColor=white&style=for-the-badge"></a>
 </p>
 
 <p align="center">
@@ -33,15 +38,19 @@
 - 支持配置 Github、X/Twitter 等 OAuth2 登录/注册方式。
 - 支持消息回复、编辑、删除等操作，支持通过消息链接定位访问消息。
 - 支持网站内新消息通知，支持桌面新消息通知。
+- 支持图片发送、图片查看、图片信息编辑
 - 项目地址 https://github.com/haruki1953/pocket-chat
 - 预览 https://sakiko.top
 
 ![](./assets/Snipaste_2025-11-16_16-03-05.png)
-![](./assets/Snipaste_2025-11-16_16-00-27.png)
+![](./assets/Snipaste_2026-01-05_10-11-45.jpg)
 
 <details>
 <summary>📸 <b>更多截图</b></summary>
 
+![](./assets/Snipaste_2026-01-05_10-33-05.jpg)
+![](./assets/Snipaste_2026-01-05_10-34-08.jpg)
+![](./assets/Snipaste_2025-11-16_16-00-27.png)
 ![](./assets/Snipaste_2025-11-26_19-39-09.png)
 ![](./assets/Snipaste_2025-11-26_19-30-04.png)
 
@@ -84,8 +93,16 @@ PocketChat 所有的版本更新都在 Github 以 release 形式发布，在 htt
 - users 选项（专业的来说是 集合），可查看所有用户
 - config 集合，可查看或修改关于本项目的一些配置，详见 [config 集合配置](#config-集合配置)
 - messages 集合，可查看所有用户发送的所有消息
+- images 集合，可查看全部图片（ `v0.1.1` 版本后支持）
 
 ![](./assets/image-4.png)
+
+<details>
+<summary><b>images 集合 v0.1.1</b></summary>
+
+![](./assets/Snipaste_2026-01-05_10-50-02.png)
+
+</details>
 
 `http://127.0.0.1:58090` 为 PocketChat 的主页，在浏览器访问即可开始使用。
 
@@ -237,10 +254,12 @@ docker logs PocketChat
 
 ### config 集合配置
 
-![](./assets/Snipaste_2025-11-17_15-30-28.png)
+<!-- ![](./assets/Snipaste_2025-11-17_15-30-28.png) -->
+![](./assets/Snipaste_2026-01-05_10-56-53.png)
 
-- [`external-links-to-social-media-icons-etc`](#社交媒体等图标外链-external-links-to-social-media-icons-etc) : 社交媒体等图标外链（显示在登录页底部的图标链接） 
 - `website-name` : 网站名称，显示在 登录页 和 聊天主页左上角
+- [`external-links-to-social-media-icons-etc`](#社交媒体等图标外链-external-links-to-social-media-icons-etc) : 社交媒体等图标外链（显示在登录页底部的图标链接） 
+- [`upload-image-process-options`](#图片处理配置-upload-image-process-options) : 图片处理配置 `v0.1.1`
 - `password-update-rate-limit-second` : 发送密码修改请求后，需要等待一段时间，才能再次进行这一操作。此值控制需等待的时间，单位为秒。
 - `email-verify-rate-limit-second` : 发送邮箱验证请求后，需要等待一段时间，才能再次进行这一操作。此值控制需等待的时间，单位为秒。
 - `email-update-rate-limit-second` : 发送邮箱修改请求后，需要等待一段时间，才能再次进行这一操作。此值控制需等待的时间，单位为秒。
@@ -279,9 +298,80 @@ docker logs PocketChat
 
 ![](./assets/Snipaste_2025-11-17_15-50-13.png)
 
+#### 图片处理配置 upload-image-process-options
+
+![](./assets/Snipaste_2026-01-05_11-23-48.png)
+
+默认值为
+
+```json
+{
+  "bigConfig": {
+    "format": "image/webp",
+    "quality": 0.9,
+    "sumWidthHeightLimit": 4000
+  },
+  "imageConfig": {
+    "format": "image/webp",
+    "quality": 0.8,
+    "sumWidthHeightLimit": 2000
+  },
+  "smallConfig": {
+    "format": "image/webp",
+    "quality": 0.8,
+    "sumWidthHeightLimit": 1200
+  },
+  "tinyConfig": {
+    "format": "image/webp",
+    "quality": 0.8,
+    "sumWidthHeightLimit": 800
+  }
+}
+```
+
+配置说明
+
+```
+bigConfig 大图的配置
+imageConfig 中图的配置
+smallConfig 小图的配置
+tinyConfig 超小图的配置
+
+format 为图片应处理为的格式，支持："image/png" | "image/jpeg" | "image/webp"
+
+quality 为图片质量，为 0 到 1 之间的数字，只在 "image/jpeg" | "image/webp" 时生效
+
+sumWidthHeightLimit 为图片长宽之和的限制值，将按此值将图片处理为不同大小的图片
+注意，其值要符合 bigConfig > imageConfig > smallConfig > tinyConfig
+
+（前端会根据元素尺寸与屏幕分辨率，选择尺寸最合适的图片来显示）
+```
+
 #### config 重置为默认
 
 将 config 集合中任意一项删除，然后重启 PocketChat，此项配置就会重置为默认值。
+
+#### config 配置正确性检验
+
+config 集合修改后，重新打开前端网页（注意是根路径的面向用户的网页，而不是pocketbase的管理面板网页），并打开浏览器的开发者工具，查看其控制台，如果没有错误信息即代表配置正确
+
+如果某个配置缺失，如 `external-links-to-social-media-icons-etc` 缺失，将显示如下错误信息
+```
+src\queries\pb-collection-config.ts
+usePbCollectionConfigQuery
+findKeyItem == null
+key: external-links-to-social-media-icons-etc
+```
+
+如果某个配置错误，如 `upload-image-process-options` 配置的类型错误，将显示如下错误信息
+```
+src\queries\pb-collection-config.ts
+usePbCollectionConfigQuery
+findKeyItemParseResult.success === false
+key: upload-image-process-options
+```
+
+![](./assets/Snipaste_2026-01-05_13-30-55.png)
 
 ### Application 信息配置
 

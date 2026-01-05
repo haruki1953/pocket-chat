@@ -12,7 +12,7 @@
   <!-- TailwindCSS -->
   <a href="https://tailwindcss.com/" target="_blank"><img src="https://img.shields.io/badge/TailwindCSS-38B2AC?style=for-the-badge&logo=tailwindcss&logoColor=white" alt="TailwindCSS"></a>
   <!-- TanStack Query -->
-  <a href="https://tanstack.com/query/latest" target="_blank"><img src="https://img.shields.io/badge/TanStack%20Query-FF4154?style=for-the-badge&logo=reactquery&logoColor=white" alt="TanStack Query"></a>
+  <a href="https://tanstack.com/query/latest" target="_blank"><img src="https://img.shields.io/badge/TanStack%20Query-FF4154?style=for-the-badge&logo=TanStack&logoColor=white" alt="TanStack Query"></a>
   <!-- PocketBase -->
   <a href="https://pocketbase.io/" target="_blank"><img src="https://img.shields.io/badge/PocketBase-0E83CD?style=for-the-badge&logo=pocketbase&logoColor=white" alt="PocketBase"></a>
   </br>
@@ -22,6 +22,11 @@
   <a href="https://github.com/haruki1953/pocket-chat/releases" target="_blank"><img src="https://img.shields.io/github/release/haruki1953/pocket-chat.svg?style=for-the-badge" alt="GitHub Release"></a>
   <!-- GitHub Activity -->
   <a href="https://github.com/haruki1953/pocket-chat/commits" target="_blank"><img src="https://img.shields.io/github/commit-activity/m/haruki1953/pocket-chat.svg?style=for-the-badge" alt="GitHub Activity"></a>
+  </br>
+  <!-- Discord -->
+  <a href="https://discord.gg/aZq6u3Asak"><img alt="Discord" src="https://img.shields.io/discord/1192346949635026944?logo=discord&logoColor=white&label=Discord&color=4285F4&style=for-the-badge"></a>
+  <!-- Telegram -->
+  <a href="https://t.me/PocketTogether"><img alt="Telegram" src="https://img.shields.io/badge/Telegram-JOIN-188FCA.svg?logo=telegram&logoColor=white&style=for-the-badge"></a>
 </p>
 
 <p align="center">
@@ -33,15 +38,19 @@
 - Supports GitHub, X/Twitter, and other OAuth2 login/registration methods.
 - Supports message reply, edit, delete, and jumping to a message via its link.
 - Supports in-site new message notifications and desktop new message notifications.
+- Supports image sending, image viewing, and image metadata editing
 - Project address: https://github.com/haruki1953/pocket-chat
 - Live demo: https://sakiko.top
 
 ![](./assets/Snipaste_2025-11-16_16-03-05.png)
-![](./assets/Snipaste_2025-11-16_16-00-27.png)
+![](./assets/Snipaste_2026-01-05_10-11-45.jpg)
 
 <details>
 <summary>📸 <b>More Screenshots</b></summary>
 
+![](./assets/Snipaste_2026-01-05_10-33-05.jpg)
+![](./assets/Snipaste_2026-01-05_10-34-08.jpg)
+![](./assets/Snipaste_2025-11-16_16-00-27.png)
 ![](./assets/Snipaste_2025-11-26_19-39-09.png)
 ![](./assets/Snipaste_2025-11-26_19-30-04.png)
 
@@ -83,8 +92,16 @@ Creating a superuser is a [**required step after deployment**](#required-post-de
 - `users` collection: view all registered users
 - `config` collection: project-specific settings (see [Config collection settings](#config-collection-settings))
 - `messages` collection: view all sent messages
+- `images` collection: view all uploaded images (supported since version `v0.1.1`).
 
 ![](./assets/image-4.png)
+
+<details>
+<summary><b>images collection v0.1.1</b></summary>
+
+![](./assets/Snipaste_2026-01-05_10-50-02.png)
+
+</details>
 
 `http://127.0.0.1:58090` → PocketChat main chat interface
 
@@ -224,10 +241,12 @@ Fill in email and password. The email does not need to be real (e.g. `admin@admi
 
 ### Config collection settings
 
-![](./assets/Snipaste_2025-11-17_15-30-28.png)
+<!-- ![](./assets/Snipaste_2025-11-17_15-30-28.png) -->
+![](./assets/Snipaste_2026-01-05_10-56-53.png)
 
-- [`external-links-to-social-media-icons-etc`](#social-media-and-other-icon-external-links-external-links-to-social-media-icons-etc) – Social media icon links shown at the bottom of the login page
 - `website-name` – Site name displayed on login page and top-left of chat
+- [`external-links-to-social-media-icons-etc`](#social-media-and-other-icon-external-links-external-links-to-social-media-icons-etc) – Social media icon links shown at the bottom of the login page
+- [`upload-image-process-options`](#image-processing-configuration-upload-image-process-options) : Image processing configuration `v0.1.1`
 - `password-update-rate-limit-second` – Seconds to wait before another password change request is allowed
 - `email-verify-rate-limit-second` – Seconds to wait before another email verification request is allowed
 - `email-update-rate-limit-second` – Seconds to wait before another email update request is allowed
@@ -266,9 +285,89 @@ Icons come from https://remixicon.com/ (use the class name).
 
 ![](./assets/Snipaste_2025-11-17_15-50-13.png)
 
+#### Image processing configuration (upload-image-process-options)
+
+![](./assets/Snipaste_2026-01-05_11-23-48.png)
+
+Default value:
+
+```json
+{
+  "bigConfig": {
+    "format": "image/webp",
+    "quality": 0.9,
+    "sumWidthHeightLimit": 4000
+  },
+  "imageConfig": {
+    "format": "image/webp",
+    "quality": 0.8,
+    "sumWidthHeightLimit": 2000
+  },
+  "smallConfig": {
+    "format": "image/webp",
+    "quality": 0.8,
+    "sumWidthHeightLimit": 1200
+  },
+  "tinyConfig": {
+    "format": "image/webp",
+    "quality": 0.8,
+    "sumWidthHeightLimit": 800
+  }
+}
+```
+
+Configuration details:
+
+```
+bigConfig   Configuration for large images
+imageConfig Configuration for medium images
+smallConfig Configuration for small images
+tinyConfig  Configuration for extra-small images
+
+format  Image format, supported values:
+        "image/png" | "image/jpeg" | "image/webp"
+
+quality Image quality, a number between 0 and 1.
+        Only applies to "image/jpeg" and "image/webp".
+
+sumWidthHeightLimit
+        The limit for the sum of image width and height.
+        Images will be resized according to this value.
+        Note: The values must follow the order:
+              bigConfig > imageConfig > smallConfig > tinyConfig
+
+(The frontend will automatically choose the most appropriate image size
+based on element dimensions and screen resolution.)
+```
+
 #### Reset config to defaults
 
 Delete any field in the config collection and restart PocketChat – that field will revert to its default value.
+
+### Config Validatio
+
+After modifying the `config` collection, reopen the frontend webpage (note: this refers to the user-facing site at the root path, **not** the PocketBase admin panel). Then open the browser’s developer tools and check the console.  
+If no error messages appear, the configuration is valid.
+
+If a configuration entry is missing — for example, if `external-links-to-social-media-icons-etc` is not found — the following error will appear:
+
+```
+src\queries\pb-collection-config.ts
+usePbCollectionConfigQuery
+findKeyItem == null
+key: external-links-to-social-media-icons-etc
+```
+
+If a configuration entry is invalid — for example, if the type of `upload-image-process-options` is incorrect — the following error will appear:
+
+```
+src\queries\pb-collection-config.ts
+usePbCollectionConfigQuery
+findKeyItemParseResult.success === false
+key: upload-image-process-options
+```
+
+![](./assets/Snipaste_2026-01-05_13-30-55.png)
 
 ### Application settings
 
