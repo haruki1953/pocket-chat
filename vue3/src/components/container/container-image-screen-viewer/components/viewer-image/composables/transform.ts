@@ -312,12 +312,13 @@ export const useViewerImageTransformDesuwa = (data: {
 
   const onTouchMove = (e: TouchEvent) => {
     // -------------------------
-    // 双指 pinch 缩放 + 平移
+    // 双指 pinch 缩放 + 平移（连续差分）
     // -------------------------
     if (isPinching && e.touches.length === 2) {
       const newDist = getTouchDist(e.touches)
       const center = getTouchCenter(e.touches)
 
+      // 缩放
       const ratio =
         ((newDist - touchStartDist) * touchScaleRatioCoefficientFn() +
           touchStartDist) /
@@ -326,23 +327,41 @@ export const useViewerImageTransformDesuwa = (data: {
       const newScale = touchStartScale * ratio
       applyScale(newScale, center.x, center.y)
 
-      const newX = touchStartTranslate.x + (center.x - touchStartCenter.x)
-      const newY = touchStartTranslate.y + (center.y - touchStartCenter.y)
+      // 平移（连续差分）
+      const dx = center.x - touchStartCenter.x
+      const dy = center.y - touchStartCenter.y
+
+      const newX = touchStartTranslate.x + dx
+      const newY = touchStartTranslate.y + dy
       clampTranslate(newX, newY)
+
+      // ⭐关键：更新“上一帧”的参考点
+      touchStartCenter = center
+      touchStartTranslate = { x: translateX.value, y: translateY.value }
+      touchStartDist = newDist
+      touchStartScale = scale.value
 
       return
     }
 
     // -------------------------
-    // 单指拖拽
+    // 单指拖拽（连续差分）
     // -------------------------
     if (isSingleFinger && e.touches.length === 1) {
-      const dx = e.touches[0].clientX - singleStart.x
-      const dy = e.touches[0].clientY - singleStart.y
+      const x = e.touches[0].clientX
+      const y = e.touches[0].clientY
+
+      const dx = x - singleStart.x
+      const dy = y - singleStart.y
 
       const newX = touchStartTranslate.x + dx
       const newY = touchStartTranslate.y + dy
       clampTranslate(newX, newY)
+
+      // ⭐关键：更新“上一帧”的参考点
+      singleStart.x = x
+      singleStart.y = y
+      touchStartTranslate = { x: translateX.value, y: translateY.value }
 
       return
     }
