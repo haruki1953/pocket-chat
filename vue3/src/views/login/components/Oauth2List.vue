@@ -57,7 +57,7 @@ const authWithOAuth2 = async (providerName: AuthProviderInfo['name']) => {
   <!-- 左侧水平分割线 -->
   <div
     v-if="oauth2List.length > 0"
-    class="border border-color-background"
+    class="border-t-[3px] border-color-background"
   ></div>
   <!-- 左侧下栏 -->
   <div v-if="oauth2List.length > 0" class="mx-auto max-w-96">

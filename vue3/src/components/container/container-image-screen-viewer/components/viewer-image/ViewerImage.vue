@@ -35,9 +35,11 @@ const {
 } = useViewerImageTransformDesuwa({ allSize })
 
 // 鼠标离开窗口时也触发onMouseUp
-useEventListener(document, 'mouseleave', () => {
-  onMouseUp()
-})
+useEventListener(document, 'mouseleave', onMouseUp)
+useEventListener(document, 'visibilitychange', onMouseUp)
+useEventListener(window, 'blur', onMouseUp)
+useEventListener(window, 'mouseup', onMouseUp)
+useEventListener(window, 'pointerup', onMouseUp)
 
 defineExpose({
   isImageLoading,

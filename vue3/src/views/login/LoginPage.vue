@@ -106,7 +106,7 @@ const allowUsersToRegister = computed(() => {
                   <Oauth2List></Oauth2List>
                 </div>
                 <!-- 中间垂直分割线 -->
-                <div class="w-0 border border-transparent"></div>
+                <div class="w-0 border-l-[3px] border-transparent"></div>
                 <!-- 右栏 -->
                 <div
                   ref="refBoxRight"
@@ -131,7 +131,7 @@ const allowUsersToRegister = computed(() => {
                     </div>
                   </div>
                   <Oauth2List></Oauth2List>
-                  <div class="border border-color-background"></div>
+                  <div class="border-t-[3px] border-color-background"></div>
                   <div class="mx-auto max-w-96">
                     <div class="m-8">
                       <RegisterForm></RegisterForm>
