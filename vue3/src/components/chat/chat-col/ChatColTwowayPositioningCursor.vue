@@ -12,6 +12,7 @@ import {
   useChatScrollToShowMore,
   useChatShowLimitControlTwoway,
   useChatShowMoreOnTopOrBottomTwoway,
+  useImageScreenViewerDesuwa,
   useTwowayPositioningCursorDataInitialization,
 } from './composables'
 import ChatColTemplateBase from './ChatColTemplateBase.vue'
@@ -237,6 +238,11 @@ const {
   chatColPageRecoverDataCheck,
 })
 
+// 图片查看器这一块
+const imageScreenViewerDesuwa = useImageScreenViewerDesuwa({
+  chatDisplayDependentDataInitializationChoose,
+})
+
 // 页面恢复数据收集
 useChatColPageRecoverDataSetOnBeforeUnmountAndRouteLeave({
   props,
@@ -249,6 +255,7 @@ useChatColPageRecoverDataSetOnBeforeUnmountAndRouteLeave({
   chatRoomMessagesLimitBottomCursor,
   refChatColTemplateBase,
   chatRoomMessagesRealtimeReadNumber,
+  imageScreenViewerDesuwa,
 })
 
 // 封装 消息实时提示效果
@@ -293,6 +300,7 @@ useChatRoomMessagesRealtimeNotifEffects({
         "
         :chatTitle="chatTitle"
         :chatMessageQueryisNullAndError="chatMessageQueryisNullAndError"
+        :imageScreenViewerDesuwa="imageScreenViewerDesuwa"
       >
         <template #chatTopBarMoreMenu>
           <!-- 聊天顶栏菜单项 插槽 -->

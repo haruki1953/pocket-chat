@@ -1,9 +1,8 @@
 import { pbUsersGetOneApi } from '@/api'
 import { queryConfig } from '@/config'
-import { Collections, onPbResErrorStatus401AuthClear, pb } from '@/lib'
+import { pb } from '@/lib'
 import { queryKeys, queryRetryPbNetworkError } from '@/queries'
 import { useAuthStore, usePlaceholderDataProfileStore } from '@/stores'
-import { fetchWithTimeoutPreferred } from '@/utils'
 import { useQuery } from '@tanstack/vue-query'
 
 // 个人信息查询
@@ -48,7 +47,5 @@ export const useProfileQuery = () => {
     retry: queryRetryPbNetworkError,
   })
 
-  return {
-    ...query,
-  }
+  return query
 }

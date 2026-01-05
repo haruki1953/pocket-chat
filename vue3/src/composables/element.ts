@@ -50,3 +50,81 @@ export const useElementScrollMetrics = (
 
   return { scrollHeight, clientHeight }
 }
+
+/**
+ * useElementOverlayClick
+ *
+ * 提供严格的遮罩点击判断逻辑：
+ * - mousedown 与 mouseup 都必须发生在遮罩元素上
+ * - mousedown → mouseup 的时间不能超过 1000ms
+ * - 鼠标移动距离不能超过 100px
+ *
+ * 解决原生 click 的语义缺陷（mousedown 与 mouseup 只要在同一树内就触发）。
+ *
+ * 使用方式：
+ * ```vue
+ * <div class="overlay"
+ *      @mousedown="onOverlayDown"
+ *      @mouseup="onOverlayUp">
+ *   <div class="dialog"
+ *        @mousedown.stop="stopOverlayJudge"
+ *        @mouseup.stop="stopOverlayJudge">
+ *   </div>
+ * </div>
+ * ```
+ *
+ * @param {Object} data
+ * @param {Function} data.callback
+ *        当满足所有条件（按下与抬起都在遮罩内、时间与距离限制）时触发。
+ *
+ * @returns {{
+ *   onOverlayDown: (e: MouseEvent) => void,
+ *   onOverlayUp: (e: MouseEvent) => void,
+ *   stopOverlayJudge: () => void
+ * }}
+ */
+export const useElementOverlayClick = (data: { callback: () => unknown }) => {
+  const { callback } = data
+
+  const downInOverlay = ref(false)
+  const downTime = ref(0)
+  const downPos = ref({ x: 0, y: 0 })
+
+  function onOverlayDown(e: MouseEvent) {
+    downInOverlay.value = true
+    downTime.value = Date.now()
+    downPos.value = { x: e.clientX, y: e.clientY }
+  }
+
+  function onOverlayUp(e: MouseEvent) {
+    if (!downInOverlay.value) {
+      return
+    }
+
+    const duration = Date.now() - downTime.value
+    const dx = e.clientX - downPos.value.x
+    const dy = e.clientY - downPos.value.y
+    const distance = Math.sqrt(dx * dx + dy * dy)
+
+    const withinTime = duration <= 1000
+    const withinDistance = distance <= 100
+
+    if (withinTime && withinDistance) {
+      callback()
+    }
+
+    stopOverlayJudge()
+  }
+
+  function stopOverlayJudge() {
+    downInOverlay.value = false
+    downTime.value = 0
+    downPos.value = { x: 0, y: 0 }
+  }
+
+  return {
+    onOverlayDown,
+    onOverlayUp,
+    stopOverlayJudge,
+  }
+}

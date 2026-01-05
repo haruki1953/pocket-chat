@@ -1,22 +1,41 @@
 /** messages pb查询时一般要用的 Expand ，将在多个api中使用 */
 
-import type { MessagesRecord, MessagesResponse, UsersResponse } from '@/lib'
+import type {
+  ImagesResponse,
+  MessagesRecord,
+  MessagesResponse,
+  UsersResponse,
+} from '@/lib'
 import type { Group, KeyValueMirror } from '@/types'
 
 // 📦 定义 PocketBase 扩展字段的响应类型
 // 完整的消息类型
-export type MessagesResponseWidthExpand = MessagesResponse<MessagesRecordExpand>
+export type MessagesResponseWidthExpand = MessagesResponse<
+  MessagesRecordExpand | undefined
+>
 // 辅助类型，消息中replyMessage的类型
-export type MessagesResponseWidthExpandReplyMessage =
-  MessagesResponse<MessagesRecordExpandReplyMessage>
+export type MessagesResponseWidthExpandReplyMessage = MessagesResponse<
+  MessagesRecordExpandReplyMessage | undefined
+>
+// 辅助类型，消息中images的类型
+export type MessagesResponseWidthExpandImages = ImagesResponse<
+  MessagesRecordExpandImages | undefined
+>
 // 🎯 指定集合中需要展开的关联字段及其响应类型
 type MessagesRecordExpand = {
   author?: UsersResponse
   replyMessage?: MessagesResponseWidthExpandReplyMessage
+  images?: MessagesResponseWidthExpandImages[]
 }
+
 type MessagesRecordExpandReplyMessage = {
   author?: UsersResponse
 }
+
+type MessagesRecordExpandImages = {
+  author?: UsersResponse
+}
+
 // 🧠 类型安全地构造 expand 字符串
 export const messagesExpand = (() => {
   /**
@@ -39,26 +58,39 @@ export const messagesExpand = (() => {
   const recordKeys = {
     author: 'author',
     replyMessage: 'replyMessage',
+    images: 'images',
   } as const satisfies Group<
-    // 限制键必须来自 `[CollectionName]Record`，可选（允许只使用部分字段）
-    Partial<Record<keyof MessagesRecord, string>>
+    // 限制键必须来自 `[CollectionName]Record`，且每个键的值必须与键名相同（KeyValueMirror），可选（允许只使用部分字段）
+    Partial<KeyValueMirror<keyof MessagesRecord>>
   > satisfies Group<
-    // 限制键集合必须与 `RecordExpand` 完全一致，且每个键的值必须与键名相同（KeyValueMirror）
+    // 限制键集合必须与 `[CollectionName]RecordExpand[DeepExpandKey]` 完全一致，且每个键的值必须与键名相同（KeyValueMirror）
     KeyValueMirror<keyof MessagesRecordExpand>
   >
   const recordKeysReplyMessage = {
     author: 'author',
   } as const satisfies Group<
-    // 限制键必须来自 `[CollectionName]Record`，可选（允许只使用部分字段）
-    Partial<Record<keyof MessagesRecord, string>>
+    // 限制键必须来自 `[CollectionName]Record`，且每个键的值必须与键名相同（KeyValueMirror），可选（允许只使用部分字段）
+    Partial<KeyValueMirror<keyof MessagesRecord>>
   > satisfies Group<
-    // 限制键集合必须与 `RecordExpand` 完全一致，且每个键的值必须与键名相同（KeyValueMirror）
+    // 限制键集合必须与 `[CollectionName]RecordExpand[DeepExpandKey]` 完全一致，且每个键的值必须与键名相同（KeyValueMirror）
     KeyValueMirror<keyof MessagesRecordExpandReplyMessage>
+  >
+
+  const recordKeysImages = {
+    author: 'author',
+  } as const satisfies Group<
+    // 限制键必须来自 `[CollectionName]Record`，且每个键的值必须与键名相同（KeyValueMirror），可选（允许只使用部分字段）
+    Partial<KeyValueMirror<keyof ImagesResponse>>
+  > satisfies Group<
+    // 限制键集合必须与 `[CollectionName]RecordExpand[DeepExpandKey]` 完全一致，且每个键的值必须与键名相同（KeyValueMirror）
+    KeyValueMirror<keyof MessagesRecordExpandImages>
   >
 
   // 🧩 将字段键拼接为 expand 查询字符串
   // 模板字面量类型（Template Literal Types）可以在类型层面进行字符串拼接、组合和约束。
-  // type const = "author,replyMessage.author"
-
-  return `${recordKeys.author},${recordKeys.replyMessage}.${recordKeysReplyMessage.author}` as const
+  const rk = recordKeys
+  const rkrm = recordKeysReplyMessage
+  const rki = recordKeysImages
+  return `${rk.author},${rk.replyMessage}.${rkrm.author},${rk.images}.${rki.author}` as const
+  // type const = "author,replyMessage.author,images.author"
 })()

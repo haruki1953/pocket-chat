@@ -54,11 +54,13 @@ const crop = () => {
               fileUserAvatarConfig.imageResizeNumber,
               fileUserAvatarConfig.imageResizeNumber
             )
-            const imageBlob = await new Promise<Blob>((resolve) => {
+            const imageBlob = await new Promise<Blob>((resolve, reject) => {
+              // const imageResize: HTMLCanvasElement
               imageResize.toBlob(
                 (blob) => {
                   if (!blob) {
-                    throw new Error()
+                    reject(new Error('!blob'))
+                    return
                   }
                   resolve(blob)
                 },
@@ -140,7 +142,7 @@ const crop = () => {
         </div>
       </div>
       <!-- 分割线 div -->
-      <div class="border border-color-background"></div>
+      <div class="border-t-[3px] border-transparent"></div>
       <!-- 再复制一份样式创建按钮 -->
       <div class="flow-root rounded-b-3xl bg-color-background-soft">
         <div class="poto-setting-button-box not-center mb-4 mr-2 mt-2">

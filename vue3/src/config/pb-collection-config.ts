@@ -1,5 +1,11 @@
 import { z } from 'zod'
 
+const uploadImageProcessOptionsConfigSchema = z.object({
+  sumWidthHeightLimit: z.number(),
+  format: z.enum(['image/png', 'image/jpeg', 'image/webp']),
+  quality: z.number().min(0).max(1),
+})
+
 // pocketbase 集合 config 其值的 zodSchema
 export const pbCollectionConfigSchema = {
   'allow-users-to-register': z.boolean(),
@@ -15,6 +21,12 @@ export const pbCollectionConfigSchema = {
       name: z.string(),
     })
   ),
+  'upload-image-process-options': z.object({
+    imageConfig: uploadImageProcessOptionsConfigSchema,
+    bigConfig: uploadImageProcessOptionsConfigSchema,
+    smallConfig: uploadImageProcessOptionsConfigSchema,
+    tinyConfig: uploadImageProcessOptionsConfigSchema,
+  }),
 }
 // 类型体操：自动推导出类型结构
 export type PbCollectionConfigType = {
@@ -42,24 +54,50 @@ export const pbCollectionConfigDefaultGetFn = () => {
     /** 是否允许任何人查看，不登录也能查看（游客访问） */
     'allow-anonymous-view': true,
     /** 邮箱修改最短秒数（由 客户端/前端 实现的速率限制，单位秒） */
-    'email-update-rate-limit-second': 30,
+    'email-update-rate-limit-second': 60,
     /** 邮箱验证最短秒数 */
-    'email-verify-rate-limit-second': 30,
+    'email-verify-rate-limit-second': 60,
     /** 密码修改最短秒数 */
-    'password-update-rate-limit-second': 30,
+    'password-update-rate-limit-second': 60,
+    /**
+     * 图片的处理配置，
+     * 建议为 image/webp ，这样体积小，还不会丢失透明通道
+     */
+    'upload-image-process-options': {
+      imageConfig: {
+        sumWidthHeightLimit: 2000,
+        format: 'image/webp',
+        quality: 0.8,
+      },
+      bigConfig: {
+        sumWidthHeightLimit: 4000,
+        format: 'image/webp',
+        quality: 0.9,
+      },
+      smallConfig: {
+        sumWidthHeightLimit: 1200,
+        format: 'image/webp',
+        quality: 0.8,
+      },
+      tinyConfig: {
+        sumWidthHeightLimit: 800,
+        format: 'image/webp',
+        quality: 0.8,
+      },
+    },
     /*
       【pbCollectionConfigDefault_public END】
     */
 
     /**
-     * 网站名称
-     * 此值特殊，在前端为空字符串，在后端为'PocketTogether'
-     */
-    'website-name': '',
-    /**
      * 社交媒体等图标外链（显示在登录页底部的图标链接） https://remixicon.com/
      * 此值特殊，在前端为空数组，在后端为默认图标数组
      */
     'external-links-to-social-media-icons-etc': [],
+    /**
+     * 网站名称
+     * 此值特殊，在前端为空字符串，在后端为'PocketTogether'
+     */
+    'website-name': '',
   } satisfies PbCollectionConfigType as PbCollectionConfigType
 }

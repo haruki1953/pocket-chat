@@ -6,13 +6,15 @@ import {
 } from '@/api'
 import { appUserDefaultAvatar, routerDict } from '@/config'
 import { pb } from '@/lib'
-import { useRealtimeMessagesStore } from '@/stores'
+import { useI18nStore, useRealtimeMessagesStore } from '@/stores'
 import { useWebNotification } from '@vueuse/core'
 import { useRoute } from 'vue-router'
 
 export const useRealtimeMessagesSubscribe = () => {
   const realtimeMessagesStore = useRealtimeMessagesStore()
   const route = useRoute()
+
+  const i18nStore = useI18nStore()
 
   // 收到新消息时调用，根据情况决定是否通知
   const newMessageCheckAndNotif = (newMessage: MessagesResponseWidthExpand) => {
@@ -36,7 +38,7 @@ export const useRealtimeMessagesSubscribe = () => {
     /** 标题-头像 */
     const title = (() => {
       // author == null是不正常的
-      if (newMessage.expand.author == null) {
+      if (newMessage.expand?.author == null) {
         console.error('newMessage.expand.author == null')
         return ''
       }
@@ -48,11 +50,17 @@ export const useRealtimeMessagesSubscribe = () => {
       return newMessage.expand.author.name
     })()
     /** 内容 */
-    const body = newMessage.content
+    const body = (() => {
+      // 内容可能为图片
+      if (newMessage.images.length > 0) {
+        return i18nStore.t('chatMessageReplyMessageImageShowText')()
+      }
+      return newMessage.content
+    })()
     /** 图标-头像 */
     const icon = (() => {
       // author == null是不正常的，返回默认头像
-      if (newMessage.expand.author == null) {
+      if (newMessage.expand?.author == null) {
         console.error('newMessage.expand.author == null')
         return appUserDefaultAvatar
       }

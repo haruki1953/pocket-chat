@@ -40,6 +40,12 @@ export const chatRoomMessagesTwowayPositioningCursorScrollTopOffsetConfig =
 export const chatRoomMessagesDispalyTogetherMaxSecondsConfig = 600 as const
 
 /**
+ * 聊天页 dialogQueryKey: 'MessageInfoDialog',
+ * 控制dialog是否显示的query键, 不同的对话框应使用不同的，且要避免与其他query参数冲突
+ */
+export const chatRoomMessagesInfoDialogQueryKey = 'MessageInfoDialog' as const
+
+/**
  * 聊天页 双向定位游标 路由查询参数 键统一管理，以便在多处使用
  */
 export const chatRoomMessagesTwowayPositioningCursorRouterQueryParametersKeyConfig =
@@ -60,10 +66,10 @@ export const chatRoomMessagesScrollBottomGtThisValueCanBackTopConfig =
   500 as const
 
 /** 聊天页输入栏默认高度（为空时的高度） */
-export const chatInputBarDefaultHeightConfig = 64 as const
+export const chatInputBarDefaultHeightConfig = 52 as const
 
 /** 聊天内容中的链接，在显示时的最大长度 */
-export const chatLinkContentMaxLength = 30 as const
+export const chatLinkContentMaxLength = 60 as const
 
 /** 发送、修改、删除，等消息操作后的实时等待，其最大等待时间（超时时间），单位毫秒ms */
 export const chatMessageControlRealtimeWaitTimeoutMsConfig = 5000 as const

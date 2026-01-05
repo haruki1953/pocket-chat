@@ -1,7 +1,15 @@
 <script setup lang="ts">
-import type { PMLRCApiParameters0DataPageParamNonNullable } from '@/api'
-import { ContainerDialog, TextWithLink } from '@/components'
-import { useRouteControlDialog } from '@/composables'
+import type {
+  ImagesResponseWithBaseExpand,
+  PMLRCApiParameters0DataPageParamNonNullable,
+} from '@/api'
+import {
+  ContainerDialog,
+  IGVSoltHoverSlideInfoGo,
+  ImageGroupViewer,
+  TextWithLink,
+} from '@/components'
+import { useRouteControlDialog, useRouterHistoryTool } from '@/composables'
 import { useDateFormatYYYYMMDDHHmmss } from '@/utils'
 import type {
   ChatDisplayDependentDataInitializationChooseType,
@@ -11,6 +19,7 @@ import type { ChatInputBar } from './dependencies'
 import { useMessageControl, useMessageDispaly } from './composables'
 import { MessageDeleteDialog } from './components'
 import { useAuthStore, useI18nStore } from '@/stores'
+import { chatRoomMessagesInfoDialogQueryKey } from '@/config'
 
 const props = defineProps<{
   /** 聊天输入栏，将使用其中的数据 */
@@ -27,7 +36,7 @@ const props = defineProps<{
 export type MessageInfoDialogPropsType = typeof props
 
 const { dialogVisible, dialogOpen, dialogClose } = useRouteControlDialog({
-  dialogQueryKey: 'MessageInfoDialog',
+  dialogQueryKey: chatRoomMessagesInfoDialogQueryKey,
 })
 
 // 封装 消息显示相关数据逻辑
@@ -74,6 +83,21 @@ defineExpose({
 
 const i18nStore = useI18nStore()
 const authStore = useAuthStore()
+
+const {
+  // 跳转至图片详情页的方法
+  routerGoImageInfoPage,
+} = useRouterHistoryTool()
+
+const goImageInfoPage = (data: {
+  imageId: string
+  presetImageGetOneData: ImagesResponseWithBaseExpand
+}) => {
+  // dialogClose()
+  // await new Promise((resolve) => setTimeout(resolve, 200))
+  // await nextTick()
+  routerGoImageInfoPage(data)
+}
 </script>
 
 <template>
@@ -137,7 +161,7 @@ const authStore = useAuthStore()
                 <div
                   v-if="
                     chatRoomMessagesGetOneQuery.data.value.expand
-                      .replyMessage != null
+                      ?.replyMessage != null
                   "
                   class="mb-[6px] ml-[10px] mr-[12px]"
                 >
@@ -156,7 +180,7 @@ const authStore = useAuthStore()
                         if (
                           chatRoomMessagesGetOneQuery.data.value != null &&
                           chatRoomMessagesGetOneQuery.data.value.expand
-                            .replyMessage != null &&
+                            ?.replyMessage != null &&
                           chatRoomMessagesGetOneQuery.data.value.expand
                             .replyMessage.isDeleted
                         ) {
@@ -193,6 +217,17 @@ const authStore = useAuthStore()
                         }}
                       </div>
                       <div
+                        v-else-if="
+                          chatRoomMessagesGetOneQuery.data.value.expand
+                            .replyMessage.images.length > 0
+                        "
+                        class="select-none truncate text-[12px] text-color-text"
+                      >
+                        {{
+                          i18nStore.t('chatMessageReplyMessageImageShowText')()
+                        }}
+                      </div>
+                      <div
                         v-else
                         class="select-none truncate text-[12px] text-color-text"
                       >
@@ -204,8 +239,53 @@ const authStore = useAuthStore()
                     </div>
                   </div>
                 </div>
+                <!-- 图片 -->
+                <div
+                  v-if="
+                    chatRoomMessagesGetOneQuery.data.value.expand?.images !=
+                      null &&
+                    chatRoomMessagesGetOneQuery.data.value.expand.images
+                      .length > 0
+                  "
+                  class="flow-root"
+                >
+                  <div
+                    class="mx-[15px]"
+                    :class="{
+                      // 无回复消息是，上边距多一点
+                      'mt-[5px]':
+                        chatRoomMessagesGetOneQuery.data.value.expand
+                          ?.replyMessage == null,
+                    }"
+                  >
+                    <div
+                      class="overflow-hidden rounded-[20px] border-[3px] border-transparent bg-color-background"
+                    >
+                      <ImageGroupViewer
+                        v-slot="{ imageItem }"
+                        :imageList="
+                          chatRoomMessagesGetOneQuery.data.value.expand.images
+                        "
+                        bgTwcss="bg-color-background-mute"
+                      >
+                        <IGVSoltHoverSlideInfoGo
+                          :imageItem="imageItem"
+                          :onSlideClick="
+                            () => {
+                              goImageInfoPage({
+                                imageId: imageItem.id,
+                                presetImageGetOneData: imageItem,
+                              })
+                            }
+                          "
+                        ></IGVSoltHoverSlideInfoGo>
+                      </ImageGroupViewer>
+                    </div>
+                  </div>
+                </div>
                 <!-- 消息 -->
                 <div
+                  v-else
                   class="wrap-long-text mx-[15px] text-[16px] text-color-text"
                 >
                   <TextWithLink
@@ -315,7 +395,7 @@ const authStore = useAuthStore()
             </div>
           </div>
           <!-- 垫片，视觉高度调整 -->
-          <div class="h-[16px]"></div>
+          <!-- <div class="h-[16px]"></div> -->
         </div>
       </template>
       <template v-else>

@@ -1,10 +1,16 @@
 <script setup lang="ts">
+import { useElementOverlayClick } from '@/composables'
 import { useDark, useElementSize, useWindowSize } from '@vueuse/core'
 import type { ElScrollbar } from 'element-plus'
 
 const props = withDefaults(
   defineProps<{
+    /** 控制对话框是否显示的值 */
     dialogVisible: boolean
+    /**
+     * 对话框的关闭方法，需要传入函数，才能让其点击遮罩时关闭，如
+     * () => { dialogVisible.value = false }
+     */
     dialogCloseFn: () => void
     /** 是否可以通过点击遮罩关闭 Dialog，默认为true */
     closeOnClickOverlay?: boolean
@@ -14,12 +20,15 @@ const props = withDefaults(
     overlayBlur?: boolean
     /** 是否半透明遮罩，为false即全透明，默认为true */
     overlayTranslucent?: boolean
+    /** 对话框最大宽度 默认为500px*/
+    dialogMaxWidth?: number
   }>(),
   {
     closeOnClickOverlay: true,
     verticalAlignRatio: 0.3,
     overlayBlur: true,
     overlayTranslucent: true,
+    dialogMaxWidth: 500,
   }
 )
 
@@ -51,6 +60,12 @@ const dialogOverlayOnClickFn = () => {
     props.dialogCloseFn()
   }
 }
+
+const { onOverlayDown, onOverlayUp, stopOverlayJudge } = useElementOverlayClick(
+  {
+    callback: dialogOverlayOnClickFn,
+  }
+)
 </script>
 
 <template>
@@ -68,7 +83,8 @@ const dialogOverlayOnClickFn = () => {
             'bg-color-background-a90': isDark && overlayTranslucent,
             'overlay-blur': overlayBlur,
           }"
-          @click="dialogOverlayOnClickFn"
+          @mousedown="onOverlayDown"
+          @mouseup="onOverlayUp"
         >
           <ElScrollbar height="100vh">
             <!-- 内容左右距屏幕最小16px -->
@@ -77,7 +93,8 @@ const dialogOverlayOnClickFn = () => {
               <div
                 class="mx-auto"
                 :style="{
-                  'max-width': '500px',
+                  // 'max-width': '500px',
+                  'max-width': `${dialogMaxWidth}px`,
                 }"
               >
                 <!-- 高度最小为屏幕高度，以实现如果内容高度较小就垂直居中 -->
@@ -94,12 +111,21 @@ const dialogOverlayOnClickFn = () => {
                   <!-- 内容上下距屏幕最小32px -->
                   <div class="my-[32px]">
                     <!-- 阻断这之中的点击向父级传递，内容中的点击不会传递到遮罩，以达到只有遮罩被点击时才关闭 -->
-                    <div @click.stop>
-                      <!-- 此div用于测量内容高度 -->
-                      <div ref="refContentDiv" class="dialog-content">
-                        <!-- 内容插槽 -->
-                        <slot></slot>
-                      </div>
+                    <div
+                      @mousedown.stop="stopOverlayJudge"
+                      @mouseup.stop="stopOverlayJudge"
+                    >
+                      <Transition name="dialog-content-fade">
+                        <!-- 此div用于测量内容高度 -->
+                        <div
+                          v-show="dialogVisible"
+                          ref="refContentDiv"
+                          class="dialog-content"
+                        >
+                          <!-- 内容插槽 -->
+                          <slot></slot>
+                        </div>
+                      </Transition>
                     </div>
                   </div>
                 </div>
@@ -118,22 +144,39 @@ const dialogOverlayOnClickFn = () => {
     backdrop-filter: blur(15px); /* 模糊背景内容 */
     -webkit-backdrop-filter: blur(15px); /* Safari 支持 */
   }
-  transition: all 0.3s;
-}
-.dialog-content {
-  transition: all 0.3s;
-  transition-delay: 0.2s;
 }
 
-// .poto-container-dialog-leave-active,
-// .poto-container-dialog-enter-active {
-//   // transition: all 0.3s;
-// }
-.poto-container-dialog-enter-from,
+/* 遮罩进入：无 delay，立刻开始淡入 */
+.poto-container-dialog-enter-from {
+  opacity: 0;
+}
+.poto-container-dialog-enter-active {
+  transition: opacity 0.3s;
+}
+
+/* 遮罩离开：延迟 再开始淡出 */
 .poto-container-dialog-leave-to {
   opacity: 0;
-  .dialog-content {
-    opacity: 0;
-  }
+}
+.poto-container-dialog-leave-active {
+  transition: opacity 0.3s;
+  // transition-delay: 0.3s; /* ⭐ 关闭时遮罩比内容晚 */
+}
+
+/* 内容进入：延迟 再开始淡入 */
+.dialog-content-fade-enter-from {
+  opacity: 0;
+}
+.dialog-content-fade-enter-active {
+  transition: opacity 0.3s;
+  // transition-delay: 0.3s; /* ⭐ 打开时比遮罩晚 */
+}
+
+/* 内容离开：无 delay，立刻开始淡出 */
+.dialog-content-fade-leave-to {
+  opacity: 0;
+}
+.dialog-content-fade-leave-active {
+  transition: opacity 0.3s;
 }
 </style>

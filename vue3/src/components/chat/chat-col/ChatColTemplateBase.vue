@@ -10,10 +10,11 @@ import {
   ChatTopBar,
 } from './components'
 import { useI18nStore } from '@/stores'
-import { ContainerBar } from '@/components'
+import { ContainerBar, ContainerImageScreenViewer } from '@/components'
 import type {
   ChatDisplayDependentDataInitializationChooseType,
   ChatColPageRecoverDataCheckType,
+  ImageScreenViewerDesuwaType,
 } from './types'
 import { chatInputBarDefaultHeightConfig } from '@/config'
 
@@ -57,7 +58,16 @@ const props = defineProps<{
   /** 聊天标题 */
   chatTitle: string
   chatMessageQueryisNullAndError: boolean
+  // 图片查看器这一块
+  imageScreenViewerDesuwa: ImageScreenViewerDesuwaType
 }>()
+
+const {
+  imageScreenViewerClose,
+  imageScreenViewerVisible,
+  imageScreenViewerImageList,
+  imageScreenViewerImageCurrentId,
+} = props.imageScreenViewerDesuwa
 
 // 消息详情对话框
 const refMessageInfoDialog = ref<InstanceType<typeof MessageInfoDialog> | null>(
@@ -97,6 +107,13 @@ const chatRoomMessagesForShowWithOnMounted = computed(() => {
 
 <template>
   <div class="relative">
+    <!-- 图片查看器 -->
+    <ContainerImageScreenViewer
+      :imageList="imageScreenViewerImageList"
+      :imageCurrentId="imageScreenViewerImageCurrentId"
+      :dialogVisible="imageScreenViewerVisible"
+      :dialogCloseFn="imageScreenViewerClose"
+    ></ContainerImageScreenViewer>
     <!-- 消息详情对话框 -->
     <MessageInfoDialog
       ref="refMessageInfoDialog"
@@ -202,6 +219,7 @@ const chatRoomMessagesForShowWithOnMounted = computed(() => {
                   :replyPositioningFlagMessageId="replyPositioningFlagMessageId"
                   :replyPositioningFlagShow="replyPositioningFlagShow"
                   :replyPositioningFlagClose="replyPositioningFlagClose"
+                  :imageScreenViewerDesuwa="imageScreenViewerDesuwa"
                 ></ChatMessage>
               </div>
               <!-- <ElButton @click="testPbPageBottom">pb分页测试</ElButton> -->
@@ -270,7 +288,7 @@ const chatRoomMessagesForShowWithOnMounted = computed(() => {
         class="pointer-events-none absolute top-0 z-10 h-full w-full"
       >
         <div class="sticky top-0 flex h-screen items-center justify-center">
-          <div class="h-[50px] w-[50px] text-color-text-soft">
+          <div class="h-[50px] w-[50px] overflow-hidden text-color-text-soft">
             <RiLoader3Line
               class="loading-spinner-800ms"
               size="50px"
@@ -287,7 +305,9 @@ const chatRoomMessagesForShowWithOnMounted = computed(() => {
         class="pointer-events-none absolute top-0 z-10 h-full w-full"
       >
         <div class="sticky top-0 flex h-screen items-center justify-center">
-          <div class="h-[100px] w-[100px] text-color-background-soft">
+          <div
+            class="h-[100px] w-[100px] overflow-hidden text-color-background-soft"
+          >
             <!-- <RiMessage3Line size="100px"></RiMessage3Line> -->
             <RiMessage3Fill size="100px"></RiMessage3Fill>
           </div>

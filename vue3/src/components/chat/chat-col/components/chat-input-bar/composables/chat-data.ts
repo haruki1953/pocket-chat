@@ -1,8 +1,10 @@
 import {
+  type ImagesResponseWithBaseExpand,
   type MessagesResponseWidthExpand,
   type MessagesResponseWidthExpandReplyMessage,
 } from '@/api'
 import type { ChatInputBarPropsType } from './dependencies'
+import { useSelectionImageStore } from '@/stores'
 
 // 封装 聊天输入栏数据逻辑
 // useChatInputBarData
@@ -17,6 +19,9 @@ export const useChatInputBarData = (data: {
 
   // 聊天输入框内容
   const chatInputContent = ref('')
+
+  // 图片选择内容
+  const chatImageSelectList = ref<ImagesResponseWithBaseExpand[]>([])
 
   // 回复的消息，将导出给外部组件使用
   const chatReplyMessage = ref<MessagesResponseWidthExpandReplyMessage | null>(
@@ -35,10 +40,12 @@ export const useChatInputBarData = (data: {
       chatEditMessage.value = null
       chatInputContent.value = ''
       chatReplyMessage.value = null
+      chatImageSelectList.value = []
     } else {
       chatEditMessage.value = val
       chatInputContent.value = val.content
-      chatReplyMessage.value = val.expand.replyMessage ?? null
+      chatReplyMessage.value = val.expand?.replyMessage ?? null
+      chatImageSelectList.value = val.expand?.images ?? []
     }
   }
 
@@ -64,6 +71,7 @@ export const useChatInputBarData = (data: {
     props.chatColPageRecoverDataCheck === true
   ) {
     chatInputContent.value = chatColPageRecoverData.data.chatInputContent
+    chatImageSelectList.value = chatColPageRecoverData.data.chatImageSelectList
     chatReplyMessage.value = chatColPageRecoverData.data.chatReplyMessage
     chatEditMessage.value = chatColPageRecoverData.data.chatEditMessage
     chatMessageIsRealtimeTimeout.value =
@@ -74,9 +82,17 @@ export const useChatInputBarData = (data: {
     // 无
   }
 
+  // 图片选择数据接收，必须在“页面恢复数据”初始化之后，以覆盖其
+  const selectionImageStore = useSelectionImageStore()
+  const selectionImageGetData = selectionImageStore.getAndClear()
+  if (selectionImageGetData != null) {
+    chatImageSelectList.value = selectionImageGetData
+  }
+
   return {
     //
     chatInputContent,
+    chatImageSelectList,
     chatReplyMessage,
     chatReplyMessageSet,
     chatEditMessage,

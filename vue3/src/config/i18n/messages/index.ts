@@ -2,6 +2,7 @@ import { i18nMessagesChatPart } from './chat'
 import { i18nMessagesDatePart } from './date'
 import type { I18nLocaleType } from './dependencies'
 import { i18nMessagesHomePart } from './home'
+import { i18nMessagesImagePart } from './image'
 import { i18nMessagesLoginPart } from './login'
 import { i18nMessagesNotificationPart } from './notification'
 import { i18nMessagesPagePart } from './page'
@@ -9,6 +10,7 @@ import { i18nMessagesRegisterPart } from './register'
 import { i18nMessagesRoomPart } from './room'
 import { i18nMessagesSettingPart } from './setting'
 import { i18nMessagesTagsPart } from './tags'
+import { i18nMessagesUploadPart } from './upload'
 
 export type I18nMessagesSatisfiesType = Record<
   string,
@@ -41,6 +43,10 @@ export const i18nMessages = {
   ...i18nMessagesChatPart,
   // 房间页相关部分
   ...i18nMessagesRoomPart,
+  // 上传相关部分
+  ...i18nMessagesUploadPart,
+  // 图片页相关部分
+  ...i18nMessagesImagePart,
 } as const satisfies I18nMessagesSatisfiesType
 
 // 通过类型体操，获取i18nMessages键的类型
@@ -55,3 +61,5 @@ export type I18nMessagesKeyType = keyof typeof i18nMessages
 // 'ja-JP': () => '' as const,
 // 'ko-KR': () => '' as const,
 // 'ru-RU': () => '' as const,
+
+export * from './upload'

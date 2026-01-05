@@ -43,3 +43,34 @@ export type Group<T> = T
 export type KeyValueMirror<T extends string> = {
   [K in T]: K
 }
+
+/**
+ * ReplacePropertyType<T, K, NewType>
+ *
+ * 一个通用的类型工具，用于在已有对象类型 T 中，
+ * 将指定属性 K 的类型替换为新的类型 NewType。
+ *
+ * @template T - 原始对象类型
+ * @template K - 需要替换的属性键，必须是 T 的键之一
+ * @template NewType - 替换后的新类型
+ *
+ * @example
+ * type User = {
+ *   id: number;
+ *   name: string;
+ *   active: boolean;
+ * };
+ *
+ * // 将 User 类型中的 id 从 number 改为 string
+ * type UserWithStringId = ReplacePropertyType<User, "id", string>;
+ *
+ * // 结果：
+ * // {
+ * //   id: string;
+ * //   name: string;
+ * //   active: boolean;
+ * // }
+ */
+export type ReplacePropertyType<T, K extends keyof T, NewType> = {
+  [P in keyof T]: P extends K ? NewType : T[P]
+}

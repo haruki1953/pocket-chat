@@ -87,6 +87,11 @@ $dark-steps: 1, 2, 3, 4, 5, 6, 7, 8, 9;
 ...
 */
 
+.el-button.el-button {
+  // 【251210】el版本改变后，发现ForgotPasswordDialog.vue中的“取消”按钮颜色不对，进行修正
+  --el-fill-color-blank: vat(--color-background)
+}
+
 .el-message.el-message {
   border-radius: 20px;
   transition:
@@ -96,7 +101,8 @@ $dark-steps: 1, 2, 3, 4, 5, 6, 7, 8, 9;
     opacity var(--el-transition-duration),
     transform .4s,
     top .4s;
-  box-shadow: var(--el-box-shadow-light);
+  // box-shadow: var(--el-box-shadow-light);
+  box-shadow: 0 0 6px 6px var(--color-background);
   --el-message-bg-color: var(--color-background-soft);
   --el-message-border-color: transparent;
 
@@ -110,6 +116,9 @@ $dark-steps: 1, 2, 3, 4, 5, 6, 7, 8, 9;
 
 .el-notification.el-notification {
   border-radius: 20px;
+  border: none;
+  background-color: var(--color-background-soft);
+  box-shadow: 0 0 6px 6px var(--color-background);
 }
 
 .el-notification.right {

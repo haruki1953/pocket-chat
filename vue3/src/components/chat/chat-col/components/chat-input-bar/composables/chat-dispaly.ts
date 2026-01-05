@@ -22,6 +22,7 @@ export const useChatInputBarDispaly = (
     //
     props,
     chatInputContent,
+    chatImageSelectList,
     chatReplyMessage,
     chatEditMessage,
     chatMessageIsRealtimeTimeout,
@@ -90,21 +91,25 @@ export const useChatInputBarDispaly = (
     if (chatEditMessage.value != null || messageEditSubmitRunning.value) {
       return 'edit'
     }
-    // send 设置回复后，输入文字后，或正处于发送中，为 输入栏+发送按钮
+    // send 输入文字后，或正处于发送中，为 输入栏+发送按钮
+    // 【251222】图片选择后，也为send
     if (
+      chatImageSelectList.value.length > 0 ||
       chatInputContent.value !== '' ||
-      chatReplyMessage.value != null ||
       messageSendSubmitRunning.value
     ) {
       return 'send' as const
     }
     // backTop 底部仍有未显示的消息，或距底部距离大于大于一定值后为 回到底部文字+按钮
-    if (props.chatBackBottomDisplayable === true) {
+    // 且应没有正在回复的消息（正在回复消息时则不显示 backTop）
+    if (
+      props.chatBackBottomDisplayable === true &&
+      chatReplyMessage.value == null
+    ) {
       return 'backBottom' as const
     }
     // menu 正常状时为 输入栏+菜单按钮
-    // return 'menu' as const
-    return 'send' as const
+    return 'menu' as const
   })
 
   // 实现回到底部和新消息提示循环闪烁显示，间隔 2000ms

@@ -19,6 +19,9 @@ import type { UploadFile } from 'element-plus'
 import CropDialog from './components/CropDialog.vue'
 import { pbUsersUpdateAvatarApi } from '@/api'
 
+// 定义允许的图片类型
+const allowedTypes = ['image/jpeg', 'image/png', 'image/webp']
+
 const i18nStore = useI18nStore()
 
 // 个人信息查询
@@ -60,6 +63,19 @@ const refCropDialog = ref<InstanceType<typeof CropDialog> | null>(null)
 // 当用户通过 ElUpload 选择图片后触发
 // 用 URL.createObjectURL() 创建 原始图片 的临时 URL，并显示裁剪对话框
 const onImageSelect = (uploadFile: UploadFile) => {
+  const rawFile = uploadFile.raw
+  if (!rawFile) {
+    console.warn('未找到原始文件对象')
+    return
+  }
+
+  // 类型校验
+  // 头像、图片上传，拖拽文件上传时，el此时不会检查格式，应自己加上检查逻辑
+  if (!allowedTypes.includes(rawFile.type)) {
+    console.warn(`不支持的文件类型: ${rawFile.type}`)
+    return
+  }
+
   if (uploadFile.raw) {
     originalImage.value = URL.createObjectURL(uploadFile.raw)
     refCropDialog.value?.dialogOpen()
@@ -162,17 +178,12 @@ const submit = mutation.mutateAsync
       <!-- 居中 -->
       <div class="flex justify-center">
         <!-- ElUpload -->
-        <!--
-        将这个div换为ElUpload
-        单个文件，只允许 png jpg webp
-        用户点击这个后不是会选择文件吗，选择文件后打印文件信息
-        -->
-        <div class="upload-box">
+        <div class="upload-box overflow-hidden rounded-full">
           <ElUpload
             :autoUpload="false"
             :showFileList="false"
             :onChange="onImageSelect"
-            accept="image/png,image/jpeg,image/webp"
+            :accept="allowedTypes.join(',')"
             drag
           >
             <div
@@ -227,6 +238,9 @@ const submit = mutation.mutateAsync
         background-color: unset;
         border: none;
         padding: 0;
+        &.is-dragover {
+          background-color: var(--color-text-soft);
+        }
       }
     }
   }

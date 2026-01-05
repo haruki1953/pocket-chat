@@ -36,6 +36,22 @@ export const i18nMessagesPagePart = {
     'ko-KR': () => '이미지' as const,
     'ru-RU': () => 'Изображения' as const,
   },
+  pageImageSelect: {
+    'en-US': () => 'Image Selection' as const,
+    'zh-CN': () => '图片选择' as const,
+    'zh-TW': () => '圖片選擇' as const,
+    'ja-JP': () => '画像選択' as const,
+    'ko-KR': () => '이미지 선택' as const,
+    'ru-RU': () => 'Выбор изображения' as const,
+  },
+  pageImageInfo: {
+    'en-US': () => 'Image Details' as const,
+    'zh-CN': () => '图片详情' as const,
+    'zh-TW': () => '圖片詳情' as const,
+    'ja-JP': () => '画像の詳細' as const,
+    'ko-KR': () => '이미지 상세정보' as const,
+    'ru-RU': () => 'Сведения об изображении' as const,
+  },
   pageSetting: {
     'en-US': () => 'Setting' as const,
     'zh-CN': () => '设置' as const,

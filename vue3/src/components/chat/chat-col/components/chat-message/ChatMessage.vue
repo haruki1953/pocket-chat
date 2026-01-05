@@ -1,18 +1,36 @@
 <script setup lang="ts">
-import { chatRoomMessagesClassIdNamingFnConfig } from '@/config'
+import {
+  chatRoomMessagesClassIdNamingFnConfig,
+  imageCalcMaxWidthByRatioSizeLimitHandlerConfig,
+  imageCalcMaxWidthByRatioStepsOnChatPageConfig,
+  imageCalcMaxWidthByRatioStepsOnImagePageConfig,
+  imageCalcSingleRatioOptionsConfig,
+} from '@/config'
 import type {
   ChatRoomMessagesItem,
   OpenMessageInfoDialogType,
   ChatInputBar,
+  ImageScreenViewerDesuwaType,
 } from './dependencies'
-import type { PMLRCApiParameters0DataPageParamNonNullable } from '@/api'
+import type {
+  MessagesResponseWidthExpandImages,
+  PMLRCApiParameters0DataPageParamNonNullable,
+} from '@/api'
 import {
   useMessageControl,
   useMessageDisplay,
   useMessageRealtimeUpdate,
 } from './composables'
 import { useI18nStore } from '@/stores'
-import { TextWithLink } from '@/components'
+import {
+  IGVSoltAltLable,
+  ImageGroupViewerWithQueryAndRealtime,
+  TextWithLink,
+} from '@/components'
+import {
+  imageCalcMaxWidthByRatioUtil,
+  pbImageDataChooseByLargest,
+} from '@/utils'
 
 const props = defineProps<{
   /** 消息数据 */
@@ -40,8 +58,15 @@ const props = defineProps<{
   replyPositioningFlagMessageId: string | null
   replyPositioningFlagShow: boolean
   replyPositioningFlagClose: () => void
+  // 图片查看器这一块
+  imageScreenViewerDesuwa: ImageScreenViewerDesuwaType
 }>()
 export type ChatMessagePropsType = typeof props
+
+const {
+  //
+  imageScreenViewerOpen,
+} = props.imageScreenViewerDesuwa
 
 const i18nStore = useI18nStore()
 
@@ -93,6 +118,76 @@ const {
   updateCurrentMessageRealtimeUpdated,
   isCurrentMessageRealtimeUpdatedIsDeleted,
 })
+
+// 显式定义一个 可区分联合类型，让 mode 成为 discriminant
+type MessageShowModeWithDataValueType =
+  | {
+      mode: 'images'
+      data: {
+        images: MessagesResponseWidthExpandImages[]
+        messageMaxWidth: string
+      }
+    }
+  | {
+      mode: 'text'
+      data: {
+        messageMaxWidth: undefined
+      }
+    }
+// 消息显示模式，并携带数据
+const messageShowModeWithData = computed<MessageShowModeWithDataValueType>(
+  () => {
+    // images mode
+    if (
+      currentMessageData.value.expand?.images != null &&
+      currentMessageData.value.expand.images.length > 0
+    ) {
+      const imageList = currentMessageData.value.expand.images
+      // 根据图片大小计算消息最大宽度
+      const imageGroupMaxWidth = (() => {
+        // 单个图片
+        if (imageList.length === 1) {
+          const { width: imageWidth, height: imageHeight } =
+            pbImageDataChooseByLargest(imageList[0])
+
+          return imageCalcMaxWidthByRatioUtil({
+            imageWidth,
+            imageHeight,
+            imageCalcSingleRatioOptions: imageCalcSingleRatioOptionsConfig,
+            steps: imageCalcMaxWidthByRatioStepsOnChatPageConfig,
+            sizeLimitHandler: imageCalcMaxWidthByRatioSizeLimitHandlerConfig,
+          })
+        }
+        // 多个图片（或没有），以16比9计算，不加 sizeLimitHandler
+        else {
+          return imageCalcMaxWidthByRatioUtil({
+            imageWidth: 16,
+            imageHeight: 9,
+            imageCalcSingleRatioOptions: imageCalcSingleRatioOptionsConfig,
+            steps: imageCalcMaxWidthByRatioStepsOnChatPageConfig,
+          })
+        }
+      })()
+      // 返回 image mode 数据
+      return {
+        mode: 'images',
+        data: {
+          images: imageList,
+          messageMaxWidth: `${imageGroupMaxWidth}px`,
+        },
+      } as const
+    }
+    // text mode
+    else {
+      return {
+        mode: 'text',
+        data: {
+          messageMaxWidth: undefined,
+        },
+      } as const
+    }
+  }
+)
 </script>
 
 <template>
@@ -133,14 +228,24 @@ const {
           </div>
         </div>
         <!-- 消息列 -->
-        <div class="col-message truncate">
-          <div
+        <div
+          class="col-message truncate"
+          :class="{
+            'show-mode-images': messageShowModeWithData.mode === 'images',
+            'show-mode-text': messageShowModeWithData.mode === 'text',
+          }"
+          :style="{
+            maxWidth: messageShowModeWithData.data.messageMaxWidth,
+          }"
+        >
+          <!-- <div
             class="flex"
             :class="{
               // 消息为当前用户发送，flex-row-reverse使其靠右显示
               'flex-row-reverse': isMessageCurrentUser,
             }"
-          >
+          > -->
+          <div>
             <div
               class="flex min-h-[40px] items-center truncate transition-colors"
               :class="{
@@ -180,16 +285,20 @@ const {
                     ></div>
                   </Transition> -->
                   <div
-                    class="my-2"
+                    class=""
                     :class="{
                       'blinking-2s':
                         isCurrentMessageShouldUpdateRealtimeUpdated,
+                      'my-2': messageShowModeWithData.mode === 'text',
                     }"
                   >
                     <!-- 回复的消息 -->
                     <div
-                      v-if="currentMessageData.expand.replyMessage != null"
+                      v-if="currentMessageData.expand?.replyMessage != null"
                       class="mb-[4px] ml-[4px] mr-[12px]"
+                      :class="{
+                        'mt-2': messageShowModeWithData.mode === 'images',
+                      }"
                     >
                       <div
                         class="flex items-center"
@@ -202,7 +311,7 @@ const {
                         @click="
                           () => {
                             if (
-                              currentMessageData.expand.replyMessage != null &&
+                              currentMessageData.expand?.replyMessage != null &&
                               currentMessageData.expand.replyMessage.isDeleted
                             ) {
                               return
@@ -237,6 +346,19 @@ const {
                             }}
                           </div>
                           <div
+                            v-else-if="
+                              currentMessageData.expand.replyMessage.images
+                                .length > 0
+                            "
+                            class="select-none truncate text-[12px] text-color-text"
+                          >
+                            {{
+                              i18nStore.t(
+                                'chatMessageReplyMessageImageShowText'
+                              )()
+                            }}
+                          </div>
+                          <div
                             v-else
                             class="select-none truncate text-[12px] text-color-text"
                           >
@@ -245,8 +367,50 @@ const {
                         </div>
                       </div>
                     </div>
+                    <!-- 消息图片内容，优先于文字 -->
+                    <div
+                      v-if="messageShowModeWithData.mode === 'images'"
+                      class=""
+                    >
+                      <div
+                        class="overflow-hidden border-[3px] border-transparent"
+                        :class="{
+                          // 圆角控制
+                          'rounded-tl-[20px]': isMessageBoxroundedTL,
+                          'rounded-tr-[20px]': isMessageBoxroundedTR,
+                          'rounded-bl-[20px]': isMessageBoxroundedBL,
+                          'rounded-br-[20px]': isMessageBoxroundedBR,
+                          'rounded-tl-[4px]': !isMessageBoxroundedTL,
+                          'rounded-tr-[4px]': !isMessageBoxroundedTR,
+                          'rounded-bl-[4px]': !isMessageBoxroundedBL,
+                          'rounded-br-[4px]': !isMessageBoxroundedBR,
+                        }"
+                      >
+                        <ImageGroupViewerWithQueryAndRealtime
+                          v-slot="{ imageItem, imageList }"
+                          :imageList="messageShowModeWithData.data.images"
+                          bgTwcss="bg-color-background-mute"
+                          lazy
+                        >
+                          <div
+                            class="h-full cursor-pointer"
+                            @click="
+                              imageScreenViewerOpen({
+                                imageList: imageList,
+                                imageCurrentId: imageItem.id,
+                              })
+                            "
+                          >
+                            <IGVSoltAltLable
+                              :imageItem="imageItem"
+                            ></IGVSoltAltLable>
+                          </div>
+                        </ImageGroupViewerWithQueryAndRealtime>
+                      </div>
+                    </div>
                     <!-- 消息文字内容 -->
                     <div
+                      v-else
                       class="wrap-long-text mx-3 text-[15px] text-color-text"
                     >
                       <!-- 消息是否为自己发送，背景色会不一样，所以链接的颜色也不一样 -->
@@ -265,7 +429,8 @@ const {
                         v-else
                         :data="currentMessageData.content"
                         aTwcss="text-el-primary hover:underline"
-                      ></TextWithLink>
+                      >
+                      </TextWithLink>
                     </div>
                   </div>
                 </div>
@@ -387,9 +552,19 @@ const {
 
   .col-message {
     // 限制消息列最大宽度， 40px 为头像列和图标列的宽度， 4px 为间隔宽度
-    max-width: calc(
-      100% - var(--avatar-width) - var(--icon-width) - var(--gap) - var(--gap)
-    );
+    // max-width: calc(
+    //   100% - var(--avatar-width) - var(--icon-width) - var(--gap) - var(--gap)
+    // );
+    &.show-mode-text {
+      max-width: calc(
+        100% - var(--avatar-width) - var(--icon-width) - var(--gap) - var(--gap)
+      );
+    }
+    &.show-mode-images {
+      width: calc(
+        100% - var(--avatar-width) - var(--icon-width) - var(--gap) - var(--gap)
+      );
+    }
   }
 
   // more-button 默认不显示

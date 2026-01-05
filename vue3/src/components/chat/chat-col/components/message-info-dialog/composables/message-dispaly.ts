@@ -98,7 +98,7 @@ export const useMessageDispaly = (data: {
   const { currentMessageUserData: replyMessageUserData } =
     useCurrentMessageUserDataOptimization({
       messageData: computed(
-        () => chatRoomMessagesGetOneQuery.data.value?.expand.replyMessage
+        () => chatRoomMessagesGetOneQuery.data.value?.expand?.replyMessage
       ),
     })
 

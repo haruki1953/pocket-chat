@@ -78,8 +78,9 @@ export const useChatControlFunctions = (data: {
       queryClient.removeQueries({
         // chatRoomMessagesInfiniteTwowayQuery.queryKey.value 是只读的固定长度元组类型，通过索引访问是安全的
         queryKey: [queryKey.value[0], queryKey.value[1]],
-        exact: false, // 模糊匹配，即不需要CursorData游标数据，移除本房间的所有数据
+        // exact: false, // 模糊匹配，即不需要CursorData游标数据，移除本房间的所有数据
       })
+
       // 重置双向定位无限查询的定位游标数据和相关数据
       resetPositioningCursorDataAndRelatedData()
       // 重新加载数据

@@ -2,16 +2,22 @@ import type {
   MessagesResponseWidthExpand,
   PMLRCApiParameters0DataPageParamNonNullable,
 } from '@/api'
-import { chatRoomMessagesTwowayPositioningCursorRouterQueryParametersKeyConfig } from '@/config'
+import {
+  chatRoomMessagesInfoDialogQueryKey,
+  chatRoomMessagesTwowayPositioningCursorRouterQueryParametersKeyConfig,
+  imageScreenViewerDialogQueryKey,
+} from '@/config'
 import { onBeforeRouteLeave, useRoute, useRouter } from 'vue-router'
 import type {
   ChatRoomMessagesInfiniteTwowayQueryType,
   ChatRoomMessagesLimitTopCursorType,
   ChatRoomMessagesListAndRealtimeType,
+  ImageScreenViewerDesuwaType,
   PropsType,
   RefChatColTemplateBaseType,
 } from './dependencies'
 import { useRouterHistoryStore } from '@/stores'
+import { useOnComponentLeave } from '@/composables'
 
 // 封装，定义 与 初始化，分开
 
@@ -85,10 +91,12 @@ export const useChatDisplayDependentDataInitializationChoose = () => {
   const route = useRoute()
   const router = useRouter()
 
+  // 聊天页 双向定位游标 路由查询参数 键统一管理，以便在多处使用
+  const { id: keyId, created: keyCreated } =
+    chatRoomMessagesTwowayPositioningCursorRouterQueryParametersKeyConfig
+
   // 获取根据路由定位查询参数初始化数据
   const routeQueryPositioningCursorData = (() => {
-    const { id: keyId, created: keyCreated } =
-      chatRoomMessagesTwowayPositioningCursorRouterQueryParametersKeyConfig
     const id = route.query[keyId]
     const created = route.query[keyCreated]
     if (
@@ -104,22 +112,11 @@ export const useChatDisplayDependentDataInitializationChoose = () => {
       created,
     }
   })()
-  // 无卵使用哪种初始化，都清除路由中的查询参数
-  router.replace(route.path)
 
   // 获取根据页面恢复数据初始化数据
   const routerHistoryStore = useRouterHistoryStore()
   const chatColPageRecoverData =
     routerHistoryStore.currentGetPageRecoverDataForChatColItem()
-
-  // console.log('routerHistoryStore.currentUuid', routerHistoryStore.currentUuid)
-  ;(async () => {
-    await new Promise((resolve) => setTimeout(resolve, 3000))
-    // console.log(
-    //   'routerHistoryStore.currentUuid',
-    //   routerHistoryStore.currentUuid
-    // )
-  })()
 
   // 决定使用哪种初始化
   const chooseInitialization = (() => {
@@ -132,6 +129,29 @@ export const useChatDisplayDependentDataInitializationChoose = () => {
     }
     return 'none' as const
   })()
+
+  // 无论使用哪种初始化，都清除路由中的查询参数
+  // router.replace({
+  //   path: route.path,
+  //   query: {
+  //     ...route.query,
+  //     [keyId]: undefined,
+  //     [keyCreated]: undefined,
+  //   },
+  // })
+  const newQuery = { ...route.query }
+  delete newQuery[keyId]
+  delete newQuery[keyCreated]
+  // 对于 MessageInfoDialog 和 ImageScreenViewer
+  // 如果是 chatColPageRecoverData 则保留，否则也清除
+  if (chooseInitialization !== 'chatColPageRecoverData') {
+    delete newQuery[chatRoomMessagesInfoDialogQueryKey]
+    delete newQuery[imageScreenViewerDialogQueryKey]
+  }
+  router.replace({
+    path: route.path,
+    query: newQuery,
+  })
 
   return {
     chooseInitialization,
@@ -318,6 +338,7 @@ export const useChatColPageRecoverDataSetOnBeforeUnmountAndRouteLeave = (data: {
   chatRoomMessagesLimitBottomCursor: ChatRoomMessagesLimitTopCursorType
   refChatColTemplateBase: RefChatColTemplateBaseType
   chatRoomMessagesRealtimeReadNumber: Ref<number>
+  imageScreenViewerDesuwa: ImageScreenViewerDesuwaType
 }) => {
   const {
     //
@@ -331,12 +352,16 @@ export const useChatColPageRecoverDataSetOnBeforeUnmountAndRouteLeave = (data: {
     chatRoomMessagesLimitBottomCursor,
     refChatColTemplateBase,
     chatRoomMessagesRealtimeReadNumber,
+    imageScreenViewerDesuwa,
   } = data
 
+  const {
+    //
+    imageScreenViewerImageList,
+    imageScreenViewerImageCurrentId,
+  } = imageScreenViewerDesuwa
+
   const routerHistoryStore = useRouterHistoryStore()
-  // onBeforeUnmount 有一些问题，有时会在 router.afterEach 之后才执行，这对于自己是不正确的，
-  // 而 onBeforeRouteLeave 虽然能确保在 router.afterEach 之前执行（确定吗），但不会触发于非路由卸载（如 v-if）
-  // 所以需要将 onBeforeUnmount 和 beforeRouteLeave结合，同时使用这两个，只要让这两个不会执行两次即可
 
   const chatColPageRecoverDataSet = () => {
     // console.log(
@@ -356,6 +381,7 @@ export const useChatColPageRecoverDataSetOnBeforeUnmountAndRouteLeave = (data: {
     }
     const {
       chatInputContent,
+      chatImageSelectList,
       chatReplyMessage,
       chatEditMessage,
       chatMessageIsRealtimeTimeout,
@@ -376,6 +402,7 @@ export const useChatColPageRecoverDataSetOnBeforeUnmountAndRouteLeave = (data: {
       chatRoomMessagesLimitBottomCursor:
         chatRoomMessagesLimitBottomCursor.value,
       chatInputContent,
+      chatImageSelectList,
       chatReplyMessage,
       chatEditMessage,
       chatMessageIsRealtimeTimeout,
@@ -383,24 +410,12 @@ export const useChatColPageRecoverDataSetOnBeforeUnmountAndRouteLeave = (data: {
       refScrollWarpScrollTop,
       chatRoomMessagesRealtimeReadNumber:
         chatRoomMessagesRealtimeReadNumber.value,
+      imageScreenViewerImageList: imageScreenViewerImageList.value,
+      imageScreenViewerImageCurrentId: imageScreenViewerImageCurrentId.value,
     })
     // console.log(routerHistoryStore.pageRecoverDataForChatCol)
   }
-  // chatColPageRecoverDataSet 是否已执行
-  let chatColPageRecoverDataSetHasRun = false
-  // 让 chatColPageRecoverDataSet 只执行一次
-  const chatColPageRecoverDataSetRunOnce = () => {
-    if (chatColPageRecoverDataSetHasRun) {
-      return
-    }
-    chatColPageRecoverDataSetHasRun = true
-    chatColPageRecoverDataSet()
-  }
 
-  onBeforeUnmount(() => {
-    chatColPageRecoverDataSetRunOnce()
-  })
-  onBeforeRouteLeave(() => {
-    chatColPageRecoverDataSetRunOnce()
-  })
+  // 在组件离开时执行 页面恢复数据收集
+  useOnComponentLeave(chatColPageRecoverDataSet)
 }

@@ -119,7 +119,7 @@ export const useMessageControl = (data: {
   /** 聊天回复定位 */
   const replyMessagesPositioningFn = async () => {
     // 本消息无回复，直接返回
-    if (currentMessageData.value.expand.replyMessage == null) {
+    if (currentMessageData.value.expand?.replyMessage == null) {
       return
     }
     await props.chatRoomMessagesReplyPositioningFn({

@@ -187,12 +187,15 @@ export const useMessageDisplay = (data: {
     {
       // i18n
       messages: i18nStore.t('useTimeAgoMessages')(),
+      max: 'day',
     }
   )
 
   const { currentMessageUserData: replyMessageUserData } =
     useCurrentMessageUserDataOptimization({
-      messageData: computed(() => currentMessageData.value.expand.replyMessage),
+      messageData: computed(
+        () => currentMessageData.value.expand?.replyMessage
+      ),
     })
 
   // 回复的消息的用户头像
