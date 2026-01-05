@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ContainerDialog } from '@/components'
+import { ContainerDialog251102 } from '@/components'
 import { useRouteControlDialog } from '@/composables'
 import { fileUserAvatarConfig } from '@/config'
 import { useI18nStore } from '@/stores'
@@ -108,7 +108,7 @@ const crop = () => {
       :modalClass="overlayClass"
       :closeOnClickModal="false"
     > -->
-    <ContainerDialog
+    <ContainerDialog251102
       :dialogVisible="dialogVisible"
       :dialogCloseFn="dialogClose"
       :closeOnClickOverlay="false"
@@ -156,7 +156,7 @@ const crop = () => {
           </span>
         </div>
       </div>
-    </ContainerDialog>
+    </ContainerDialog251102>
     <!-- </ElDialog> -->
   </div>
 </template>
