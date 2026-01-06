@@ -7,6 +7,29 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.2.1] - 2026-01-06
+
+<details>
+<summary>📝 查看中文版本 (Chinese Version)</summary>
+
+### 修复
+
+- Solve some problems by @haruki1953 in https://github.com/haruki1953/pocket-chat/pull/13
+- 解决当聊天高度不够屏幕时，导致新消失提示无法消除的问题
+- 优化图片查看器transform过渡，完善触摸缩放位移控制
+- 解决图片选择页左列较空时仍有滚动的问题
+- 解决未登录时仍能确认选择图片的问题
+
+</details>
+
+### Fixed
+
+- Solve some problems by @haruki1953 in https://github.com/haruki1953/pocket-chat/pull/13
+- Fix the issue where the “new message dismissed” indicator cannot be cleared when the chat height is shorter than the screen.
+- Optimize the image viewer’s transform transitions and improve touch-based zoom and pan controls.
+- Fix the issue where the left column in the image selection page still scrolls even when it has little content.
+- Fix the issue where users can still confirm image selection without being logged in.
+
 ## [0.2.0] - 2026-01-05
 
 <details>
@@ -66,5 +89,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - pocket-chat: 一个基于 PocketBase 与 Vue3 的实时聊天平台 | A real-time chat platform built with PocketBase and Vue3. 
 
-[unreleased]: https://github.com/haruki1953/pocket-chat/compare/v0.2.0...HEAD
+[unreleased]: https://github.com/haruki1953/pocket-chat/compare/v0.2.1...HEAD
+[0.2.0]: https://github.com/haruki1953/pocket-chat/compare/v0.2.0...v0.2.1
 [0.2.0]: https://github.com/haruki1953/pocket-chat/compare/v0.1.0...v0.2.0
