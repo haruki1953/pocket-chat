@@ -93,12 +93,12 @@ Creating a superuser is a [**required step after deployment**](#required-post-de
 - `users` collection: view all registered users
 - `config` collection: project-specific settings (see [Config collection settings](#config-collection-settings))
 - `messages` collection: view all sent messages
-- `images` collection: view all uploaded images (supported since version `v0.1.1`).
+- `images` collection: view all uploaded images (supported since version `v0.2.0`).
 
 ![](./assets/image-4.png)
 
 <details>
-<summary><b>images collection v0.1.1</b></summary>
+<summary><b>images collection v0.2.0</b></summary>
 
 ![](./assets/Snipaste_2026-01-05_10-50-02.png)
 
@@ -355,7 +355,7 @@ Fill in email and password. The email does not need to be real (e.g. `admin@admi
 
 - `website-name` – Site name displayed on login page and top-left of chat
 - [`external-links-to-social-media-icons-etc`](#social-media-and-other-icon-external-links-external-links-to-social-media-icons-etc) – Social media icon links shown at the bottom of the login page
-- [`upload-image-process-options`](#image-processing-configuration-upload-image-process-options) : Image processing configuration `v0.1.1`
+- [`upload-image-process-options`](#image-processing-configuration-upload-image-process-options) : Image processing configuration `v0.2.0`
 - `password-update-rate-limit-second` – Seconds to wait before another password change request is allowed
 - `email-verify-rate-limit-second` – Seconds to wait before another email verification request is allowed
 - `email-update-rate-limit-second` – Seconds to wait before another email update request is allowed

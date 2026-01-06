@@ -94,12 +94,12 @@ PocketChat 所有的版本更新都在 Github 以 release 形式发布，在 htt
 - users 选项（专业的来说是 集合），可查看所有用户
 - config 集合，可查看或修改关于本项目的一些配置，详见 [config 集合配置](#config-集合配置)
 - messages 集合，可查看所有用户发送的所有消息
-- images 集合，可查看全部图片（ `v0.1.1` 版本后支持）
+- images 集合，可查看全部图片（ `v0.2.0` 版本后支持）
 
 ![](./assets/image-4.png)
 
 <details>
-<summary><b>images 集合 v0.1.1</b></summary>
+<summary><b>images 集合 v0.2.0</b></summary>
 
 ![](./assets/Snipaste_2026-01-05_10-50-02.png)
 
@@ -358,7 +358,7 @@ docker logs PocketChat
 
 - `website-name` : 网站名称，显示在 登录页 和 聊天主页左上角
 - [`external-links-to-social-media-icons-etc`](#社交媒体等图标外链-external-links-to-social-media-icons-etc) : 社交媒体等图标外链（显示在登录页底部的图标链接） 
-- [`upload-image-process-options`](#图片处理配置-upload-image-process-options) : 图片处理配置 `v0.1.1`
+- [`upload-image-process-options`](#图片处理配置-upload-image-process-options) : 图片处理配置 `v0.2.0`
 - `password-update-rate-limit-second` : 发送密码修改请求后，需要等待一段时间，才能再次进行这一操作。此值控制需等待的时间，单位为秒。
 - `email-verify-rate-limit-second` : 发送邮箱验证请求后，需要等待一段时间，才能再次进行这一操作。此值控制需等待的时间，单位为秒。
 - `email-update-rate-limit-second` : 发送邮箱修改请求后，需要等待一段时间，才能再次进行这一操作。此值控制需等待的时间，单位为秒。
