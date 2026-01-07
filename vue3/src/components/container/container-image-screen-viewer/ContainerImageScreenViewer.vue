@@ -58,7 +58,7 @@ const viewerControlDesuwa = useViewerControlDesuwa({
   //
   props,
   viewerDisplayDesuwa,
-  refViewerImage
+  refViewerImage,
 })
 
 const isImageLoading = computed(() => {
@@ -158,7 +158,7 @@ const isImageLoading = computed(() => {
             <!-- 加载状态 -->
             <Transition name="fade">
               <div
-                v-show="isImageLoading"
+                v-if="isImageLoading"
                 class="absolute bottom-0 left-0 right-0 top-0 flex items-center justify-center"
               >
                 <div
@@ -168,6 +168,25 @@ const isImageLoading = computed(() => {
                     class="loading-spinner-800ms"
                     size="50px"
                   ></RiLoader3Line>
+                </div>
+              </div>
+            </Transition>
+            <!-- 加载状态时，有一个和图片一样大小的盒子在其之上，主要为了让加载遮罩也阻止点击退出 -->
+            <Transition name="fade">
+              <div
+                v-if="isImageLoading && viewerContentData != null"
+                class="absolute bottom-0 left-0 right-0 top-0"
+              >
+                <div class="relative h-full w-full">
+                  <div
+                    class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 cursor-wait"
+                    :style="{
+                      width: `${viewerContentData.width}px`,
+                      height: `${viewerContentData.height}px`,
+                    }"
+                    @mousedown.stop="stopOverlayJudge"
+                    @mouseup.stop="stopOverlayJudge"
+                  ></div>
                 </div>
               </div>
             </Transition>

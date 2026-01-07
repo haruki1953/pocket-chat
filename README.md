@@ -355,7 +355,7 @@ Fill in email and password. The email does not need to be real (e.g. `admin@admi
 
 - `website-name` – Site name displayed on login page and top-left of chat
 - [`external-links-to-social-media-icons-etc`](#social-media-and-other-icon-external-links-external-links-to-social-media-icons-etc) – Social media icon links shown at the bottom of the login page
-- [`upload-image-process-options`](#image-processing-configuration-upload-image-process-options) : Image processing configuration `v0.2.0`
+- [`upload-image-process-options`](#image-processing-configuration-upload-image-process-options) – Image processing configuration `v0.2.0`
 - `password-update-rate-limit-second` – Seconds to wait before another password change request is allowed
 - `email-verify-rate-limit-second` – Seconds to wait before another email verification request is allowed
 - `email-update-rate-limit-second` – Seconds to wait before another email update request is allowed
