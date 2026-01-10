@@ -56,7 +56,7 @@ export const useChatInputBarDispaly = (
     return pb.files.getURL(
       charReplyMessageUserData.value,
       charReplyMessageUserData.value.avatar,
-      { thumb: fileUserAvatarConfig.thumb200x200f }
+      { thumb: fileUserAvatarConfig.thumb200x200 }
     )
   })
 
