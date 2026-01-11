@@ -7,6 +7,41 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.3.0] - 2026-01-11
+
+<details>
+<summary>📝 查看中文版本 (Chinese Version)</summary>
+
+### 新增
+- 实现用户权限控制，发送消息权限、发送图片权限
+- 实现用户封禁功能
+- 实现控制是否只允许oauth2注册
+- 图片查看器，实现双击缩放或还原
+- 图片查看器，实现图片加载失败时重试
+
+### 变更
+- 从 devDependencies 中移除了 `pocketbase-typegen`，改为使用位于 `/pocketbase-typegen` 的本地实现
+
+### 修复
+- 解决手机输入状态时滚动可能导致底栏被overflow-hidden的问题
+- 完善图片查看器底栏中图片边框的显示
+
+</details>
+
+### Added
+- Implemented user permission controls, including message‑sending and image‑sending permissions.  
+- Added user banning functionality.  
+- Added an option to restrict registration to OAuth2 only.  
+- Image viewer: added double‑tap to zoom/restore.  
+- Image viewer: added automatic retry when image loading fails.
+
+### Changed
+- Removed `pocketbase-typegen` from devDependencies and switched to a local implementation located at `/pocketbase-typegen`.
+
+### Fixed
+- Fixed an issue where scrolling during text input on mobile could cause the bottom bar to be hidden by `overflow-hidden`.  
+- Improved the display of image borders in the image viewer’s bottom bar.
+
 ## [0.2.2] - 2026-01-07
 
 <details>
@@ -115,7 +150,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - pocket-chat: 一个基于 PocketBase 与 Vue3 的实时聊天平台 | A real-time chat platform built with PocketBase and Vue3. 
 
-[unreleased]: https://github.com/PocketTogether/pocket-chat/compare/v0.2.2...HEAD
+[unreleased]: https://github.com/PocketTogether/pocket-chat/compare/v0.3.0...HEAD
+[0.3.0]: https://github.com/PocketTogether/pocket-chat/compare/v0.2.2...v0.3.0
 [0.2.2]: https://github.com/PocketTogether/pocket-chat/compare/v0.2.1...v0.2.2
 [0.2.1]: https://github.com/PocketTogether/pocket-chat/compare/v0.2.0...v0.2.1
 [0.2.0]: https://github.com/PocketTogether/pocket-chat/compare/v0.1.0...v0.2.0
