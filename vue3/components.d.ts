@@ -49,6 +49,7 @@ declare module 'vue' {
     RiFlaskLine: typeof import('@remixicon/vue')['RiFlaskLine']
     RiImageAddLine: typeof import('@remixicon/vue')['RiImageAddLine']
     RiImageLine: typeof import('@remixicon/vue')['RiImageLine']
+    RiInformationLine: typeof import('@remixicon/vue')['RiInformationLine']
     RiLink: typeof import('@remixicon/vue')['RiLink']
     RiLoader3Line: typeof import('@remixicon/vue')['RiLoader3Line']
     RiLockLine: typeof import('@remixicon/vue')['RiLockLine']

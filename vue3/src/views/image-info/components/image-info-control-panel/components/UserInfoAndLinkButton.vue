@@ -62,7 +62,10 @@ const authorAvatarUrl = computed(() => {
  * 作者名称
  */
 const authorName = computed(() => {
-  return imageAuthor.value?.name ?? authorUsername.value
+  if (imageAuthor.value?.name == null || imageAuthor.value?.name === '') {
+    return authorUsername.value
+  }
+  return imageAuthor.value.name
 })
 
 /**
