@@ -12,7 +12,7 @@
     "type-check": "vue-tsc --build",
     "lint": "eslint . --fix",
     "format": "prettier --write src/",
-    "pb-typegen-json": "pocketbase-typegen --json ../pocketbase/pb_schema.json --out ./src/lib/pocketbase/pocketbase-types.ts"
+    "pb-typegen-json": "node scripts/pocketbase-typegen.cjs"
   },
   "dependencies": {
     "@remixicon/vue": "^4.6.0",

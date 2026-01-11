@@ -138,27 +138,38 @@ export type MessagesRecord = {
 	updated?: IsoDateString
 }
 
-export enum UsersCanSendMessageOptions {
+export enum UsersCanaaaaOptions {
 	"YES" = "YES",
 	"NO" = "NO",
 	"" = "",
 }
 
-export enum UsersCanUploadImageOptions {
+export enum UsersCanaaaaCopyOptions {
 	"YES" = "YES",
 	"NO" = "NO",
 	"" = "",
 }
+
+export enum UsersCanbbbbOptions {
+	"YES" = "YES",
+	"NO" = "NO",
+}
+
+export enum UsersCanbbbbCopyOptions {
+	"YES" = "YES",
+	"NO" = "NO",
+}
 export type UsersRecord = {
 	avatar?: string
 	bio?: string
-	canSendMessage?: UsersCanSendMessageOptions
-	canUploadImage?: UsersCanUploadImageOptions
+	canaaaa?: UsersCanaaaaOptions
+	canaaaa_copy?: UsersCanaaaaCopyOptions[]
+	canbbbb: UsersCanbbbbOptions
+	canbbbb_copy: UsersCanbbbbCopyOptions[]
 	created?: IsoDateString
 	email: string
 	emailVisibility?: boolean
 	id: string
-	isBanned?: boolean
 	name?: string
 	password: string
 	tokenKey: string
